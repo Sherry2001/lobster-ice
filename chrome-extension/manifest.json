@@ -13,6 +13,9 @@
     "default_title": "Lobster Ice Cream Sidebar",
     "default_popup": "popup.html"
   },
+  "web_accessible_resources": [
+    "assets/*"
+  ],
   "permissions": [
     "https://*/*",
     "http://*/*",
