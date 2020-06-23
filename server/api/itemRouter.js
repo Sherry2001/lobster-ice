@@ -101,8 +101,7 @@ router.delete('/deleteItem', (req, res) => {
         })
       }     
     })
-      .then(() => res.status(200).json({success: true, message: "item deleted"}))
-      .catch((err) => next(err));
+      .then(() => res.status(200).json({success: true, message: "item deleted"}));
   })
 })
 
