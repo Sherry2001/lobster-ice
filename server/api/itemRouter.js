@@ -55,21 +55,20 @@ router.put('/addItemToCategory', (req, res) => {
 
   Item.findOne({_id:body.itemId}, (err, item) => {
     if (err) {
-      next(err);
+      throw err;
     }
     item.categoryIds.push(body.categoryId);
     item.save(done);
   })
-    .then(() => Category.findOne({_id: body.categoryId}, (err, category) => {
-      if (err) {
-        next(err);
-      }
-      category.items.push(body.itemId);
-      category.save(done);
-          
-    }))
-    .then(() => res.status(200).json({success: true, message: "item added to category"}))
-    .catch((err) => next(err));
+  .then(() => Category.findOne({_id: body.categoryId}, (err, category) => {
+    if (err) {
+      throw err;
+    }
+    category.items.push(body.itemId);
+    category.save(done);
+  }))
+  .catch((err) => next(err))
+  .then(() => res.status(200).json({success: true, message: "item added to category"}))
 })
 
 // /** TODO: */
