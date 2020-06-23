@@ -9,9 +9,12 @@ const router = express.Router()
 /**
  * Add an item
  * 
- * TODO: req.body: {userId: mongoose.objectId}
+ * req.body: {sourceLink: String,
+ *            highlight: String,
+ *            placeId: id(optional),
+ *            comments: String (optional),}
  * 
- * response: [{title: String, categoryId: mongoose.objectId}]
+ * response: success/ failure
  */
 router.post('/addItem', (req, res) => {
   const body = req.body;
@@ -28,11 +31,14 @@ router.post('/addItem', (req, res) => {
 })
 
 /**
- * TODO:
+ * Get all items
  * 
  * req.body: {userId: mongoose.objectId}
  * 
- * response: [{title: String, categoryId: mongoose.objectId}]
+ * response: [{sourceLink: String,
+ *            highlight: String,
+ *            placeId: id(optional),
+ *            comments: String (optional),}]
  */
 router.get('/getItems', (req, res) => {
   Item.find({userId:req.body.userId}, (err, item) => {
@@ -44,11 +50,12 @@ router.get('/getItems', (req, res) => {
 })
 
 /**
- * TODO:
+ * Add item to category
  * 
- * req.body: {userId: mongoose.objectId}
+ * req.body: {itemId: mongoose.objectId,
+ *            categoryId: mongoose.objectId}
  * 
- * response: [{title: String, categoryId: mongoose.objectId}]
+ * response: success/ error
  */
 router.put('/addItemToCategory', (req, res) => {
   const body = req.body;
@@ -72,7 +79,13 @@ router.put('/addItemToCategory', (req, res) => {
     .catch((err) => next(err));
 })
 
-// /** TODO: */
+/** 
+ * Delete item
+ * 
+ * req.body: {itemId: mongoose.objectId}
+ * 
+ * response: success/ failure
+ */
 router.delete('/deleteItem', (req, res) => {
   Item.findOneAndDelete({_id: req.body.itemId}, (err, item) => {
     if(err) {
