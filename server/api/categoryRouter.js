@@ -37,7 +37,7 @@ router.get('/getCategories', (req, res) => {
  * 
  * response: [{title: String, 
  *             items: [{
- *               item object from db 
+ *               item objects from db 
  *             }]
  *            }]
  */
@@ -57,7 +57,7 @@ router.get('/getCategoryItems', (req, res) => {
     this.response.title = data.title;
     itemObjects = [];
     itemIds = data.items;
-    itemIds.forEach( async (itemId) => {
+    itemIds.forEach(async (itemId) => {
       const itemObject = await getItemInfo(itemId);
       itemObjects.push(itemObject); 
     }) 
@@ -80,5 +80,51 @@ async function getItemInfo(itemId) {
     }
   })
 }
+
+/**
+ * Delete a category and its id from all items in the category
+ * 
+ * req.body : {categoryId: mongoose.objectId}
+ * 
+ * response: {
+ *            success: true/false.
+ *            message: "deleted category" or "error when deleting"
+ *           }
+ *  or error
+ */
+router.get('/deleteCategory', (req, res) => {
+  const categoryId = req.body.categoryId;
+  response = {};
+  Categories.find({_id: categoryId}, (err, data) =>{
+    if (err) {
+      throw err;
+    }
+    if (data) {
+      return data.items;
+    }
+  })
+  .then(async (categoryItems) => {
+    categoryItems.forEach((itemId) => {
+      await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
+    })
+  })
+  .then(() => {
+    Categories.deleteOne({_id: categoryId}, (err, data) => {
+      if(err) {
+        throw err;
+      }
+    })
+    this.response.success = true;
+    this.response.message = "deleted category";
+  })
+  .catch((err) => {
+    this.response.success = false;
+    this.response.message = "error when deleting";
+    next(err);
+  })
+  .then(() => {
+    res.json(response);
+  })
+})
 
 module.exports = router;
