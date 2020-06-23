@@ -3,7 +3,7 @@
  * 
  */
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 
 var itemSchema = new mongoose.Schema({
   sourceLink: {type: String, required: true},
@@ -12,6 +12,6 @@ var itemSchema = new mongoose.Schema({
   note: {type: String},
   placesId: {type: String}, //TODO to be clarfied
   categoryIds: {type: [mongoose.ObjectId]},
-})
+});
 
-module.exports = mongoose.model('items', itemSchema)
+module.exports = mongoose.model('items', itemSchema);
