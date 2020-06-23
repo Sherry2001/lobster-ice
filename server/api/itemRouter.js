@@ -45,21 +45,20 @@ router.put('/addItemToCategory', (req, res) => {
     
     Item.findOne({_id:body.itemId}, (err, item) => {
         if (err) {
-            next(err);
+            throw err;
         }
         item.categoryIds.push(body.categoryId);
         item.save(done);
-        res.status(200).json({ success: true });
     })
-
-    Category.findOne({_id: body.categoryId}, (err, category) => {
+    .then(() => Category.findOne({_id: body.categoryId}, (err, category) => {
         if (err) {
-            next(err);
+            throw err;
         }
         category.items.push(body.itemId);
         category.save(done);
-        res.status(200).json({ success: true });
     })
+    .then(() => res.status(200).json({success: true, message: "item added to category"})
+    .catch((err) => next(err))
 })
 
 module.exports = router;
