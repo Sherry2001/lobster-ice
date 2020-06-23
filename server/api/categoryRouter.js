@@ -112,6 +112,7 @@ router.get('/deleteCategory', async (req, res) => {
   } catch (error) {
     this.response.success = false;
     this.response.message = "error when deleting";
+    res.json(response);
     next(error);
   }
 
