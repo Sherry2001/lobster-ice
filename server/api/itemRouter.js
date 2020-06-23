@@ -6,60 +6,92 @@ const mongoose = require('mongoose');
 
 const router = express.Router()
 
+/**
+ * Add an item
+ * 
+ * TODO: req.body: {userId: mongoose.objectId}
+ * 
+ * response: [{title: String, categoryId: mongoose.objectId}]
+ */
 router.post('/addItem', (req, res) => {
-    const body = req.body;
+  const body = req.body;
 
-    if(!body) {
-        next(err);
-    }
+  const item = new Item(body);
 
-    const item = new Item(body);
-
-    if(!item) {
-        next(err);
-    }
-
-    item.save().then(() => {
-        res.status(201).json({
-            success: true,
-            message: 'Item added'
-        })
-    });
+  item.save().then(() => {
+    res.status(201).json({
+      success: true,
+      message: 'Item added'
+    })
+  })
+    .catch(err => next(err));
 })
 
-router.get('/getItems', async (req, res) => {
-    await User.find({_id:req.body.userId }, (err, item) => {
-        if (err) {
-            next(err);
-        }
-        return res.json(item);
-    }).catch(err => next(err));
+/**
+ * TODO:
+ * 
+ * req.body: {userId: mongoose.objectId}
+ * 
+ * response: [{title: String, categoryId: mongoose.objectId}]
+ */
+router.get('/getItems', (req, res) => {
+  Item.find({userId:req.body.userId}, (err, item) => {
+    if (err) {
+      next(err);
+    }
+    return res.json(item);
+  }).catch(err => next(err));
 })
 
+/**
+ * TODO:
+ * 
+ * req.body: {userId: mongoose.objectId}
+ * 
+ * response: [{title: String, categoryId: mongoose.objectId}]
+ */
 router.put('/addItemToCategory', (req, res) => {
-    const body = req.body;
-    
-    if(!body) {
-        next(err);
-    }
-    
-    Item.findOne({_id:body.itemId}, (err, item) => {
-        if (err) {
-            next(err);
-        }
-        item.categoryIds.push(body.categoryId);
-        item.save(done);
-        res.status(200).json({ success: true });
-    })
+  const body = req.body;
 
-    Category.findOne({_id: body.categoryId}, (err, category) => {
-        if (err) {
+  Item.findOne({_id:body.itemId}, (err, item) => {
+    if (err) {
+      next(err);
+    }
+    item.categoryIds.push(body.categoryId);
+    item.save(done);
+  })
+    .then(() => Category.findOne({_id: body.categoryId}, (err, category) => {
+      if (err) {
+        next(err);
+      }
+      category.items.push(body.itemId);
+      category.save(done);
+          
+    }))
+    .then(() => res.status(200).json({success: true, message: "item added to category"}))
+    .catch((err) => next(err));
+})
+
+// /** TODO: */
+router.delete('/deleteItem', (req, res) => {
+  Item.findOneAndDelete({_id: req.body.itemId}, (err, item) => {
+    if(err) {
+      next(err);
+    }
+
+    const loopCategories = async (() => {
+      for (let i = 0; i < item.categoryIds.length; i++) {
+        Category.findOne({_id: item.categoryIds[i]}, (err, category) => {
+          if(err) {
             next(err);
-        }
-        category.items.push(body.itemId);
-        category.save(done);
-        res.status(200).json({ success: true });
+          }
+          category.items.pull(req.body.itemId);
+        })
+      }     
     })
+      .then(() => res.status(200).json({success: true, message: "item deleted"}))
+      .catch((err) => next(err));
+  })
 })
 
 module.exports = router;
