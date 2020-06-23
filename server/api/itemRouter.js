@@ -56,9 +56,9 @@ router.put('/addItemToCategory', (req, res) => {
         }
         category.items.push(body.itemId);
         category.save(done);
-    })
-    .then(() => res.status(200).json({success: true, message: "item added to category"})
-    .catch((err) => next(err))
+    }))
+    .then(() => res.status(200).json({success: true, message: "item added to category"}))
+    .catch((err) => next(err));
 })
 
 module.exports = router;
