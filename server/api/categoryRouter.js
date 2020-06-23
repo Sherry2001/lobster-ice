@@ -87,44 +87,64 @@ async function getItemInfo(itemId) {
  * req.body : {categoryId: mongoose.objectId}
  * 
  * response: {
- *            success: true/false.
- *            message: "deleted category" or "error when deleting"
+ *            success: boolean,
+ *            message: String,
  *           }
- *  or error
+ * error 
  */
-router.get('/deleteCategory', (req, res) => {
+router.get('/deleteCategory', async (req, res) => {
   const categoryId = req.body.categoryId;
   response = {};
-  Categories.find({_id: categoryId}, (err, data) =>{
-    if (err) {
-      throw err;
-    }
-    if (data) {
-      return data.items;
-    }
-  })
-  .then(async (categoryItems) => {
-    categoryItems.forEach((itemId) => {
-      await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
-    })
-  })
-  .then(() => {
-    Categories.deleteOne({_id: categoryId}, (err, data) => {
-      if(err) {
-        throw err;
-      }
-    })
+
+  try {
+    const category = await Categories.find({_id: categoryId}).exec();
+    const categoryItemIds = category.items;
+
+    await Promise.all(categoryItemIds.map(async (itemId) => {
+      await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done).exec();
+    }));
+
+    await Categories.deleteOne({_id: categoryId}).exec();
+
     this.response.success = true;
     this.response.message = "deleted category";
-  })
-  .catch((err) => {
+    res.json(response);
+  } catch (error) {
     this.response.success = false;
     this.response.message = "error when deleting";
-    next(err);
-  })
-  .then(() => {
-    res.json(response);
-  })
+    next(error);
+  }
+
+//   Categories.find({_id: categoryId}, (err, data) =>{
+//     if (err) {
+//       throw err;
+//     }
+//     if (data) {
+//       return data.items;
+//     }
+//   })
+//   .then(async (categoryItems) => {
+//     categoryItems.forEach((itemId) => {
+//       await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
+//     })
+//   })
+//   .then(() => {
+//     Categories.deleteOne({_id: categoryId}, (err, data) => {
+//       if(err) {
+//         throw err;
+//       }
+//     })
+//     this.response.success = true;
+//     this.response.message = "deleted category";
+//   })
+//   .catch((err) => {
+//     this.response.success = false;
+//     this.response.message = "error when deleting";
+//     next(err);
+//   })
+//   .then(() => {
+//     res.json(response);
+//   })
 })
 
 module.exports = router;
