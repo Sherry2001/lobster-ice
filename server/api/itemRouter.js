@@ -46,7 +46,7 @@ router.get('/getItems', (req, res) => {
       next(err);
     }
     return res.json(item);
-  }).catch(err => next(err));
+  }).catch(err => res.json({success: false, message: 'Error getting items'}));
 })
 
 /**
@@ -74,8 +74,8 @@ router.put('/addItemToCategory', (req, res) => {
     category.items.push(body.itemId);
     category.save(done);
   }))
-  .catch((err) => next(err))
-  .then(() => res.status(200).json({success: true, message: "item added to category"}))
+  .then(() => res.status(200).json({success: true, message: 'item added to category'}))
+  .catch((err) => res.json({success: false, message: 'Error adding item to category'}))
 })
 
 /** 
@@ -95,13 +95,14 @@ router.delete('/deleteItem', (req, res) => {
       for (let i = 0; i < item.categoryIds.length; i++) {
         Category.findOne({_id: item.categoryIds[i]}, (err, category) => {
           if(err) {
-            next(err);
+            throw(err);
           }
           category.items.pull(req.body.itemId);
         })
       }     
     })
-      .then(() => res.status(200).json({success: true, message: "item deleted"}));
+      .then(() => res.status(200).json({success: true, message: 'item deleted'}))
+      .catch((err) => res.json({success: falase, message: 'error deleting item'}));
   })
 })
 
