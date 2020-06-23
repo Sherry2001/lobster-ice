@@ -3,7 +3,6 @@ const User = require('../db/models/user')
 const Category = require('../db/models/category')
 const express = require('express')
 const mongoose = require('mongoose');
-const item = require('../db/models/item');
 
 const router = express.Router()
 
