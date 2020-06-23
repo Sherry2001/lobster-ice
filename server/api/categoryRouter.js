@@ -5,7 +5,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-const Categories = require('../../db/models/category')
+const Categories = require('../db/models/category')
 
 const router = express()
 

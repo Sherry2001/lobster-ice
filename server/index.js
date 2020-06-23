@@ -22,6 +22,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/category', categoryRouter);
-app.use('/item', itemRouter);
+//app.use('/item', itemRouter);
 
 app.listen(apiPort, () => console.log('Server running on port ', apiPort));
