@@ -23,6 +23,7 @@
     "webRequest",
     "webRequestBlocking",
     "storage",
-    "activeTab"
+    "activeTab",
+    "contextMenus"
   ]
 }

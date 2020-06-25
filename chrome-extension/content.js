@@ -11,6 +11,7 @@ const bulmaLink = document.createElement('link');
     sidebar.classList.add('invisible'); 
     document.body.appendChild(sidebar); 
 
+      
 document.onmouseup = document.onkeyup = document.onselectionchange = function() {
   const content = window.getSelection().toString(); 
   console.log(content);  
