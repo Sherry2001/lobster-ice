@@ -1,13 +1,17 @@
 
 .injection-panel {
+  z-index: 9999;
   position: fixed;
   right: 0;
   top: 20px;
   width: 300px;
   max-height: 80vh;
   background-color: #fff;
+  display: none;
 }
 
-.invisible {
+.injection-icon {
+  z-index: 9999;
+  position: absolute;
   display: none;
 }
