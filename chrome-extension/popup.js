@@ -10,4 +10,4 @@ document.addEventListener('DOMContentLoaded', function() {
       let value = e.target.children.highlight.value
       console.log(value)
     })
-  }, false);
+}, false);
