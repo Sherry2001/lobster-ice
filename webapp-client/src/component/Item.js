@@ -1,15 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import './Item.css';
+import '../stylesheets/Item.css';
 
 const Item = (props) => {
   return (
-    <div onclick="foo"></div>
+    <div className="item">
+      <h3 className="highlight">
+        {props.highlight.value}
+      </h3>
+      <a className="source-link" target="_blank" href={props.sourcelink.value}></a>
+      <p className="notes">
+        {props.notes.value}
+      </p>
+    </div>
   );
 };
-
-function foo() {
-  
-}
 
 export default Item;
