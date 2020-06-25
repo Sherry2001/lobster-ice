@@ -2,10 +2,11 @@
 
 <head>
   <!-- TODO: Add http://clipart-library.com/lobster-cliparts.html somewhere in the extension -->
-  <link href="assets/bulma.min.css" rel="stylesheet">
+  <title>Travel Idea Clipper</title>
+  <script src="popup.js"></script>
+  <link href="assets/bulma.min.css" rel="stylesheet">        
 </head>
-
-<body class="mx-1 my-1">
+<body class="mx-4 my-4">
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <div class="navbar-item mt-2">
@@ -21,8 +22,9 @@
       </div>
     </div>
   </nav>
-  <form>
+  <form id="itemForm">
     <input class="input" />
+    <textarea class="textarea my-2" id="highlight"></textarea>
   </form>
   <div class="card my-2">
     <header class="card-header">
