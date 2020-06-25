@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lobster Ice Cream</title>
+  <link href="./bulma.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- TODO: Find a way to make this take up the full height on desktop -->
+  <nav class="navbar mb-1" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="">
+        <img src="./lobster.jpg"
+             alt="Lobster Ice Cream Logo (a cute lobster)"
+             class="is-32x32">
+      </a>
+      <a class="navbar-item">
+        <h1 class="title is-4">Lobster Ice Cream</h1>
+      </a>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">Username</div>
+    </div>
+  </nav>
+  <div class="columns">
+    <div class="column is-one-quarter">
+      <nav class="panel">
+        <div class="panel-block">
+          <p class="control has-icons-left">
+            <!-- Replace this with a working search icon -->
+            <input class="input" type="text" placeholder="Search">
+            <span class="icon is-left">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+        </div>
+        <!-- TODO: Indicate that this is the active panel block visually -->
+        <a class="panel-block is-active">
+          All
+        </a>
+        <a class="panel-block">
+          France Trip!!
+        </a>
+        <a class="panel-block">
+          Senior Trip
+        </a>
+        <a class="panel-block">
+          Foods I want
+        </a>
+        <a class="panel-block">
+          China
+        </a>
+        <div class="panel-block is-flex" style="align-self: flex-end;">
+          <button class="button is-link is-outlined is-fullwidth">
+            Add Category
+          </button>
+        </div>
+      </nav>
+    </div>
+    <div class="column mr-3">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title">Ben and Bill's Chocolate Emporium
+            <div class="content">
+              <p>Hehe!! Lobster ice cream??? Sounds weird, but I wanna try!!
+            </div>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title">Eiffel Tower
+            <div class="content">
+              <p>Must visit!!!
+            </div>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title">Yellowstone Park
+            <div class="content">
+              <p>I know it smells kinda bad but I still want to gooooooo
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
