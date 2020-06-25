@@ -1,4 +1,7 @@
-.nav-bar li{
+.list-category li{
   list-style: none;
   padding: 15px;
+}
+.nav-bar {
+  width: 25%;
 }
