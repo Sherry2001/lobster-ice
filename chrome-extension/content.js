@@ -9,6 +9,9 @@ sidebar.id = 'lobstericecream';
 sidebar.classList.add('panel','injection-panel','px-4','py-4');
 document.body.appendChild(sidebar); 
 
+    
+
+
 const iconContainer = document.createElement('div');
 iconContainer.classList.add('injection-icon');
 iconContainer.id = 'icon-container';
@@ -59,21 +62,29 @@ sidebar.onclick = (event) => {
 
 function showIcon(event, content) {
     iconContainer.style.display = 'block';
-    iconContainer.style.left = event.pageX - 50 + 'px';
+    iconContainer.style.left = event.pageX - 10 + 'px';
     iconContainer.style.top = event.pageY - 55 + 'px';
 }; 
 
+function closeSidebar() {
+  sidebar.style.display = 'none';
+}
+
 function createSidebar(content) {
     console.log('createSidebar called');
-    sidebar.style.display = 'block';
     sidebar.innerHTML = '';
+    sidebar.style.display = 'block';
     const panelHeading = document.createElement('div');
-    panelHeading.classList.add('panel-heading');
+    panelHeading.classList.add('message-header');
     panelHeading.innerText = 'Lobster Ice Cream'; 
+
+    const close = document.createElement('a');
+    close.classList.add('delete');
+    close.onclick = closeSidebar;
+    panelHeading.appendChild(close);
     sidebar.appendChild(panelHeading);
-   
-    const sidebarHeader = document.createElement('div');
-    sidebarHeader.classList.add('navbar');
+    // const sidebarHeader = document.createElement('div');
+    // sidebarHeader.classList.add('navbar');
 
     const form = document.createElement('form');
     const highlightLabel = document.createElement('label');
