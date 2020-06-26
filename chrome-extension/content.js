@@ -25,6 +25,8 @@ let lastContent;
 
 document.onclick = (event) => {
     console.log('got in here');
+    const dontListen = '.injection-panel, .injection-icon';
+    //if (!event.target.matches(dontListen)) {
     console.log(iconContainer.style.display);
     if (iconContainer.style.display === 'block') {
         console.log('current block, change to none')
@@ -42,18 +44,28 @@ document.onclick = (event) => {
         }
         
         console.log(content); 
-    
+   // }
 };
 
+iconButton.onclick = (event) => {
+    event.stopPropagation(); 
+    iconContainer.style.display = 'none';
+    createSidebar(lastContent);
+}
+
+sidebar.onclick = (event) => {
+    event.stopPropagation();
+}
 
 function showIcon(event, content) {
-    iconButton.onclick = () => createSidebar(content);
     iconContainer.style.display = 'block';
     iconContainer.style.left = event.pageX - 50 + 'px';
     iconContainer.style.top = event.pageY - 55 + 'px';
 }; 
 
 function createSidebar(content) {
+    console.log('createSidebar called');
+    sidebar.style.display = 'block';
     sidebar.innerHTML = '';
     const panelHeading = document.createElement('div');
     panelHeading.classList.add('panel-heading');
