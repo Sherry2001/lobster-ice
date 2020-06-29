@@ -31,9 +31,7 @@ let lastContent;
 //Show extension icon when selecting text on page
 document.onclick = (event) => {
   const dontListen = '.injection-panel, .injection-icon';
-  console.log(iconContainer.style.display);
   if (iconContainer.style.display === 'block') {
-    console.log('current block, change to none')
     iconContainer.style.display ='none'; 
   } 
   const content = window.getSelection().toString();
