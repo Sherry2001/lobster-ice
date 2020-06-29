@@ -1,14 +1,12 @@
 /**
  * Router for item actions
  */
+const Categories = require('../db/models/category');
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-
-const Categories = require('../db/models/category');
 
 const router = express();
-
+router.use(express.json());
 /**
  * Get all of the user's categories- just names and ids.
  * 
@@ -16,16 +14,20 @@ const router = express();
  * 
  * response: [{title: String, categoryId: mongoose.objectId}]
  */
-router.get('/getCategories', (req, res) => {
+router.get('/getCategories', async (req, res) => {
   const userId = req.body.userId;
   response = {};
-  Categories.find({}, 'title', (err, data) => {
+  await Categories.find({ userId: userId }, (err, data) => {
     if (err) {
       next(err);
     }
     if (data) {
       response = data;
       res.json(response);
+    }
+  }).catch(function (err) {
+    if (err) {
+      console.error(err);
     }
   });
 });
