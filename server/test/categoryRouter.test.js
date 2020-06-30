@@ -3,7 +3,6 @@ const categoryRouter = require('../api/categoryRouter');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { getDB } = require('../db');
-const MongoClient = require('mongodb');
 const MongoMemoryServer = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
