@@ -1,9 +1,9 @@
 /**
  * Router for item actions
  */
-const express = require('express')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const Categories = require('../db/models/category')
 const Items = require('../db/models/item')
@@ -18,14 +18,14 @@ const router = express()
  */
 router.get('/getCategories', (req, res) => {
   const userId = req.body.userId;
-  response = {}
+  response = {};
   Categories.find({}, 'title', (err, data) => {
     if (err) {
-      next(err); 
-    } 
+      next(err);
+    }
     if (data) {
-      response = data; 
-      res.json(response); 
+      response = data;
+      res.json(response);
     }
   });
 });
