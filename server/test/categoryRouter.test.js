@@ -52,7 +52,7 @@ describe('categoryRouter', function () {
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.have.length(0);
+          expect(res.body).to.have.lengthOf(0);
         });
     });
     // TODO: make this into a test suite and check more cases
@@ -67,7 +67,7 @@ describe('categoryRouter', function () {
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.have.length(1);
+          expect(res.body).to.have.lengthOf(1);
           expect(res.body[0].title).equals(exampleCategory.title);
         });
     });
