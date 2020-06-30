@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
-const defaultURI = 'mongodb+srv://user:password@lobstericecream-trflp.gcp.mongodb.net/home?retryWrites=true&w=majority';
+const defaultUri = 'mongodb+srv://user:password@lobstericecream-trflp.gcp.mongodb.net/home?retryWrites=true&w=majority';
+const opts = {
+  useNewUrlParser: true, useUnifiedTopology: true
+};
 
-function getDB(URI) {
+function getDB(uri) {
   mongoose
-    .connect(URI)
+    .connect(uri, opts)
     .then(() => console.log('MongoDB successfully connected'))
     .catch((e) => {
       console.error('Connection error', e.message);
@@ -12,4 +15,4 @@ function getDB(URI) {
   return mongoose.connection;
 }
 
-module.exports = { getDB, defaultURI };
+module.exports = { getDB, defaultUri };

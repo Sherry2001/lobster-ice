@@ -5,8 +5,8 @@ const app = express();
 const apiPort = 8080;
 
 //connected to mongoose through db/index.js
-const getDB, URI = require('./db');
-const db = getDB(URI);
+const getDB, uri = require('./db');
+const db = getDB(uri);
 //Import Routers
 const categoryRouter = require('./api/categoryRouter.js');
 const itemRouter = require('./api/itemRouter.js');

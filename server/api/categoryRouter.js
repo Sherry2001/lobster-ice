@@ -25,10 +25,6 @@ router.get('/getCategories', async (req, res) => {
       response = data;
       res.json(response);
     }
-  }).catch(function (err) {
-    if (err) {
-      console.error(err);
-    }
   });
 });
 

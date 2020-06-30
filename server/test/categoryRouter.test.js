@@ -15,9 +15,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 function handleErr(err) {
-  if (err) {
-    throw err;
-  }
+  expect(err).to.be.null;
 }
 
 before(async function () {
@@ -38,16 +36,27 @@ after(async function () {
 
 it('There should be one user in the database', async function () {
   await Category.find(function (err, categories) {
-    handleErr(err);
+    expect(err).to.be.null;
     console.log(categories);
   });
-  const cnt = await User.count();
+  const cnt = await User.countDocuments();
   expect(cnt).to.equal(1);
 });
 
 describe('categoryRouter', function () {
   describe('/getCategories', function () {
-    it('should return a response code of 200 when both the user and their category are present', async function () {
+    it('should return an empty list when no userId is provided in the request', async function () {
+      chai
+        .request(categoryRouter)
+        .get('/getCategories')
+        .end(function (err, res) {
+          expect(err).to.be.null;
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.length(0);
+        });
+    });
+    // TODO: make this into a test suite and check more cases
+    it('should return a JSON array with all categories associated with the given userId', async function () {
       chai
         .request(categoryRouter)
         .get('/getCategories')
@@ -56,8 +65,10 @@ describe('categoryRouter', function () {
           userId: defaultUser._id
         })
         .end(function (err, res) {
-          if (err) throw err;
+          expect(err).to.be.null;
           expect(res).to.have.status(200);
+          expect(res.body).to.have.length(1);
+          expect(res.body[0].title).equals(exampleCategory.title);
         });
     });
   });
