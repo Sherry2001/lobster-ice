@@ -1,5 +1,4 @@
 const Category = require('../db/models/category');
-// const categoryRouter = require('../api/categoryRouter');
 const server = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -70,5 +69,6 @@ describe('categoryRouter', function () {
           expect(res.body[0].title).equals(exampleCategory.title);
         });
     });
+    //TODO: ADD TESTS FOR ALL OTHER CATEGORY ROUTERS 
   });
 });
