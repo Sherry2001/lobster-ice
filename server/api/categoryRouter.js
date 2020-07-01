@@ -1,13 +1,12 @@
 /**
  * Router for item actions
  */
+const Categories = require('../db/models/category');
 const express = require('express');
+const Items = require('../db/models/item');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-
-const Categories = require('../db/models/category')
-const Items = require('../db/models/item')
-const router = express()
+const router = express();
+router.use(express.json());
 
 /**
  * Get all of the user's categories- just names and ids.
@@ -16,10 +15,10 @@ const router = express()
  * 
  * response: [{title: String, categoryId: mongoose.objectId}]
  */
-router.get('/getCategories', (req, res) => {
+router.get('/getCategories', async (req, res) => {
   const userId = req.body.userId;
   response = {};
-  Categories.find({}, 'title', (err, data) => {
+  await Categories.find({ userId: userId }, (err, data) => {
     if (err) {
       next(err);
     }
@@ -43,13 +42,13 @@ router.get('/getCategories', (req, res) => {
  */
 router.get('/getCategoryItems', (req, res) => {
   const categoryId = req.body.categoryId;
-  response = {}
-  Categories.findOne({_id: categoryId}, 'title items', (err, data) => {
+  response = {};
+  Categories.findOne({ _id: categoryId }, 'title items', (err, data) => {
     if (err) {
       throw err;
-    } 
+    }
     if (data) {
-      return data
+      return data;
     }
   }).catch((err) => {
     next(err);
@@ -59,11 +58,11 @@ router.get('/getCategoryItems', (req, res) => {
     itemIds = data.items;
     itemIds.forEach(async (itemId) => {
       const itemObject = await getItemInfo(itemId);
-      itemObjects.push(itemObject); 
-    }) 
+      itemObjects.push(itemObject);
+    });
     this.response.items = itemObjects;
     res.json(this.response);
-  })
+  });
 });
 
 /**
@@ -74,11 +73,11 @@ async function getItemInfo(itemId) {
   Items.findById(itemId, (err, data) => {
     if (err) {
       throw new Error('error getting itemInfo: ', err);
-    } 
-    if(data){
+    }
+    if (data) {
       return data;
     }
-  })
+  });
 }
 
 /**
@@ -97,14 +96,14 @@ router.get('/deleteCategory', async (req, res) => {
   response = {};
 
   try {
-    const category = await Categories.find({_id: categoryId}).exec();
+    const category = await Categories.find({ _id: categoryId }).exec();
     const categoryItemIds = category.items;
 
     await Promise.all(categoryItemIds.map(async (itemId) => {
-      await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done).exec();
+      await Items.update({ _id: itemId }, { $pull: { categoryIds: this.categoryId } }, done).exec();
     }));
 
-    await Categories.deleteOne({_id: categoryId}).exec();
+    await Categories.deleteOne({ _id: categoryId }).exec();
 
     this.response.success = true;
     this.response.message = "deleted category";
@@ -116,36 +115,36 @@ router.get('/deleteCategory', async (req, res) => {
     next(error);
   }
 
-//   Categories.find({_id: categoryId}, (err, data) =>{
-//     if (err) {
-//       throw err;
-//     }
-//     if (data) {
-//       return data.items;
-//     }
-//   })
-//   .then(async (categoryItems) => {
-//     categoryItems.forEach((itemId) => {
-//       await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
-//     })
-//   })
-//   .then(() => {
-//     Categories.deleteOne({_id: categoryId}, (err, data) => {
-//       if(err) {
-//         throw err;
-//       }
-//     })
-//     this.response.success = true;
-//     this.response.message = "deleted category";
-//   })
-//   .catch((err) => {
-//     this.response.success = false;
-//     this.response.message = "error when deleting";
-//     next(err);
-//   })
-//   .then(() => {
-//     res.json(response);
-//   })
-})
+  //   Categories.find({_id: categoryId}, (err, data) =>{
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     if (data) {
+  //       return data.items;
+  //     }
+  //   })
+  //   .then(async (categoryItems) => {
+  //     categoryItems.forEach((itemId) => {
+  //       await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
+  //     })
+  //   })
+  //   .then(() => {
+  //     Categories.deleteOne({_id: categoryId}, (err, data) => {
+  //       if(err) {
+  //         throw err;
+  //       }
+  //     })
+  //     this.response.success = true;
+  //     this.response.message = "deleted category";
+  //   })
+  //   .catch((err) => {
+  //     this.response.success = false;
+  //     this.response.message = "error when deleting";
+  //     next(err);
+  //   })
+  //   .then(() => {
+  //     res.json(response);
+  //   })
+});
 
 module.exports = router;
