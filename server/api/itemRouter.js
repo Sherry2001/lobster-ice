@@ -1,8 +1,6 @@
 const Item = require('../db/models/item');
-const User = require('../db/models/user');
 const Category = require('../db/models/category');
 const express = require('express');
-const mongoose = require('mongoose');
 
 const router = express.Router();
 
@@ -11,10 +9,12 @@ const router = express.Router();
  * 
  * req.body: {sourceLink: String,
  *            highlight: String,
- *            placeId: id(optional),
- *            comments: String (optional),}
+ *            userId: mongoose.ObjectId,
+ *            placesId: id(optional),
+ *            comment: String (optional),}
  * 
- * response: success/ failure
+ * response: {success: boolean,
+ *            message: String}
  */
 router.post('/addItem', (req, res) => {
   const newItem = req.body;
@@ -61,7 +61,8 @@ router.get('/getItems', (req, res) => {
  * req.body: {itemId: mongoose.objectId,
  *            categoryId: mongoose.objectId}
  * 
- * response: success/ error
+ * response: {success: boolean,
+ *            message: String}
  */
 router.put('/addItemToCategory', async (req, res) => {
   const itemId = req.body.itemId;
@@ -90,7 +91,8 @@ router.put('/addItemToCategory', async (req, res) => {
  * 
  * req.body: {itemId: mongoose.objectId}
  * 
- * response: success/ failure
+ * response: {success: boolean,
+ *            message: String}
  */
 router.delete('/deleteItem', async (req, res) => {
   const itemId = req.body.itemId; 
