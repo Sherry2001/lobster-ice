@@ -15,4 +15,5 @@ function getMongoDB(uri) {
   return mongoose.connection;
 }
 
-module.exports = { getMongoDB, defaultUri };
+module.exports = { getMongoDB: getMongoDB , 
+                   uri: defaultUri };

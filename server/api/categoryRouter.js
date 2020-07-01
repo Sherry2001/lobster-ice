@@ -16,7 +16,7 @@ router.use(express.json());
  */
 router.post('/createCategory', (req, res) => {
   const newCategory = req.body; 
-  response = {};
+  let response = {};
   Category.create(newCategory, (err, data) => {
     if (err) {
       response.successs = false; 
@@ -61,7 +61,7 @@ router.get('/getCategories', async (req, res) => {
  */
 router.get('/getCategoryItems', async (req, res) => {
   const categoryId = req.body.categoryId;
-  response = {};
+  let response = {};
   try {
     //get category name and a list of item ids
     const categoryData =  await Category.findOne({ _id: categoryId}, 'title items', (error, data)).exec();
@@ -94,7 +94,7 @@ router.get('/getCategoryItems', async (req, res) => {
  */
 router.get('/deleteCategory', async (req, res) => {
   const categoryId = req.body.categoryId;
-  response = {};
+  let response = {};
 
   try {
     const category = await Category.find({ _id: categoryId }).exec();
