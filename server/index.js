@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const apiPort = 8080;
@@ -15,9 +15,9 @@ if (require.main === module) {
 const categoryRouter = require('./api/categoryRouter.js');
 const itemRouter = require('./api/itemRouter.js');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Hello Word!');
