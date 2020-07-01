@@ -55,7 +55,7 @@ router.get('/getItems', (req, res) => {
  * 
  * response: success/ error
  */
-router.put('/addItemToCategory', (req, res) => {
+router.put('/addItemToCategory', async (req, res) => {
   const itemId = req.body.itemId;
   const categoryId = req.body.categoryId;
   let response = {}; 
@@ -74,6 +74,7 @@ router.put('/addItemToCategory', (req, res) => {
 
   // For Cynthia's review, changed original code to the above,
   // deleted original code should show on github  -sherry
+  // will remove these comments after review
 });
 
 /** 
@@ -83,25 +84,31 @@ router.put('/addItemToCategory', (req, res) => {
  * 
  * response: success/ failure
  */
-router.delete('/deleteItem', (req, res) => {
-  Item.findOneAndDelete({ _id: req.body.itemId }, (err, item) => {
-    if (err) {
-      next(err);
-    }
+router.delete('/deleteItem', async (req, res) => {
+  const itemId = req.body.itemId; 
+  let response = {};
+  try { 
+    const itemObject = await Item.findOneAndRemove({ _id: itemId}).exec();
+    const itemCategoryIds = itemObject.categoryIds;
 
-    const loopCategories = async(() => {
-      for (let i = 0; i < item.categoryIds.length; i++) {
-        Category.findOne({ _id: item.categoryIds[i] }, (err, category) => {
-          if (err) {
-            throw (err);
-          }
-          category.items.pull(req.body.itemId);
-        });
-      }
-    })
-      .then(() => res.status(200).json({ success: true, message: 'item deleted' }))
-      .catch((err) => res.json({ success: false, message: 'error deleting item' }));
-  });
+    //deleting this itemId from all the categories it belonged to
+    await Promise.all(itemCategoryIds.map(async (categoryId) => {
+      await Category.update({ _id: categoryId}, { $pull: { items: this.itemId} }, done).exec();
+    }))
+
+    response.success = true;
+    response.message = 'item deleted'; 
+    res.json(response);
+  } catch (error) {
+    response.success = false;
+    response.message = 'error deleting item'; 
+    res.json(response);
+    next(error);
+  }
+  
+  // For Cynthia's review, changed original code to the above, 
+  // deleted original code should show on github - sherry 
+  // will remove these comments after review
 });
 
 module.exports = router;
