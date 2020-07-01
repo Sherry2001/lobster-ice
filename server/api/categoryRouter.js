@@ -1,5 +1,5 @@
 /**
- * Router for item actions
+ * Router for category actions
  */
 const Category = require('../db/models/category');
 const express = require('express');

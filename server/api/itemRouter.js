@@ -1,7 +1,6 @@
 const Item = require('../db/models/item');
 const Category = require('../db/models/category');
 const express = require('express');
-
 const router = express.Router();
 
 /**
@@ -16,7 +15,7 @@ const router = express.Router();
  * response: {success: boolean,
  *            message: String}
  */
-router.post('/addItem', (req, res) => {
+router.post('/addItem', (req, res, next) => {
   const newItem = req.body;
   const item = new Item(newItem);
   let response = {}; 
@@ -44,7 +43,7 @@ router.post('/addItem', (req, res) => {
  *            placeId: id(optional),
  *            comments: String (optional),}]
  */
-router.get('/getItems', (req, res) => {
+router.get('/getItems', (req, res, next) => {
   Item.find({ userId: req.body.userId }, (err, items) => {
     if (err) {
       next(err);
@@ -64,11 +63,11 @@ router.get('/getItems', (req, res) => {
  * response: {success: boolean,
  *            message: String}
  */
-router.put('/addItemToCategory', async (req, res) => {
-  const itemId = req.body.itemId;
-  const categoryId = req.body.categoryId;
+router.put('/addItemToCategory', async (req, res, next) => {
   let response = {}; 
   try {
+    const itemId = req.body.itemId;
+    const categoryId = req.body.categoryId;
     await Item.update({ _id: itemId }, { $push: { categoryIds: this.categoryId } }, done).exec();
     await Category.update({ _id: categoryId }, { $push: { items: this.itemId } }, done).exec();
     response.success = true;
@@ -94,10 +93,10 @@ router.put('/addItemToCategory', async (req, res) => {
  * response: {success: boolean,
  *            message: String}
  */
-router.delete('/deleteItem', async (req, res) => {
-  const itemId = req.body.itemId; 
+router.delete('/deleteItem', async (req, res, next) => {
   let response = {};
   try { 
+    const itemId = req.body.itemId; 
     const itemObject = await Item.findOneAndRemove({ _id: itemId}).exec();
     const itemCategoryIds = itemObject.categoryIds;
 
