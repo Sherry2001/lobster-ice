@@ -2,7 +2,7 @@ const Category = require('../db/models/category');
 const categoryRouter = require('../api/categoryRouter');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { getDB } = require('../db');
+const { getMongoDB } = require('../db');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
@@ -20,7 +20,7 @@ function handleErr(err) {
 before(async function () {
   mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
-  getDB(mongoUri);
+  getMongoDB(mongoUri);
   User = require('../db/models/user');
   defaultUser = new User({ email: 'lobster-ice-cream-lover@gmeil.com' });
   defaultUser.save(handleErr);
@@ -38,8 +38,8 @@ it('There should be one user in the database', async function () {
     expect(err).to.be.null;
     console.log(categories);
   });
-  const cnt = await User.countDocuments();
-  expect(cnt).to.equal(1);
+  const documentCount = await User.countDocuments();
+  expect(documentCount).to.equal(1);
 });
 
 describe('categoryRouter', function () {
