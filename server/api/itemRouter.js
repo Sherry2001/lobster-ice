@@ -18,7 +18,6 @@ const router = express.Router();
  */
 router.post('/addItem', (req, res) => {
   const body = req.body;
-
   const item = new Item(body);
 
   item.save().then(() => {
@@ -26,8 +25,7 @@ router.post('/addItem', (req, res) => {
       success: true,
       message: 'Item added'
     });
-  })
-    .catch(err => next(err));
+  }).catch(err => next(err));
 });
 
 /**
@@ -58,24 +56,24 @@ router.get('/getItems', (req, res) => {
  * response: success/ error
  */
 router.put('/addItemToCategory', (req, res) => {
-  const body = req.body;
+  const itemId = req.body.itemId;
+  const categoryId = req.body.categoryId;
+  let response = {}; 
+  try {
+    await Item.update({ _id: itemId }, { $push: { categoryIds: this.categoryId } }, done).exec();
+    await Category.update({ _id: categoryId }, { $push: { items: this.itemId } }, done).exec();
+    response.success = true;
+    response.message = 'item added to category'; 
+    res.json(response);
+  } catch (error) {
+    response.success = false;
+    response.message = 'error adding item to category'; 
+    res.json(response);
+    next(error);
+  }
 
-  Item.findOne({ _id: body.itemId }, (err, item) => {
-    if (err) {
-      throw err;
-    }
-    item.categoryIds.push(body.categoryId);
-    item.save(done);
-  })
-    .then(() => Category.findOne({ _id: body.categoryId }, (err, category) => {
-      if (err) {
-        throw err;
-      }
-      category.items.push(body.itemId);
-      category.save(done);
-    }))
-    .then(() => res.status(200).json({ success: true, message: 'item added to category' }))
-    .catch((err) => res.json({ success: false, message: 'Error adding item to category' }));
+  // For Cynthia's review, changed original code to the above,
+  // deleted original code should show on github  -sherry
 });
 
 /** 
