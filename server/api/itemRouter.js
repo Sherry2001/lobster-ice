@@ -17,15 +17,21 @@ const router = express.Router();
  * response: success/ failure
  */
 router.post('/addItem', (req, res) => {
-  const body = req.body;
-  const item = new Item(body);
-
-  item.save().then(() => {
-    res.status(201).json({
-      success: true,
-      message: 'Item added'
-    });
-  }).catch(err => next(err));
+  const newItem = req.body;
+  const item = new Item(newItem);
+  let response = {}; 
+  item.save((err) => {
+    if (err) {
+      response.success = false;
+      response.message = 'error adding item';
+      res.json(response);
+      next(err);
+    } else {
+      response.success = true;
+      response.message = 'item added';
+      res.json(response);
+    }
+  });
 });
 
 /**
@@ -39,12 +45,14 @@ router.post('/addItem', (req, res) => {
  *            comments: String (optional),}]
  */
 router.get('/getItems', (req, res) => {
-  Item.find({ userId: req.body.userId }, (err, item) => {
+  Item.find({ userId: req.body.userId }, (err, items) => {
     if (err) {
       next(err);
     }
-    return res.json(item);
-  }).catch(err => res.json({ success: false, message: 'Error getting items' }));
+    if (items) {
+      res.json(items);
+    }
+  });
 });
 
 /**
