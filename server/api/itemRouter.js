@@ -16,7 +16,7 @@ const router = express.Router();
  * response: {success: boolean,
  *            message: String}
  */
-router.post('/addItem', (req, res) => {
+router.post('/addItem', (req, res, next) => {
   const newItem = req.body;
   const item = new Item(newItem);
   let response = {}; 
@@ -44,7 +44,7 @@ router.post('/addItem', (req, res) => {
  *            placeId: id(optional),
  *            comments: String (optional),}]
  */
-router.get('/getItems', (req, res) => {
+router.get('/getItems', (req, res, next) => {
   Item.find({ userId: req.body.userId }, (err, items) => {
     if (err) {
       next(err);
@@ -64,7 +64,7 @@ router.get('/getItems', (req, res) => {
  * response: {success: boolean,
  *            message: String}
  */
-router.put('/addItemToCategory', async (req, res) => {
+router.put('/addItemToCategory', async (req, res, next) => {
   const itemId = req.body.itemId;
   const categoryId = req.body.categoryId;
   let response = {}; 
@@ -94,7 +94,7 @@ router.put('/addItemToCategory', async (req, res) => {
  * response: {success: boolean,
  *            message: String}
  */
-router.delete('/deleteItem', async (req, res) => {
+router.delete('/deleteItem', async (req, res, next) => {
   const itemId = req.body.itemId; 
   let response = {};
   try { 
