@@ -5,11 +5,11 @@ const chaiHttp = require('chai-http');
 const { getMongoDB } = require('../db');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
+const User = require('../db/models/user');
 
 let exampleCategory;
 let defaultUser;
 let mongoServer;
-let User;
 const expect = chai.expect;
 chai.use(chaiHttp);
 
@@ -21,7 +21,6 @@ before(async function () {
   mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
   getMongoDB(mongoUri);
-  User = require('../db/models/user');
   defaultUser = new User({ email: 'lobster-ice-cream-lover@gmeil.com' });
   defaultUser.save(handleErr);
   exampleCategory = new Category({ title: 'hello there', userId: defaultUser._id });

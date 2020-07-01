@@ -5,6 +5,7 @@ const Category = require('../db/models/category');
 const express = require('express');
 const Item = require('../db/models/item');
 const router = express();
+router.use(express.json());
 
 /**
  * Create a new category
@@ -13,20 +14,20 @@ const router = express();
  * 
  * response: {success: boolean, message: String}
  */
-router.post('/createCategory', (req, res) => {
-  const newCategory = req.body; 
+router.post('/createCategory', (req, res, next) => {
+  const newCategory = req.body;
   let response = {};
   Category.create(newCategory, (err, data) => {
     if (err) {
-      response.successs = false; 
+      response.successs = false;
       response.message = 'failed to add category';
-      next (err);
+      next(err);
     } else {
       response.success = true;
-      response.message = 'created new category'; 
-    } 
+      response.message = 'created new category';
+    }
     res.json(response);
-  })
+  });
 });
 
 /**
@@ -36,14 +37,18 @@ router.post('/createCategory', (req, res) => {
  * 
  * response: [{ title: String, _id: Mongoose.objectId}]
  */
-router.get('/getCategories', async (req, res) => {
-  const userId = req.body.userId;
+router.get('/getCategories', async (req, res, next) => {
   try {
-    const categoriesData = await Category.find({ userId: userId }, 'title', (error, data)).exec(); 
+    const userId = req.body.userId;
+    const categoriesData = await Category.find({ userId: userId }, 'title', function (err, data) {
+      if (err) {
+        next(err);
+      }
+    });
     const response = categoriesData;
     res.json(response);
-  } catch (error) {
-    next(error); 
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -58,22 +63,22 @@ router.get('/getCategories', async (req, res) => {
  *             }]
  *            }]
  */
-router.get('/getCategoryItems', async (req, res) => {
+router.get('/getCategoryItems', async (req, res, next) => {
   const categoryId = req.body.categoryId;
   let response = {};
   try {
     //get category name and a list of item ids
-    const categoryData =  await Category.findOne({ _id: categoryId}, 'title items', (error, data)).exec();
-    response.title = categoryData.title; 
+    const categoryData = await Category.findOne({ _id: categoryId }, 'title items', (error, data)).exec();
+    response.title = categoryData.title;
     const itemIds = categoryData.items;
     const itemObjects = [];
-    
+
     //for each item id, actually get the item object
     await Promise.all(itemIds.map(async (itemId) => {
-      const itemObject = await Item.findById(itemId).exec(); 
-      itemObjects.push(itemObject); 
-    }))
-    response.items = itemObjects; 
+      const itemObject = await Item.findById(itemId).exec();
+      itemObjects.push(itemObject);
+    }));
+    response.items = itemObjects;
     res.json(response);
   } catch (error) {
     next(error);
@@ -91,7 +96,7 @@ router.get('/getCategoryItems', async (req, res) => {
  *           }
  * error 
  */
-router.get('/deleteCategory', async (req, res) => {
+router.get('/deleteCategory', async (req, res, next) => {
   const categoryId = req.body.categoryId;
   let response = {};
 
