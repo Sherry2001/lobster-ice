@@ -3,7 +3,7 @@ const categoryRouter = require('../api/categoryRouter');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { getDB } = require('../db');
-const MongoMemoryServer = require('mongodb-memory-server');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 let exampleCategory;
@@ -18,7 +18,7 @@ function handleErr(err) {
 }
 
 before(async function () {
-  mongoServer = new MongoMemoryServer.default();
+  mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
   getDB(mongoUri);
   User = require('../db/models/user');
