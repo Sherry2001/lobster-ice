@@ -25,4 +25,5 @@ app.get('/', (req, res) => {
 app.use('/category', categoryRouter);
 app.use('/item', itemRouter);
 
-app.listen(apiPort, () => console.log('Server running on port ', apiPort));
+const server = app.listen(apiPort, () => console.log('Server running on port %s', apiPort));
+module.exports = server;

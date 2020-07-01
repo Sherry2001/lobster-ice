@@ -5,7 +5,6 @@ const Category = require('../db/models/category');
 const express = require('express');
 const Item = require('../db/models/item');
 const router = express();
-router.use(express.json());
 
 /**
  * Create a new category

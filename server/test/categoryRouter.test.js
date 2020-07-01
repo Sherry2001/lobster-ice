@@ -1,5 +1,6 @@
 const Category = require('../db/models/category');
-const categoryRouter = require('../api/categoryRouter');
+// const categoryRouter = require('../api/categoryRouter');
+const server = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { getMongoDB } = require('../db');
@@ -45,8 +46,8 @@ describe('categoryRouter', function () {
   describe('/getCategories', function () {
     it('should return an empty list when no userId is provided in the request', async function () {
       chai
-        .request(categoryRouter)
-        .get('/getCategories')
+        .request(server)
+        .get('/category/getCategories')
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
@@ -56,8 +57,8 @@ describe('categoryRouter', function () {
     // TODO: make this into a test suite and check more cases
     it('should return a JSON array with all categories associated with the given userId', async function () {
       chai
-        .request(categoryRouter)
-        .get('/getCategories')
+        .request(server)
+        .get('/category/getCategories')
         .set('content-type', 'application/json')
         .send({
           userId: defaultUser._id
