@@ -15,15 +15,12 @@ sidebar.classList.add('panel','injection-panel','px-4','py-4');
 document.body.appendChild(sidebar); 
 
 //Inject invisible highlight icon onto page
-const iconContainer = document.createElement('div');
-iconContainer.classList.add('injection-icon');
-iconContainer.id = 'icon-container';
 const iconButton = document.createElement('button');
-iconButton.classList.add('button','is-info');
-iconButton.innerHTML = 'Add to Lobster';
-iconContainer.appendChild(iconButton);
+iconButton.classList.add('injection-icon');
+iconButton.innerHTML = 'Save';
 //TODO: CHANGE BUTTON TO AN ACTUAL ICON!! 
-document.body.appendChild(iconContainer);
+
+document.body.appendChild(iconButton);
 
 //Keep track of last used highlight
 let lastContent; 
@@ -31,8 +28,8 @@ let lastContent;
 //Show extension icon when selecting text on page
 document.onclick = (event) => {
   const dontListen = '.injection-panel, .injection-icon';
-  if (iconContainer.style.display === 'block') {
-    iconContainer.style.display ='none'; 
+  if (iconButton.style.display === 'block') {
+    iconButton.style.display ='none'; 
   } 
   const content = window.getSelection().toString();
   if (content && content.length > 0 && content !== lastContent) {
@@ -45,7 +42,7 @@ document.onclick = (event) => {
 //Excute icon from text-select listener, trigger sidebar when clicked
 iconButton.onclick = (event) => {
   event.stopPropagation(); 
-  iconContainer.style.display = 'none';
+  iconButton.style.display = 'none';
   createSidebar(lastContent);
 }
 
@@ -55,9 +52,9 @@ sidebar.onclick = (event) => {
 }
 
 function showIcon(event, content) {
-  iconContainer.style.display = 'block';
-  iconContainer.style.left = event.pageX - 10 + 'px';
-  iconContainer.style.top = event.pageY - 55 + 'px';
+  iconButton.style.display = 'block';
+  iconButton.style.left = event.pageX + 5 + 'px';
+  iconButton.style.top = event.pageY - 45 + 'px';
 }; 
 
 function closeSidebar() {

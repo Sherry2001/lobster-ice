@@ -14,5 +14,9 @@
 .injection-icon {
   z-index: 9999;
   position: absolute;
-  display: none;
+  background-color: #fff;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+    display: none;
 }
