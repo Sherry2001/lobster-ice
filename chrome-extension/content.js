@@ -3,6 +3,7 @@
  */
 
 //Insert bulma stylesheet
+//TODO: STOP USING BULMA ONCE I WRITE MY OWN CSS FOR ALL EXTENSION ELEMENTS
 const bulmaLink = document.createElement('link');
 bulmaLink.setAttribute('href','https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css');
 bulmaLink.setAttribute('rel','stylesheet');
