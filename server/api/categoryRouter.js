@@ -4,7 +4,6 @@
 const Categories = require('../db/models/category');
 const express = require('express');
 const Items = require('../db/models/item');
-const mongoose = require('mongoose');
 const router = express();
 router.use(express.json());
 
@@ -13,20 +12,17 @@ router.use(express.json());
  * 
  * req.body: {userId: mongoose.objectId}
  * 
- * response: [{title: String, categoryId: mongoose.objectId}]
+ * response: [{ title: String, _id: Mongoose.objectId}]
  */
 router.get('/getCategories', async (req, res) => {
   const userId = req.body.userId;
-  response = {};
-  await Categories.find({ userId: userId }, (err, data) => {
-    if (err) {
-      next(err);
-    }
-    if (data) {
-      response = data;
-      res.json(response);
-    }
-  });
+  try {
+    const categoriesData = await Categories.find({ userId: userId }, 'title', (error, data)).exec(); 
+    const response = categoriesData;
+    res.json(response);
+  } catch (error) {
+    next(error); 
+  }
 });
 
 /**
@@ -40,45 +36,27 @@ router.get('/getCategories', async (req, res) => {
  *             }]
  *            }]
  */
-router.get('/getCategoryItems', (req, res) => {
+router.get('/getCategoryItems', async (req, res) => {
   const categoryId = req.body.categoryId;
   response = {};
-  Categories.findOne({ _id: categoryId }, 'title items', (err, data) => {
-    if (err) {
-      throw err;
-    }
-    if (data) {
-      return data;
-    }
-  }).catch((err) => {
-    next(err);
-  }).then((data) => {
-    this.response.title = data.title;
-    itemObjects = [];
-    itemIds = data.items;
-    itemIds.forEach(async (itemId) => {
-      const itemObject = await getItemInfo(itemId);
-      itemObjects.push(itemObject);
-    });
-    this.response.items = itemObjects;
-    res.json(this.response);
-  });
+  try {
+    //get category name and a list of item ids
+    const categoryData =  await Categories.findOne({ _id: categoryId}, 'title items', (error, data)).exec();
+    response.title = categoryData.title; 
+    const itemIds = categoryData.items;
+    const itemObjects = [];
+    
+    //for each item id, actually get the item object
+    await Promise.all(itemIds.map(async (itemId) => {
+      const itemObject = await Items.findById(itemId).exec(); 
+      itemObjects.push(itemObject); 
+    }))
+    response.items = itemObjects; 
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
 });
-
-/**
- * Helper function to return an item object given item id 
- * @param  itemId 
- */
-async function getItemInfo(itemId) {
-  Items.findById(itemId, (err, data) => {
-    if (err) {
-      throw new Error('error getting itemInfo: ', err);
-    }
-    if (data) {
-      return data;
-    }
-  });
-}
 
 /**
  * Delete a category and its id from all items in the category
@@ -114,37 +92,6 @@ router.get('/deleteCategory', async (req, res) => {
     res.json(response);
     next(error);
   }
-
-  //   Categories.find({_id: categoryId}, (err, data) =>{
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     if (data) {
-  //       return data.items;
-  //     }
-  //   })
-  //   .then(async (categoryItems) => {
-  //     categoryItems.forEach((itemId) => {
-  //       await Items.update({_id: itemId}, { $pull: {categoryIds: this.categoryId}}, done);
-  //     })
-  //   })
-  //   .then(() => {
-  //     Categories.deleteOne({_id: categoryId}, (err, data) => {
-  //       if(err) {
-  //         throw err;
-  //       }
-  //     })
-  //     this.response.success = true;
-  //     this.response.message = "deleted category";
-  //   })
-  //   .catch((err) => {
-  //     this.response.success = false;
-  //     this.response.message = "error when deleting";
-  //     next(err);
-  //   })
-  //   .then(() => {
-  //     res.json(response);
-  //   })
 });
 
 module.exports = router;
