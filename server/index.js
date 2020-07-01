@@ -1,12 +1,11 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const apiPort = 8080;
 
 //connected to mongoose through db/index.js
-const { getMongoDB, uri } = require('./db');
 if (require.main === module) {
+  const { getMongoDB, uri } = require('./db');
   const mongoDB = getMongoDB(uri);
   mongoDB.on('error', console.error.bind(console, 'MongoDB connection error: '));
 }
