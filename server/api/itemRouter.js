@@ -79,10 +79,6 @@ router.put('/addItemToCategory', async (req, res, next) => {
     res.json(response);
     next(error);
   }
-
-  // For Cynthia's review, changed original code to the above,
-  // deleted original code should show on github  -sherry
-  // will remove these comments after review
 });
 
 /** 
@@ -114,10 +110,6 @@ router.delete('/deleteItem', async (req, res, next) => {
     res.json(response);
     next(error);
   }
-  
-  // For Cynthia's review, changed original code to the above, 
-  // deleted original code should show on github - sherry 
-  // will remove these comments after review
 });
 
 module.exports = router;
