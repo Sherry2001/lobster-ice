@@ -6,7 +6,10 @@ const apiPort = 8080;
 
 //connected to mongoose through db/index.js
 const { getMongoDB, uri } = require('./db');
-const mongoDB = getMongoDB(uri);
+if (require.main === module) {
+  const mongoDB = getMongoDB(uri);
+  mongoDB.on('error', console.error.bind(console, 'MongoDB connection error: '));
+}
 
 //Import Routers
 const categoryRouter = require('./api/categoryRouter.js');
@@ -15,8 +18,6 @@ const itemRouter = require('./api/itemRouter.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
-
-mongoDB.on('error', console.error.bind(console, 'MongoDB connection error: '));
 
 app.get('/', (req, res) => {
   res.send('Hello Word!');
