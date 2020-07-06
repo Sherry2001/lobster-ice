@@ -95,13 +95,8 @@ router.get('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
     let response = {};
-    const category = await Category.find({ _id: categoryId }).exec();
-    const categoryItemIds = category.items;
 
-    await Promise.all(categoryItemIds.map(async (itemId) => {
-      await Item.update({ _id: itemId }, { $pull: { categoryIds: this.categoryId } }, done).exec();
-    }));
-
+    await Item.update({ }, { $pull: { categoryIds: this.categoryId } }, {multi: true }, done).exec();
     await Category.deleteOne({ _id: categoryId }).exec();
 
     this.response.success = true;

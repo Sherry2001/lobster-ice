@@ -94,14 +94,11 @@ router.delete('/deleteItem', async (req, res, next) => {
   let response = {};
   try { 
     const itemId = req.body.itemId; 
-    const itemObject = await Item.findOneAndRemove({ _id: itemId}).exec();
-    const itemCategoryIds = itemObject.categoryIds;
+    await Item.deleteOne({ _id: itemId}).exec();
 
     //deleting this itemId from all the categories it belonged to
-    await Promise.all(itemCategoryIds.map(async (categoryId) => {
-      await Category.update({ _id: categoryId}, { $pull: { items: this.itemId} }, done).exec();
-    }))
-
+    await Category.update({ }, { $pull: { items: this.itemId} }, { multi: true }, done).exec();
+  
     response.success = true;
     response.message = 'Item successfully deleted from DB'; 
     res.json(response);
