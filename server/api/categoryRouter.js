@@ -39,7 +39,7 @@ router.post('/createCategory', (req, res, next) => {
 router.get('/getCategories', async (req, res, next) => {
   try {
     const userId = req.body.userId;
-    const categoriesData = await Category.find({ userId: userId }, 'title').exec();
+    const categoriesData = await Category.find({ userId }, 'title').exec();
     const response = categoriesData;
     res.json(response);
   } catch (err) {
@@ -63,8 +63,8 @@ router.get('/getCategoryItems', async (req, res, next) => {
     const categoryId = req.body.categoryId;
     let response = {};
     //get category name and a list of item ids
-    const categoryData =  await Category.findOne({ _id: categoryId}, 'title items').exec();
-    response.title = categoryData.title; 
+    const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
+    response.title = categoryData.title;
     const itemIds = categoryData.items;
     const itemObjects = [];
 
