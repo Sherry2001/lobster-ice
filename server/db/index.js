@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const defaultUri = 'mongodb+srv://' + process.env.USER + ':' + process.env.PASSWORD
+const defaultUri = 'mongodb+srv://' + process.env.USERNAME + ':' + process.env.PASSWORD
   + '@lobstericecream-trflp.gcp.mongodb.net/home?retryWrites=true&w=majority';
 const options = {
   useNewUrlParser: true, useUnifiedTopology: true
