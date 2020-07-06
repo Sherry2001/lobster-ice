@@ -15,18 +15,18 @@ const router = express();
  */
 router.post('/createCategory', (req, res, next) => {
   const newCategory = req.body;
-  let response = {};
-  Category.create(newCategory, (err, data) => {
-    if (err) {
-      response.success = false;
-      response.message = 'Failed to add new Category document to DB';
-      next(err);
-    } else {
-      response.success = true;
-      response.message = 'Successfully created a new category';
-    }
+  const response = {};
+  try {
+    await Category.create(newCategory).exec(); 
+    response.success = true;
+    response.message = 'Successfully created a new category';
+    res.json(response); 
+  } catch (error) {
+    response.success = false;
+    response.message = 'Failed to add new Category document to DB';
+    next(err);
     res.json(response);
-  });
+  } 
 });
 
 /**
@@ -61,7 +61,7 @@ router.get('/getCategories', async (req, res, next) => {
 router.get('/getCategoryItems', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
-    let response = {};
+    const response = {};
     //get category name and a list of item ids
     const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
     response.title = categoryData.title;
@@ -90,7 +90,7 @@ router.get('/getCategoryItems', async (req, res, next) => {
 router.get('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
-    let response = {};
+    const response = {};
 
     await Item.update({ }, { $pull: { categoryIds: this.categoryId } }, {multi: true }, done).exec();
     await Category.deleteOne({ _id: categoryId }).exec();

@@ -15,22 +15,20 @@ const router = express.Router();
  * response: {success: boolean,
  *            message: String}
  */
-router.post('/addItem', (req, res, next) => {
+router.post('/addItem', async (req, res, next) => {
   const newItem = req.body;
-  const item = new Item(newItem);
-  let response = {}; 
-  item.save((err) => {
-    if (err) {
-      response.success = false;
-      response.message = 'Failed to add new item document to DB';
-      res.json(response);
-      next(err);
-    } else {
-      response.success = true;
-      response.message = 'Successfully added a new Item to DB';
-      res.json(response);
-    }
-  });
+  const response = {}; 
+  try {
+    await Item.create(newItem).exec(); 
+    response.success = true;
+    response.message = 'Successfully added a new Item to DB';
+    res.json(response);
+  } catch (error) {
+    response.success = false;
+    response.message = 'Failed to add new item document to DB';
+    res.json(response);
+    next(err);
+  }
 });
 
 /**
@@ -44,14 +42,12 @@ router.post('/addItem', (req, res, next) => {
  *            comments: String (optional),}]
  */
 router.get('/getItems', (req, res, next) => {
-  Item.find({ userId: req.body.userId }, (err, items) => {
-    if (err) {
-      next(err);
-    }
-    if (items) {
-      res.json(items);
-    }
-  });
+  try {
+    const items = await Item.find( { userId: req.body.userId }).exec();
+    res.json(items);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
@@ -64,7 +60,7 @@ router.get('/getItems', (req, res, next) => {
  *            message: String}
  */
 router.put('/addItemToCategory', async (req, res, next) => {
-  let response = {}; 
+  const response = {}; 
   try {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
@@ -91,7 +87,7 @@ router.put('/addItemToCategory', async (req, res, next) => {
  *            message: String}
  */
 router.delete('/deleteItem', async (req, res, next) => {
-  let response = {};
+  const response = {};
   try { 
     const itemId = req.body.itemId; 
 
