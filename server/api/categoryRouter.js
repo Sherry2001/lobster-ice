@@ -51,7 +51,7 @@ router.get('/getCategories', async (req, res, next) => {
  * categoryId is a Mongoose.objectId
  * 
  * response: [{title: String, 
- *             items: [Item]
+ *             items: [Item],
  *            }]
  */
 router.get('/getCategoryItems', async (req, res, next) => {
