@@ -1,67 +1,81 @@
-import React from 'react';
+import React, { Fragment } from "react";
 // installation: npm i react-shadow-scroll or yarn add react-shadow-scroll
-import ReactShadowScroll from 'react-shadow-scroll';
-import '../stylesheets/Navbar.css';
+import ReactShadowScroll from "react-shadow-scroll";
+//import {Route, NavLink, useLocation} from 'react-router-dom';
+import "../stylesheets/Navbar.css";
+import Category from "./Category"
+import CategoryPane from "./ContentPane"
 
-export default class Navbar extends React.Component{
+export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      categories : {
-        'category-1' : 'All',
-        'category-2' : 'France Trip',
-        'category-3' : 'Senior Trip',
-        'category-4' : 'All the food',
-        'category-5' : 'China Trip'
-      }
+      categories: {
+        "All": <Category categoryName={'All'} />,
+      },
     };
+    this.addCategory = this.addCategory.bind(this);
   }
+
   addCategory(category) {
-    const timestamp = (new Date()).getTime();
-    const newCategories = Object.assign({}, this.state.categories, {['category' + timestamp]: category});
-    this.setState({categories: newCategories});
+    this.setState({
+      categories: {
+        ...this.state.categories,
+        [category]: <Category categoryName={category} />,
+      },
+    });
   }
   render() {
     return (
-      <div className='nav-bar'>
-        <CategoryList categories={this.state.categories} />
-        <AddCategoryForm addCategory={this.addCategory} />
-      </div>
-    )
+      <Fragment>
+        <div className="nav-bar">
+          <CategoryList
+            categories={this.state.categories}
+            newListItem={this.newListItem}
+          />
+          <AddCategoryForm addCategory={this.addCategory} />
+        </div>
+        <CategoryPane category={this.state.categories['All']} />
+      </Fragment>
+    );
   }
 }
 
 class CategoryList extends React.Component {
-  render () {
+  render() {
     return (
       <ReactShadowScroll className="list-category">
         <ul>
-          {
-            Object.keys(this.props.categories).map((key) => {
-              return <li>{this.props.categories[key]}</li>
-            })
-          }
+          {Object.keys(this.props.categories).map((key) => {
+            return <li key={key}>{key}</li>;
+          })}
         </ul>
       </ReactShadowScroll>
-    )
+    );
   }
 }
 
 class AddCategoryForm extends React.Component {
-  createCategory = () => {
-    let category = this.refs.categoryName.value;
-    if(typeof cateogry === 'string' && category.length > 0) {
-      this.props.addCategory(category);
-      this.refs.categoryForm.reset();
-    }
-  }
-  render () {
-    return(
-      <form className="add-category-form" ref="categoryForm" onSubmit={this.createCategory}>
+  createCategory = (e) => {
+    e.preventDefault();
+    let category = this._inputElement.value;
+    this.props.addCategory(category);
+    this._inputElement.value = "";
+  };
+  render() {
+    return (
+      <form className="add-category-form" onSubmit={this.createCategory}>
         <label htmlFor="categoryName">New Category: </label>
-        <input type="text" name="categoryName"></input><br></br>
-        <button type="submit" className="submit-button">Add Category</button>
+        <input
+          ref={(input) => (this._inputElement = input)}
+          type="text"
+          name="categoryName"
+        ></input>
+        <br></br>
+        <button type="submit" className="submit-button">
+          Add Category
+        </button>
       </form>
-    )
+    );
   }
 }
