@@ -50,7 +50,7 @@ describe('categoryRouter', function () {
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.have.lengthOf(0);
+          expect(res.body).to.be.empty;
         });
     });
     // TODO: make this into a test suite and check more cases

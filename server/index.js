@@ -3,17 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const apiPort = 8080;
-
+//Import Routers
+const categoryRouter = require('./api/categoryRouter.js');
+const itemRouter = require('./api/itemRouter.js');
 //connected to mongoose through db/index.js
 const { getMongoDB, uri } = require('./db');
 if (require.main === module) {
   const mongoDB = getMongoDB(uri);
   mongoDB.on('error', console.error.bind(console, 'MongoDB connection error: '));
 }
-
-//Import Routers
-const categoryRouter = require('./api/categoryRouter.js');
-const itemRouter = require('./api/itemRouter.js');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
