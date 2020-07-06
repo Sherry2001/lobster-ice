@@ -33,10 +33,11 @@ after(async function () {
 });
 
 it('There should be one user in the database', async function () {
-  await Category.find(function (err, categories) {
+  try {
+    const category = await Category.find({});
+  } catch (err) {
     expect(err).to.be.null;
-    console.log(categories);
-  });
+  }
   const documentCount = await User.countDocuments();
   expect(documentCount).to.equal(1);
 });
@@ -62,6 +63,7 @@ describe('categoryRouter', function () {
         .send({
           userId: defaultUser._id
         })
+        // TODO: Add tests for when err is not null
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
