@@ -8,25 +8,19 @@ const router = express.Router();
  * 
  * req.body: {sourceLink: String,
  *            highlight: String,
- *            userId: mongoose.ObjectId,
- *            placesId: id(optional),
- *            comment: String (optional),}
+ *            userId: String,
+ *            placesId: String=,
+ *            comment: String=,}
  * 
- * response: {success: boolean,
- *            message: String}
+ * userId is of type Mongoose.objectId
+ * response: status 200 for success
  */
 router.post('/addItem', async (req, res, next) => {
   const newItem = req.body;
-  const response = {}; 
   try {
     await Item.create(newItem).exec(); 
-    response.success = true;
-    response.message = 'Successfully added a new Item to DB';
-    res.json(response);
+    res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
-    response.success = false;
-    response.message = 'Failed to add new item document to DB';
-    res.json(response);
     next(err);
   }
 });
@@ -34,16 +28,15 @@ router.post('/addItem', async (req, res, next) => {
 /**
  * Get all items
  * 
- * req.body: {userId: mongoose.objectId}
+ * req.params: {userId: String}
  * 
- * response: [{sourceLink: String,
- *            highlight: String,
- *            placeId: id(optional),
- *            comments: String (optional),}]
+ * userId is of type Mongoose.objectId
+ * 
+ * response: [Item]
  */
 router.get('/getItems', async (req, res, next) => {
   try {
-    const items = await Item.find( { userId: req.body.userId }).exec();
+    const items = await Item.find( { userId: req.params.userId }).exec();
     res.json(items);
   } catch (error) {
     next(error);
@@ -53,27 +46,22 @@ router.get('/getItems', async (req, res, next) => {
 /**
  * Add item to category
  * 
- * req.body: {itemId: mongoose.objectId,
- *            categoryId: mongoose.objectId}
+ * req.body: {itemId: String,
+ *            categoryId: String}
  * 
- * response: {success: boolean,
- *            message: String}
+ * itemId and categoryId are of type Mongoose.objectId
+ * 
+ * response: status 200 for success
  */
 router.put('/addItemToCategory', async (req, res, next) => {
-  const response = {}; 
   try {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
     //TODO: VERIFICATION OF USERID, SEE ISSUE #12
     await Item.update({ _id: itemId }, { $push: { categoryIds: this.categoryId } }, done).exec();
     await Category.update({ _id: categoryId }, { $push: { items: this.itemId } }, done).exec();
-    response.success = true;
-    response.message = 'Item added to category'; 
-    res.json(response);
+    res.status(200).send('Item added to category');
   } catch (error) {
-    response.success = false;
-    response.message = 'Failed to update Item and Category document in DB'; 
-    res.json(response);
     next(error);
   }
 });
@@ -81,28 +69,22 @@ router.put('/addItemToCategory', async (req, res, next) => {
 /** 
  * Delete item
  * 
- * req.body: {itemId: mongoose.objectId}
+ * req.body: {itemId: String}
  * 
- * response: {success: boolean,
- *            message: String}
+ * itemId is of type Mongoose.objectId
+ * 
+ * response: status 200 for success
  */
 router.delete('/deleteItem', async (req, res, next) => {
-  const response = {};
   try { 
     const itemId = req.body.itemId; 
 
     //deleting this itemId from all the categories it belonged to
     await Category.update({ }, { $pull: { items: this.itemId} }, { multi: true }, done).exec();
-    
     await Item.deleteOne({ _id: itemId}).exec();
 
-    response.success = true;
-    response.message = 'Item successfully deleted from DB'; 
-    res.json(response);
+    res.status(200).send('Item successfully deleted from DB');
   } catch (error) {
-    response.success = false;
-    response.message = 'Failed to delete Item and update Category documents in DB'; 
-    res.json(response);
     next(error);
   }
 });

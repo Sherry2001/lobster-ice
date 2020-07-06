@@ -11,34 +11,30 @@ const router = express();
  * 
  * req.body: {title: String}
  * 
- * response: {success: boolean, message: String}
+ * response: status 200 for success
  */
 router.post('/createCategory', async (req, res, next) => {
   const newCategory = req.body;
-  const response = {};
   try {
     await Category.create(newCategory).exec(); 
-    response.success = true;
-    response.message = 'Successfully created a new category';
-    res.json(response); 
+    res.status(200).send('Successfully created a new category');
   } catch (error) {
-    response.success = false;
-    response.message = 'Failed to add new Category document to DB';
     next(error);
-    res.json(response);
   } 
 });
 
 /**
  * Get all of the user's categories- just names and ids.
  * 
- * req.body: {userId: mongoose.objectId}
+ * req.params: {userId: String}
  * 
- * response: [{ title: String, _id: Mongoose.objectId}]
+ * response: [{ title: String, _id: String}]
+ * 
+ * userId and _id of a category are Mongoose.objectIds
  */
 router.get('/getCategories', async (req, res, next) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.params.userId;
     const categoriesData = await Category.find({ userId }, 'title').exec();
     const response = categoriesData;
     res.json(response);
@@ -50,17 +46,17 @@ router.get('/getCategories', async (req, res, next) => {
 /**
  * Get all the items belonging in a specified category
  * 
- * req.body: {categoryId: mongoose.objectId}
+ * req.params: {categoryId: String}
+ * 
+ * categoryId is a Mongoose.objectId
  * 
  * response: [{title: String, 
- *             items: [{
- *               item objects from db 
- *             }]
+ *             items: [Item]
  *            }]
  */
 router.get('/getCategoryItems', async (req, res, next) => {
   try {
-    const categoryId = req.body.categoryId;
+    const categoryId = req.params.categoryId;
     const response = {};
     //get category name and a list of item ids
     const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
@@ -79,29 +75,21 @@ router.get('/getCategoryItems', async (req, res, next) => {
 /**
  * Delete a category and its id from all items in the category
  * 
- * req.body : {categoryId: mongoose.objectId}
+ * req.body : {categoryId: String}
  * 
- * response: {
- *            success: boolean,
- *            message: String,
- *           }
- * error 
+ * categoryId is a Mongoose.objectId
+ * 
+ * response: status 200 for success 
  */
-router.get('/deleteCategory', async (req, res, next) => {
+router.delete('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
-    const response = {};
 
     await Item.update({ }, { $pull: { categoryIds: this.categoryId } }, {multi: true }, done).exec();
     await Category.deleteOne({ _id: categoryId }).exec();
 
-    this.response.success = true;
-    this.response.message = 'deleted category';
-    res.json(response);
+    res.status(200).send('deleted category');
   } catch (error) {
-    this.response.success = false;
-    this.response.message = 'Failed to remove Category and update Item documents in DB';
-    res.json(response);
     next(error);
   }
 });
