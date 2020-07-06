@@ -41,7 +41,7 @@ router.post('/addItem', async (req, res, next) => {
  *            placeId: id(optional),
  *            comments: String (optional),}]
  */
-router.get('/getItems', (req, res, next) => {
+router.get('/getItems', async (req, res, next) => {
   try {
     const items = await Item.find( { userId: req.body.userId }).exec();
     res.json(items);

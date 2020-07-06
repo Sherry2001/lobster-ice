@@ -13,7 +13,7 @@ const router = express();
  * 
  * response: {success: boolean, message: String}
  */
-router.post('/createCategory', (req, res, next) => {
+router.post('/createCategory', async (req, res, next) => {
   const newCategory = req.body;
   const response = {};
   try {
@@ -24,7 +24,7 @@ router.post('/createCategory', (req, res, next) => {
   } catch (error) {
     response.success = false;
     response.message = 'Failed to add new Category document to DB';
-    next(err);
+    next(error);
     res.json(response);
   } 
 });
@@ -42,8 +42,8 @@ router.get('/getCategories', async (req, res, next) => {
     const categoriesData = await Category.find({ userId }, 'title').exec();
     const response = categoriesData;
     res.json(response);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 });
 
