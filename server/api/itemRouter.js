@@ -94,11 +94,12 @@ router.delete('/deleteItem', async (req, res, next) => {
   let response = {};
   try { 
     const itemId = req.body.itemId; 
-    await Item.deleteOne({ _id: itemId}).exec();
 
     //deleting this itemId from all the categories it belonged to
     await Category.update({ }, { $pull: { items: this.itemId} }, { multi: true }, done).exec();
-  
+    
+    await Item.deleteOne({ _id: itemId}).exec();
+
     response.success = true;
     response.message = 'Item successfully deleted from DB'; 
     res.json(response);

@@ -66,13 +66,9 @@ router.get('/getCategoryItems', async (req, res, next) => {
     const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
     response.title = categoryData.title;
     const itemIds = categoryData.items;
-    const itemObjects = [];
 
-    //for each item id, actually get the item object
-    await Promise.all(itemIds.map(async (itemId) => {
-      const itemObject = await Item.findById(itemId).exec();
-      itemObjects.push(itemObject);
-    }));
+    const itemObjects = await Item.find({ _id: {$in : itemIds } }).exec();
+
     response.items = itemObjects;
     res.json(response);
   } catch (error) {
