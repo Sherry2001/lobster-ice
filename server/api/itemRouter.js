@@ -22,12 +22,12 @@ router.post('/addItem', (req, res, next) => {
   item.save((err) => {
     if (err) {
       response.success = false;
-      response.message = 'error adding item';
+      response.message = 'Failed to add new item document to DB';
       res.json(response);
       next(err);
     } else {
       response.success = true;
-      response.message = 'item added';
+      response.message = 'Successfully added a new Item to DB';
       res.json(response);
     }
   });
@@ -68,14 +68,15 @@ router.put('/addItemToCategory', async (req, res, next) => {
   try {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
+    //TODO: VERIFICATION OF USERID, SEE ISSUE #12
     await Item.update({ _id: itemId }, { $push: { categoryIds: this.categoryId } }, done).exec();
     await Category.update({ _id: categoryId }, { $push: { items: this.itemId } }, done).exec();
     response.success = true;
-    response.message = 'item added to category'; 
+    response.message = 'Item added to category'; 
     res.json(response);
   } catch (error) {
     response.success = false;
-    response.message = 'error adding item to category'; 
+    response.message = 'Failed to update Item and Category document in DB'; 
     res.json(response);
     next(error);
   }
@@ -102,11 +103,11 @@ router.delete('/deleteItem', async (req, res, next) => {
     }))
 
     response.success = true;
-    response.message = 'item deleted'; 
+    response.message = 'Item successfully deleted from DB'; 
     res.json(response);
   } catch (error) {
     response.success = false;
-    response.message = 'error deleting item'; 
+    response.message = 'Failed to delete Item and update Category documents in DB'; 
     res.json(response);
     next(error);
   }

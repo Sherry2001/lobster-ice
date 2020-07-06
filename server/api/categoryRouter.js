@@ -18,12 +18,12 @@ router.post('/createCategory', (req, res, next) => {
   let response = {};
   Category.create(newCategory, (err, data) => {
     if (err) {
-      response.successs = false;
-      response.message = 'failed to add category';
+      response.success = false;
+      response.message = 'Failed to add new Category document to DB';
       next(err);
     } else {
       response.success = true;
-      response.message = 'created new category';
+      response.message = 'Successfully created a new category';
     }
     res.json(response);
   });
@@ -109,7 +109,7 @@ router.get('/deleteCategory', async (req, res, next) => {
     res.json(response);
   } catch (error) {
     this.response.success = false;
-    this.response.message = 'error when deleting';
+    this.response.message = 'Failed to remove Category and update Item documents in DB';
     res.json(response);
     next(error);
   }
