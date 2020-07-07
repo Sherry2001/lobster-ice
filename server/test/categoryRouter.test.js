@@ -23,7 +23,10 @@ before(async function () {
   getMongoDB(mongoUri);
   defaultUser = new User({ email: 'lobster-ice-cream-lover@gmeil.com' });
   defaultUser.save(handleErr);
-  exampleCategory = new Category({ title: 'hello there', userId: defaultUser._id });
+  exampleCategory = new Category({
+    title: 'hello there',
+    userId: defaultUser._id,
+  });
   exampleCategory.save(handleErr);
 });
 
@@ -60,7 +63,7 @@ describe('categoryRouter', function () {
         .get('/category/getCategories/' + defaultUser._id)
         .set('content-type', 'application/json')
         .send({
-          userId: defaultUser._id
+          userId: defaultUser._id,
         }) //TODO: get rid of body, keeping for reference for future tests
         // TODO: Add tests for when err is not null
         .end(function (err, res) {
@@ -70,6 +73,6 @@ describe('categoryRouter', function () {
           expect(res.body[0].title).equals(exampleCategory.title);
         });
     });
-    //TODO: ADD TESTS FOR ALL OTHER CATEGORY ROUTERS 
+    //TODO: ADD TESTS FOR ALL OTHER CATEGORY ROUTERS
   });
 });
