@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import ReactShadowScroll from 'react-shadow-scroll';
 import '../stylesheets/Navbar.css';
 import Category from './Category';
 
@@ -49,17 +48,15 @@ export default class Navbar extends React.Component {
 class CategoryList extends React.Component {
   render() {
     return (
-      <ReactShadowScroll className="list-category">
-        <ul>
-          {this.props.categories.map((category, index) => {
-            return (
-              <li key={index} onClick={() => this.props.setContentPane(category)}>
-                {category}
-              </li>
-            );
-          })}
-        </ul>
-      </ReactShadowScroll>
+      <ul className="list-category">
+        {this.props.categories.map((category, index) => {
+          return (
+            <li key={index} onClick={() => this.props.setContentPane(category)}>
+              {category}
+            </li>
+          );
+        })}
+      </ul>
     );
   }
 }
