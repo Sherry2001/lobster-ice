@@ -1,20 +1,21 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react';
 // installation: npm i react-shadow-scroll or yarn add react-shadow-scroll
-import ReactShadowScroll from "react-shadow-scroll";
-//import {Route, NavLink, useLocation} from 'react-router-dom';
-import "../stylesheets/Navbar.css";
-import Category from "./Category"
-import CategoryPane from "./ContentPane"
+import ReactShadowScroll from 'react-shadow-scroll';
+import '../stylesheets/Navbar.css';
+import Category from './Category';
 
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
+    this.default = <Category categoryName={'All'} />;
     this.state = {
       categories: {
-        "All": <Category categoryName={'All'} />,
+        All: this.default,
       },
+      display: this.default,
     };
     this.addCategory = this.addCategory.bind(this);
+    this.setContent = this.setContent.bind(this);
   }
 
   addCategory(category) {
@@ -25,17 +26,24 @@ export default class Navbar extends React.Component {
       },
     });
   }
+
+  setContent(category) {
+    this.setState({
+      display: category,
+    });
+  }
+
   render() {
     return (
       <Fragment>
         <div className="nav-bar">
           <CategoryList
             categories={this.state.categories}
-            newListItem={this.newListItem}
+            setContentPane={this.setContent}
           />
           <AddCategoryForm addCategory={this.addCategory} />
         </div>
-        <CategoryPane category={this.state.categories['All']} />
+        <div>{this.state.display}</div>
       </Fragment>
     );
   }
@@ -47,7 +55,11 @@ class CategoryList extends React.Component {
       <ReactShadowScroll className="list-category">
         <ul>
           {Object.keys(this.props.categories).map((key) => {
-            return <li key={key}>{key}</li>;
+            return (
+              <li key={key} onClick={() => this.props.setContentPane(key)}>
+                {key}
+              </li>
+            );
           })}
         </ul>
       </ReactShadowScroll>
@@ -60,7 +72,7 @@ class AddCategoryForm extends React.Component {
     e.preventDefault();
     let category = this._inputElement.value;
     this.props.addCategory(category);
-    this._inputElement.value = "";
+    this._inputElement.value = '';
   };
   render() {
     return (
