@@ -82,6 +82,8 @@ function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
+  form.onsubmit = addItem();
+
   const highlightLabel = document.createElement('label');
   highlightLabel.classList.add('label', 'mt-2');
   highlightLabel.innerText = 'Highlighted Text';
@@ -89,21 +91,38 @@ function createSidebar(content) {
 
   const highlightTextarea = document.createElement('textarea');
   highlightTextarea.classList.add('textarea');
+  highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
   const noteTextarea = document.createElement('textarea');
   noteTextarea.classList.add('textarea', 'mt-6');
+  noteTextarea.id = 'comment';
   noteTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(noteTextarea);
-
+  
   const buttonContainer = document.createElement('div');
   buttonContainer.classList.add('has-text-centered', 'mt-1');
   const addButton = document.createElement('button');
+  addButton.type = 'submit';
   addButton.classList.add('button', 'is-link');
   addButton.innerHTML = 'Add Clipping';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
 
   sidebar.appendChild(form);
+}
+
+function addItem() {
+  newItem = {
+    userId: 'dummyUserId',
+    highlight: document.getElementById('highlight'),
+    comment: document.getElementById('comment'),
+  }
+  fetch('http://localhost:8080/item/addItem', {
+    method: 'POST',
+    body: newItem,
+  }).then(() => {
+    console.log('hello');
+  });
 }
