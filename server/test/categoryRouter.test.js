@@ -44,13 +44,12 @@ it('There should be one user in the database', async function () {
 
 describe('categoryRouter', function () {
   describe('/getCategories', function () {
-    it('should return an empty list when no userId is provided in the request', async function () {
+    it('should throw error when no userId is provided in the request', async function () {
       chai
         .request(server)
         .get('/category/getCategories')
         .end(function (err, res) {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
+          expect(res).to.have.status(404);
           expect(res.body).to.be.empty;
         });
     });
@@ -58,11 +57,11 @@ describe('categoryRouter', function () {
     it('should return a JSON array with all categories associated with the given userId', async function () {
       chai
         .request(server)
-        .get('/category/getCategories')
+        .get('/category/getCategories/' + defaultUser._id)
         .set('content-type', 'application/json')
         .send({
           userId: defaultUser._id
-        })
+        }) //TODO: get rid of body, keeping for reference for future tests
         // TODO: Add tests for when err is not null
         .end(function (err, res) {
           expect(err).to.be.null;

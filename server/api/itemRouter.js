@@ -34,7 +34,7 @@ router.post('/addItem', async (req, res, next) => {
  * 
  * response: [Item]
  */
-router.get('/getItems', async (req, res, next) => {
+router.get('/getItems/:userId', async (req, res, next) => {
   try {
     const items = await Item.find( { userId: req.params.userId }).exec();
     res.json(items);

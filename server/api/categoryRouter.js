@@ -32,7 +32,7 @@ router.post('/createCategory', async (req, res, next) => {
  * 
  * userId and _id of a category are Mongoose.objectIds
  */
-router.get('/getCategories', async (req, res, next) => {
+router.get('/getCategories/:userId', async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const categoriesData = await Category.find({ userId }, 'title').exec();
@@ -54,10 +54,11 @@ router.get('/getCategories', async (req, res, next) => {
  *             items: [Item],
  *            }]
  */
-router.get('/getCategoryItems', async (req, res, next) => {
+router.get('/getCategoryItems/:categoryId', async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId;
     const response = {};
+    
     //get category name and a list of item ids
     const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
     response.title = categoryData.title;
