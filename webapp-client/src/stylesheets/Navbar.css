@@ -8,6 +8,7 @@
 }
 .list-category {
   height: 30%;
+  overflow: scroll;
 }
 .nav-bar {
   width: 25%;
