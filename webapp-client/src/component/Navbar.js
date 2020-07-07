@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-// installation: npm i react-shadow-scroll or yarn add react-shadow-scroll
 import ReactShadowScroll from 'react-shadow-scroll';
 import '../stylesheets/Navbar.css';
 import Category from './Category';
@@ -70,7 +69,7 @@ class CategoryList extends React.Component {
 class AddCategoryForm extends React.Component {
   createCategory = (e) => {
     e.preventDefault();
-    let category = this._inputElement.value;
+    const category = this._inputElement.value;
     this.props.addCategory(category);
     this._inputElement.value = '';
   };
