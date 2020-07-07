@@ -18,7 +18,7 @@ const router = express.Router();
 router.post('/addItem', async (req, res, next) => {
   const newItem = req.body;
   try {
-    await Item.create(newItem).exec(); 
+    await Item.create(newItem).exec();
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
     next(err);
@@ -36,7 +36,7 @@ router.post('/addItem', async (req, res, next) => {
  */
 router.get('/getItems/:userId', async (req, res, next) => {
   try {
-    const items = await Item.find( { userId: req.params.userId }).exec();
+    const items = await Item.find({ userId: req.params.userId }).exec();
     res.json(items);
   } catch (error) {
     next(error);
@@ -76,12 +76,12 @@ router.put('/addItemToCategory', async (req, res, next) => {
  * response: status 200 for success
  */
 router.delete('/deleteItem', async (req, res, next) => {
-  try { 
-    const itemId = req.body.itemId; 
+  try {
+    const itemId = req.body.itemId;
 
     //deleting this itemId from all the categories it belonged to
-    await Category.update({ }, { $pull: { items: this.itemId} }, { multi: true }, done).exec();
-    await Item.deleteOne({ _id: itemId}).exec();
+    await Category.update({}, { $pull: { items: this.itemId } }, { multi: true }, done).exec();
+    await Item.deleteOne({ _id: itemId }).exec();
 
     res.status(200).send('Item successfully deleted from DB');
   } catch (error) {

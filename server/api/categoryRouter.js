@@ -16,11 +16,11 @@ const router = express();
 router.post('/createCategory', async (req, res, next) => {
   const newCategory = req.body;
   try {
-    await Category.create(newCategory).exec(); 
+    await Category.create(newCategory).exec();
     res.status(200).send('Successfully created a new category');
   } catch (error) {
     next(error);
-  } 
+  }
 });
 
 /**
@@ -58,13 +58,13 @@ router.get('/getCategoryItems/:categoryId', async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId;
     const response = {};
-    
+
     //get category name and a list of item ids
     const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
     response.title = categoryData.title;
     const itemIds = categoryData.items;
 
-    const itemObjects = await Item.find({ _id: {$in : itemIds } }).exec();
+    const itemObjects = await Item.find({ _id: { $in: itemIds } }).exec();
 
     response.items = itemObjects;
     res.json(response);
@@ -86,7 +86,7 @@ router.delete('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
 
-    await Item.update({ }, { $pull: { categoryIds: this.categoryId } }, {multi: true }, done).exec();
+    await Item.update({}, { $pull: { categoryIds: this.categoryId } }, { multi: true }, done).exec();
     await Category.deleteOne({ _id: categoryId }).exec();
 
     res.status(200).send('deleted category');
