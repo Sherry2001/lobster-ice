@@ -6,11 +6,9 @@ import Category from './Category';
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.default = <Category categoryName={'All'} />;
+    this.default = 'All';
     this.state = {
-      categories: {
-        All: this.default,
-      },
+      categories: [this.default],
       display: this.default,
     };
     this.addCategory = this.addCategory.bind(this);
@@ -19,10 +17,10 @@ export default class Navbar extends React.Component {
 
   addCategory(category) {
     this.setState({
-      categories: {
+      categories: [
         ...this.state.categories,
-        [category]: <Category categoryName={category} />,
-      },
+        category,
+      ]
     });
   }
 
@@ -42,7 +40,7 @@ export default class Navbar extends React.Component {
           />
           <AddCategoryForm addCategory={this.addCategory} />
         </div>
-        <div>{this.state.display}</div>
+        <Category categoryName={this.state.display} />
       </Fragment>
     );
   }
@@ -53,10 +51,10 @@ class CategoryList extends React.Component {
     return (
       <ReactShadowScroll className="list-category">
         <ul>
-          {Object.keys(this.props.categories).map((key) => {
+          {this.props.categories.map((category, index) => {
             return (
-              <li key={key} onClick={() => this.props.setContentPane(key)}>
-                {key}
+              <li key={index} onClick={() => this.props.setContentPane(category)}>
+                {category}
               </li>
             );
           })}
