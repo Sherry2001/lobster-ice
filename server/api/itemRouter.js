@@ -21,7 +21,7 @@ router.post('/addItem', async (req, res, next) => {
     await Item.create(newItem).exec();
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
-    next(err);
+    next(error);
   }
 });
 
