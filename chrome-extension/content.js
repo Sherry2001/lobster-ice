@@ -82,7 +82,10 @@ function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
-  form.onsubmit = addItem();
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    addItem();
+  });
 
   const highlightLabel = document.createElement('label');
   highlightLabel.classList.add('label', 'mt-2');
@@ -114,14 +117,18 @@ function createSidebar(content) {
 }
 
 function addItem() {
+  console.log('got in here');
   newItem = {
+    sourceLink: 'www.googe.com', 
+    placesId: 'something', //TODO to be clarfied
     userId: 'dummyUserId',
-    highlight: document.getElementById('highlight'),
-    comment: document.getElementById('comment'),
+    highlight: document.getElementById('highlight').value,
+    comment: document.getElementById('comment').value,
   }
   fetch('http://localhost:8080/item/addItem', {
     method: 'POST',
-    body: newItem,
+    body: JSON.stringify(newItem),
+    headers: { 'Content-type': 'application/json' }
   }).then(() => {
     console.log('hello');
   });
