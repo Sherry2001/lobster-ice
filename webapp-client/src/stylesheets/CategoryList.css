@@ -1,0 +1,12 @@
+.list-category li {
+  list-style: none;
+  padding: 5px;
+  background-color: brown;
+}
+.list-category li:hover {
+  background-color: blanchedalmond;
+}
+.list-category {
+  height: 30%;
+  overflow: scroll;
+}
