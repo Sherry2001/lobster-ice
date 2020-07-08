@@ -119,9 +119,9 @@ function createSidebar(content) {
 function addItem() {
   console.log('got in here');
   newItem = {
-    sourceLink: 'www.googe.com', 
-    placesId: 'something', //TODO to be clarfied
-    userId: 'dummyUserId',
+    sourceLink: 'www.googe.com', //TODO: get actual sourceLink
+    placesId: 'something', //TODO: to be clarfied
+    userId: 'dummyUserId', //TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   }
