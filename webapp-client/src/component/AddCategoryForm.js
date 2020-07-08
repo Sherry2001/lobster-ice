@@ -2,6 +2,7 @@ import React from 'react';
 import '../stylesheets/AddCategoryForm.css';
 
 export default class AddCategoryForm extends React.Component {
+  /** This function will be changed later to directly POST request to db instead of calling addCategory */
   createCategory = (e) => {
     e.preventDefault();
     const category = this._inputElement.value;
