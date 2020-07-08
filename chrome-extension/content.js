@@ -130,6 +130,10 @@ function addItem() {
     body: JSON.stringify(newItem),
     headers: { 'Content-type': 'application/json' }
   }).then(() => {
-    console.log('hello');
+    //TODO: display success message, timeOut closeSidebar
+    closeSidebar();
+  }).catch(() => {
+    //TODO: display error message on frontend instead of log 
+    console.log('error while adding item!'); 
   });
 }
