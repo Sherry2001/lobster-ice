@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "browser_action": {
     "default_title": "Lobster Ice Cream Sidebar",
-    "default_icon": "./assets/lobster.jpg",
+    // TODO: Add default_icon,
     "default_popup": "popup.html"
   },
   "content_scripts": [{
