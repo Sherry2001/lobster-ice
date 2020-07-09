@@ -119,7 +119,7 @@ function customCreateElement(type, classList, innerHTML = '') {
 function addItem() {
   newItem = {
     sourceLink: 'www.googe.com', //TODO: get actual sourceLink
-    placesId: 'something', //TODO: to be clarfied
+    placesId: 'something', //TODO: get actual placesId, to-be implemented
     userId: '5f050952f516f3570ee26724', //TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
