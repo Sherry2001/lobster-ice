@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
-import './stylesheets/bulma.min.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
