@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
+import ContentPane from './component/ContentPane';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
 
@@ -52,8 +53,7 @@ export default class App extends React.Component {
             </nav>
           </div>
           <div className="column">
-            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.currentCategory} />
+            <ContentPane />
           </div>
         </div>
       </Fragment>
