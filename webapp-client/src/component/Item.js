@@ -1,18 +1,26 @@
-import React from 'react';
-import '../stylesheets/Item.css';
+import React, { Component } from 'react';
 
-const Item = (props) => {
-  return (
-    <div className="item">
-      <h3 className="highlight">
-        {props.highlight.value}
-      </h3>
-      <a className="source-link" target="_blank" href={props.sourcelink.value}></a>
-      <p className="notes">
-        {props.notes.value}
-      </p>
-    </div>
-  );
-};
+class Item extends Component {
+  formatSourceLink = () => {
+    if (this.props.item.sourceLink) {
+      return <a href={this.props.item.sourceLink}>Source</a>;
+    }
+    return "";
+  };
+
+  render() {
+    return (
+      <div className="tile is-parent is-4">
+        <article className="tile is-child box">
+          <p className="title">{this.props.item.highlight}</p>
+          <div className="content">
+            <p>{this.props.item.comment}</p>
+            {this.formatSourceLink()}
+          </div>
+        </article>
+      </div>
+    );
+  }
+}
 
 export default Item;
