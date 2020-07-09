@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
+import './stylesheets/bulma.min.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
@@ -39,15 +40,23 @@ export default class App extends React.Component {
           <h1>Lobster Ice Cream</h1>
           <img src={logo} className="App-logo" alt="logo" />
         </div>
-        <div className="control-column">
-          <CategoryList
-            categories={this.state.categories}
-            setContentPane={this.setCurrentCategory}
-          />
-          <AddCategoryForm addCategory={this.addCategory} />
+        <div className="columns">
+          <div className="column is-one-fifth">
+            <nav className="panel pb-1">
+              <CategoryList
+                categories={this.state.categories}
+                setContentPane={this.setCurrentCategory}
+              />
+              <div className="panel-block"></div>
+              {/* TODO: Pull AddCategoryForm to the bottom of the page */}
+              <AddCategoryForm addCategory={this.addCategory} />
+            </nav>
+          </div>
+          <div className="column">
+            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
+            <Category categoryName={this.state.currentCategory} />
+          </div>
         </div>
-        {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-        <Category categoryName={this.state.currentCategory} />
       </Fragment>
     );
   }

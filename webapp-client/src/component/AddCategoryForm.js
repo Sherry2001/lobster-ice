@@ -1,5 +1,4 @@
 import React from 'react';
-import '../stylesheets/AddCategoryForm.css';
 
 export default class AddCategoryForm extends React.Component {
   /** This function will be changed later to directly POST request to db instead of calling addCategory */
@@ -11,17 +10,19 @@ export default class AddCategoryForm extends React.Component {
   };
   render() {
     return (
-      <form className="add-category-form" onSubmit={this.createCategory}>
-        <label htmlFor="categoryName">New Category: </label>
+      <form className="my-1" onSubmit={this.createCategory}>
         <input
           ref={(input) => (this._inputElement = input)}
           type="text"
-          name="categoryName"
+          className="input is-rounded"
+          placeholder="New Category"
         ></input>
         <br></br>
-        <button type="submit" className="submit-button">
-          Add Category
-        </button>
+        <div className="has-text-centered my-1">
+          <button type="submit" className="button">
+            Add Category
+          </button>
+        </div>
       </form>
     );
   }

@@ -1,20 +1,20 @@
 import React from 'react';
-import '../stylesheets/CategoryList.css';
 
+// TODO: Add support to highlight active category.
 export default class CategoryList extends React.Component {
-    // this.props.categories: a list of category ids fetched from db
-    // this.props.setContentPane: sets the current category to be displayed
+  // this.props.categories: a list of category ids fetched from db
+  // this.props.setContentPane: sets the current category to be displayed
   render() {
     return (
-      <ul className="list-category">
+      <React.Fragment>
         {this.props.categories.map((category, index) => {
           return (
-            <li key={index} onClick={() => this.props.setContentPane(category)}>
+            <a className="panel-block is-active" key={index} onClick={() => this.props.setContentPane(category)}>
               {category}
-            </li>
+            </a>
           );
         })}
-      </ul>
+      </React.Fragment>
     );
   }
 }
