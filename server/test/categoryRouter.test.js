@@ -1,33 +1,41 @@
+//MongoDB Models
 const Category = require('../db/models/category');
+const User = require('../db/models/user');
+
+//Require Testing Tools
 const server = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+
+//Import MongoDB-connecting functions
 const { getMongoDB } = require('../db');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const User = require('../db/models/user');
 
-let exampleCategory;
-let defaultUser;
-let mongoServer;
+//Set up Chai
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-function handleErr(err) {
-  expect(err).to.be.null;
-}
+//Mock documents used for testing 
+let testUser;
+let testCategory; 
 
 before(async function () {
+  //Connect to in-memory mongodb
   mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
   getMongoDB(mongoUri);
-  defaultUser = new User({ email: 'lobster-ice-cream-lover@gmeil.com' });
-  defaultUser.save(handleErr);
-  exampleCategory = new Category({
-    title: 'hello there',
-    userId: defaultUser._id,
-  });
-  exampleCategory.save(handleErr);
+
+  //Populate the in memory database
+  try {
+    testUser = new User({ email: 'lobster-ice-cream-lover@gmile.com' });
+    await testUser.save(testUser); 
+
+    testCategory = new Category({ title: 'Paris Trip', userId: testUser._id });
+    await testCategory.save(testCategory);
+  } catch (error) {
+    expect(error).to.be.null;
+  }
 });
 
 after(async function () {
@@ -35,14 +43,15 @@ after(async function () {
   await mongoServer.stop();
 });
 
-it('There should be one user in the database', async function () {
+it('There should be one user and one category in the database', async function () {
   try {
-    const category = await Category.find({});
+    const categoryCount = await Category.countDocuments({});
+    expect(categoryCount).to.equal(1);
+    const documentCount = await User.countDocuments();
+    expect(documentCount).to.equal(1);
   } catch (err) {
     expect(err).to.be.null;
   }
-  const documentCount = await User.countDocuments();
-  expect(documentCount).to.equal(1);
 });
 
 describe('categoryRouter', function () {
@@ -60,17 +69,17 @@ describe('categoryRouter', function () {
     it('should return a JSON array with all categories associated with the given userId', async function () {
       chai
         .request(server)
-        .get('/category/getCategories/' + defaultUser._id)
+        .get('/category/getCategories/' + testUser._id)
         .set('content-type', 'application/json')
         .send({
-          userId: defaultUser._id,
+          userId: testUser._id,
         }) //TODO: get rid of body, keeping for reference for future tests
         // TODO: Add tests for when err is not null
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res.body).to.have.lengthOf(1);
-          expect(res.body[0].title).equals(exampleCategory.title);
+          expect(res.body[0].title).equals(testCategory.title);
         });
     });
     //TODO: ADD TESTS FOR ALL OTHER CATEGORY ROUTERS
