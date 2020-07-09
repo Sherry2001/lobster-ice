@@ -13,15 +13,12 @@ bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
 //Inject invisible sidebar onto page
-const sidebar = document.createElement('div');
+const sidebar = customCreateElement('div', ['panel', 'injection-panel', 'px-4', 'py-4']);
 sidebar.id = 'lobstericecream';
-sidebar.classList.add('panel', 'injection-panel', 'px-4', 'py-4');
 document.body.appendChild(sidebar);
 
 //Inject invisible highlight icon onto page
-const iconButton = document.createElement('button');
-iconButton.classList.add('injection-icon');
-iconButton.innerHTML = 'Save';
+const iconButton = customCreateElement('button', ['injection-icon'], 'Save');
 //TODO: CHANGE BUTTON TO AN ACTUAL ICON!!
 
 document.body.appendChild(iconButton);
@@ -37,14 +34,12 @@ document.onclick = (event) => {
   const content = window.getSelection().toString();
   //TODO: Trim Text
   if (content && content !== lastContent) {
-    showIcon(event, content);
+    showIcon(event);
     lastContent = content;
-    //TODO: Keeping for now for future reference:
-    //chrome.storage.sync.set({ content });
   }
 };
 
-//Execute icon from text-select listener, trigger sidebar when clicked
+//Exclute icon from text-select listener, trigger sidebar when clicked
 iconButton.onclick = (event) => {
   event.stopPropagation();
   iconButton.style.display = 'none';
@@ -56,7 +51,7 @@ sidebar.onclick = (event) => {
   event.stopPropagation();
 };
 
-function showIcon(event, content) {
+function showIcon(event) {
   iconButton.style.display = 'block';
   iconButton.style.left = event.pageX + 5 + 'px';
   iconButton.style.top = event.pageY - 45 + 'px';
@@ -70,13 +65,11 @@ function closeSidebar() {
 function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
-  const panelHeading = document.createElement('div');
-  panelHeading.classList.add('message-header');
-  panelHeading.innerText = 'Lobster Ice Cream';
+
+  const panelHeading = customCreateElement('div', ['message-header'], 'Lobster Ice Cream');
   //TODO: Include icon in panelhead, update looks
 
-  const close = document.createElement('a');
-  close.classList.add('delete');
+  const close = customCreateElement('a', ['delete']);
   close.onclick = closeSidebar;
   panelHeading.appendChild(close);
   sidebar.appendChild(panelHeading);
@@ -87,33 +80,40 @@ function createSidebar(content) {
     addItem();
   });
 
-  const highlightLabel = document.createElement('label');
-  highlightLabel.classList.add('label', 'mt-2');
-  highlightLabel.innerText = 'Highlighted Text';
+  const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   form.appendChild(highlightLabel);
 
-  const highlightTextarea = document.createElement('textarea');
-  highlightTextarea.classList.add('textarea');
+  const highlightTextarea = customCreateElement('textarea', ['textarea']);
   highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-  const noteTextarea = document.createElement('textarea');
-  noteTextarea.classList.add('textarea', 'mt-6');
+  const noteTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
   noteTextarea.id = 'comment';
   noteTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(noteTextarea);
-  
-  const buttonContainer = document.createElement('div');
-  buttonContainer.classList.add('has-text-centered', 'mt-1');
-  const addButton = document.createElement('button');
+
+  const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+
+  const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
   addButton.type = 'submit';
-  addButton.classList.add('button', 'is-link');
-  addButton.innerHTML = 'Add Clipping';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
 
   sidebar.appendChild(form);
+}
+
+/**
+ * Helper to create an HTML Element
+ * @param {String} type
+ * @param {List of Strings} classList
+ * @param {String} innerHTML
+ */
+function customCreateElement(type, classList, innerHTML = '') {
+  const newElement = document.createElement(type);
+  newElement.classList.add(...classList);
+  newElement.innerHTML = innerHTML;
+  return newElement;
 }
 
 function addItem() {
