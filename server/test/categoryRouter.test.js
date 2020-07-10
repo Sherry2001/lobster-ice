@@ -35,7 +35,7 @@ before(async () =>{
     testUser2 = new User({ email: 'lobster2@gmile.com' });
     await testUser2.save(); 
 
-    testCategory = new Category({ title: 'Paris Trip', userId: testUser1._id });
+    testCategory = new Category({ title: 'User1 Category1', userId: testUser1._id });
     await testCategory.save();
   } catch (error) {
     expect(error).to.be.null;
@@ -60,13 +60,13 @@ it('Before: There should be two users and one category in the database', async (
 
 describe('categoryRouter', function () {
   describe('/createCategory', function () {
-    it('add a second category to Category by user1', (done) => {
+    it('add a second category to Category by user2', (done) => {
       chai
         .request(server)
         .post('/category/createCategory')
         .send({
-          userId: testUser1._id,
-          title: 'Test Title', 
+          userId: testUser2._id,
+          title: 'User2 Category1', 
         })
         .end( async function (error, response) {
           expect(error).to.be.null;
@@ -74,8 +74,8 @@ describe('categoryRouter', function () {
           try {
             const categories = await Category.find({});
             expect(categories.length).to.equal(2);
-            expect(categories[0].title).to.equal('Paris Trip');
-            expect(categories[1].title).to.equal('Test Title');
+            expect(categories[0].title).equals(testCategory.title);
+            expect(categories[1].title).equals('User2 Category1');
             done();
           } catch (error) {
             expect(error).to.be.null;
@@ -85,7 +85,7 @@ describe('categoryRouter', function () {
   });
 
   describe('/getCategories', function () {
-    it('should send error status when no userId is provided in the request', (done) => {
+    it('error status and no response when no userId is provided in the request', (done) => {
       chai
         .request(server)
         .get('/category/getCategories')
@@ -95,23 +95,45 @@ describe('categoryRouter', function () {
           done();
         });
     });
-    // TODO: make this into a test suite and check more cases
-    it('should return a JSON array with all categories associated with the given userId', (done) => {
+
+    it('valid request- response body is JSON array of all categories of testUser1', (done) => {
       chai
         .request(server)
         .get('/category/getCategories/' + testUser1._id)
         .set('content-type', 'application/json')
-        .send({
-          userId: testUser1._id,
-        }) //TODO: get rid of body, keeping for reference for future tests
-        // TODO: Add tests for when err is not null
         .end((error, response) => {
           expect(response).to.have.status(200);
-          expect(response.body).to.have.lengthOf(2);
+          expect(response.body).to.have.lengthOf(1);
           expect(response.body[0].title).equals(testCategory.title);
           done();
         });
     });
+
+    it('valid request- response body is JSON array of all categories of testUser2', (done) => {
+      chai
+        .request(server)
+        .get('/category/getCategories/' + testUser2._id)
+        .set('content-type', 'application/json')
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.lengthOf(1);
+          expect(response.body[0].title).equals('User2 Category1');
+          done();
+        });
+    });
+
+    it('request userId invalid or doesnt have documents- response body is empty', (done) => {
+      chai
+        .request(server)
+        .get('/category/getCategories/' + 'randomUserId')
+        .set('content-type', 'application/json')
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.empty;
+          done();
+        });
+    });
+
     //TODO: ADD TESTS FOR ALL OTHER CATEGORY ROUTERS
   });
 });
