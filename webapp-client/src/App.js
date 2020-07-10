@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
@@ -34,7 +34,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <React.Fragment>
         <div className="App">
           <h1>Lobster Ice Cream</h1>
           <img src={logo} className="App-logo" alt="logo" />
@@ -56,7 +56,7 @@ export default class App extends React.Component {
             <Category categoryName={this.state.currentCategory} />
           </div>
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }
