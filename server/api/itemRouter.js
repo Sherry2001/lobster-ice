@@ -16,9 +16,9 @@ const router = express.Router();
  * response: status 200 for success
  */
 router.post('/addItem', async (req, res, next) => {
-  const newItem = req.body;
   try {
-    await Item.create(newItem).exec();
+    const newItem = new Item(req.body); 
+    await newItem.save();
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
     next(error);
