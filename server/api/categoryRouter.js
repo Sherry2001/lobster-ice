@@ -86,7 +86,7 @@ router.delete('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
 
-    await Item.update({}, { $pull: { categoryIds: this.categoryId } }, { multi: true }, done).exec();
+    await Item.update({}, { $pull: { categoryIds: this.categoryId } }, { multi: true }).exec();
     await Category.deleteOne({ _id: categoryId }).exec();
 
     res.status(200).send('deleted category');
