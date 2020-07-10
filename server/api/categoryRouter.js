@@ -14,9 +14,9 @@ const router = express();
  * response: status 200 for success
  */
 router.post('/createCategory', async (req, res, next) => {
-  const newCategory = req.body;
   try {
-    await Category.create(newCategory).exec();
+    const newCategory = new Category(req.body); 
+    await newCategory.save();
     res.status(200).send('Successfully created a new category');
   } catch (error) {
     next(error);
