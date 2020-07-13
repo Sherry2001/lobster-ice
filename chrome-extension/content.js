@@ -116,22 +116,33 @@ function customCreateElement(type, classList, innerHTML = '') {
   return newElement;
 }
 
-function addItem() {
+
+const serverUrl = 'http://localhost:8080';
+// TODO: select between dev host and prod host
+
+async function addItem() {
   newItem = {
-    sourceLink: 'www.googe.com', //TODO: get actual sourceLink
-    placesId: 'something', //TODO: get actual placesId, to-be implemented
-    userId: '5f050952f516f3570ee26724', //TODO: get actual userID
+    sourceLink: 'www.googe.com', // TODO: get actual sourceLink
+    placesId: 'something', // TODO: get actual placesId
+    userId: '5f050952f516f3570ee26724', // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   }
-  fetch('http://localhost:8080/item/addItem', {
-    method: 'POST',
-    body: JSON.stringify(newItem),
-    headers: { 'Content-type': 'application/json' }
-  }).then(() => {
-    //TODO: display success message, timeOut closeSidebar
-    closeSidebar();
-  }).catch(() => {
-    //TODO: display error message on frontend
-  });
+  
+  try {
+    const response = await fetch(serverUrl + '/item/addItem', {
+        method: 'POST',
+        body: JSON.stringify(newItem),
+        headers: { 'Content-type': 'application/json' }
+    });
+    
+    if (response.statusCode !== 200) {
+      throw new Error(response.statusMessage);
+    } else {
+      // TODO: display success message, timeOut closeSidebar
+      closeSidebar();
+    }
+  } catch(error) {
+    // TODO: display error message on frontend
+  }
 }
