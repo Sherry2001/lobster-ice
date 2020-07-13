@@ -2,8 +2,8 @@
  * Content script for all urls
  */
 
-//Insert bulma stylesheet
-//TODO: STOP USING BULMA ONCE I WRITE MY OWN CSS FOR ALL EXTENSION ELEMENTS
+// Insert bulma stylesheet
+// TODO: STOP USING BULMA ONCE I WRITE MY OWN CSS FOR ALL EXTENSION ELEMENTS
 const bulmaLink = document.createElement('link');
 bulmaLink.setAttribute(
   'href',
@@ -12,41 +12,41 @@ bulmaLink.setAttribute(
 bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
-//Inject invisible sidebar onto page
-const sidebar = customCreateElement('div', ['panel', 'injection-panel', 'px-4', 'py-4']);
+// Inject invisible sidebar onto page
+const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
 sidebar.id = 'lobstericecream';
 document.body.appendChild(sidebar);
 
-//Inject invisible highlight icon onto page
+// Inject invisible highlight icon onto page
 const iconButton = customCreateElement('button', ['injection-icon'], 'Save');
-//TODO: CHANGE BUTTON TO AN ACTUAL ICON!!
+// TODO: CHANGE BUTTON TO AN ACTUAL ICON!!
 
 document.body.appendChild(iconButton);
 
-//Keep track of last used highlight
+// Keep track of last used highlight
 let lastContent;
 
-//Show extension icon when selecting text on page
+// Show extension icon when selecting text on page
 document.onclick = (event) => {
   if (iconButton.style.display === 'block') {
     iconButton.style.display = 'none';
   }
   const content = window.getSelection().toString();
-  //TODO: Trim Text
+  // TODO: Trim Text
   if (content && content !== lastContent) {
     showIcon(event);
     lastContent = content;
   }
 };
 
-//Exclute icon from text-select listener, trigger sidebar when clicked
+// Exclude icon from text-select listener, trigger sidebar when clicked
 iconButton.onclick = (event) => {
   event.stopPropagation();
   iconButton.style.display = 'none';
   createSidebar(lastContent);
 };
 
-//Exclude sidebar from text-select listener
+// Exclude sidebar from text-select listener
 sidebar.onclick = (event) => {
   event.stopPropagation();
 };
@@ -61,13 +61,13 @@ function closeSidebar() {
   sidebar.style.display = 'none';
 }
 
-//Inject sidebar html content
+// Inject sidebar html content
 function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
 
   const panelHeading = customCreateElement('div', ['message-header'], 'Lobster Ice Cream');
-  //TODO: Include icon in panelhead, update looks
+  // TODO: Include icon in panelhead, update looks
 
   const close = customCreateElement('a', ['delete']);
   close.onclick = closeSidebar;
@@ -88,10 +88,10 @@ function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-  const noteTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
-  noteTextarea.id = 'comment';
-  noteTextarea.setAttribute('placeholder', 'Note to self');
-  form.appendChild(noteTextarea);
+  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
+  commentTextarea.id = 'comment';
+  commentTextarea.setAttribute('placeholder', 'Note to self');
+  form.appendChild(commentTextarea);
 
   const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
 
@@ -106,7 +106,7 @@ function createSidebar(content) {
 /**
  * Helper to create an HTML Element
  * @param {String} type
- * @param {List of Strings} classList
+ * @param {Array of Strings} classList
  * @param {String} innerHTML
  */
 function customCreateElement(type, classList, innerHTML = '') {
