@@ -39,7 +39,7 @@ document.onclick = (event) => {
   }
 };
 
-//Exclute icon from text-select listener, trigger sidebar when clicked
+//Exclude icon from text-select listener, trigger sidebar when clicked
 iconButton.onclick = (event) => {
   event.stopPropagation();
   iconButton.style.display = 'none';
@@ -83,9 +83,9 @@ function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-  const noteTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
-  noteTextarea.setAttribute('placeholder', 'Note to self');
-  form.appendChild(noteTextarea);
+  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
+  commentTextarea.setAttribute('placeholder', 'Note to self');
+  form.appendChild(commentTextarea);
 
   const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
 
@@ -99,7 +99,7 @@ function createSidebar(content) {
 /**
  * Helper to create an HTML Element
  * @param {String} type
- * @param {List of Strings} classList
+ * @param {Array of Strings} classList
  * @param {String} innerHTML
  */
 function customCreateElement(type, classList, innerHTML = '') {
