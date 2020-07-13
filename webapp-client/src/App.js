@@ -8,12 +8,12 @@ import Category from './component/Category';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    /** hard-coded for now, will be fetched from db */
-    this.default = 'All';
+    // hard-coded for now, will be fetched from db
+    this.defaultCategory = 'All';
     this.state = {
-      /** list of category names for now, will be list of category ids later */
-      categories: [this.default],
-      currentCategory: this.default,
+      // list of category names for now, will be list of category ids later 
+      categories: [this.defaultCategory],
+      currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.addCategory = this.addCategory.bind(this);
@@ -25,7 +25,7 @@ export default class App extends React.Component {
     });
   }
 
-  /** Called in AddCategoryForm, to be deleted later when fetching from db */
+  // Called in AddCategoryForm, to be deleted later when fetching from db
   addCategory(category) {
     this.setState({
       categories: [...this.state.categories, category],
