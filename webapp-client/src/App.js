@@ -37,7 +37,7 @@ export default class App extends React.Component {
       <React.Fragment>
         <div className="App">
           <h1>Lobster Ice Cream</h1>
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={logo} className="app-logo" alt="logo" />
         </div>
         <div className="columns">
           <div className="column is-one-fifth">
