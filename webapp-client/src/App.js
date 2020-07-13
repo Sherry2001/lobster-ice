@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
@@ -8,12 +8,12 @@ import Category from './component/Category';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    /** hard-coded for now, will be fetched from db */
-    this.default = 'All';
+    // hard-coded for now, will be fetched from db
+    this.defaultCategory = 'All';
     this.state = {
-      /** list of category names for now, will be list of category ids later */
-      categories: [this.default],
-      currentCategory: this.default,
+      // list of category names for now, will be list of category ids later 
+      categories: [this.defaultCategory],
+      currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.addCategory = this.addCategory.bind(this);
@@ -25,7 +25,7 @@ export default class App extends React.Component {
     });
   }
 
-  /** Called in AddCategoryForm, to be deleted later when fetching from db */
+  // Called in AddCategoryForm, to be deleted later when fetching from db
   addCategory(category) {
     this.setState({
       categories: [...this.state.categories, category],
@@ -34,10 +34,10 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <React.Fragment>
         <div className="App">
           <h1>Lobster Ice Cream</h1>
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={logo} className="app-logo" alt="logo" />
         </div>
         <div className="columns">
           <div className="column is-one-fifth">
@@ -56,7 +56,7 @@ export default class App extends React.Component {
             <Category categoryName={this.state.currentCategory} />
           </div>
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

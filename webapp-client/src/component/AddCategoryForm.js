@@ -11,7 +11,7 @@ export default class AddCategoryForm extends React.Component {
   /** This function will be changed later to directly POST request to db instead of calling addCategory */
   createCategory = async (e) => {
     e.preventDefault();
-    const category = this._inputElement.value;
+    const category = e.target.elements['add-category'].value;
     const request = {
       method: 'POST',
       body: JSON.stringify({
@@ -35,7 +35,7 @@ export default class AddCategoryForm extends React.Component {
       console.log(error);
       this.setState({ hasError: true });
     }
-    this._inputElement.value = '';
+    e.target.elements['add-category'].value = '';
   };
 
   clearHasError = () => {
@@ -48,16 +48,18 @@ export default class AddCategoryForm extends React.Component {
     return (
       <React.Fragment>
         <form className="my-1" onSubmit={this.createCategory}>
+          <label className="label" htmlFor="add-category">
+            Add Category:
+          </label>
           <input
-            ref={(input) => (this._inputElement = input)}
             type="text"
+            name="add-category"
             className="input is-rounded"
             placeholder="New Category"
           ></input>
-          <br></br>
           <div className="has-text-centered my-1">
             <button type="submit" className="button">
-              Add Category
+              Add
             </button>
           </div>
         </form>
