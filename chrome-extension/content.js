@@ -75,21 +75,28 @@ function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    addItem();
+  });
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   form.appendChild(highlightLabel);
 
   const highlightTextarea = customCreateElement('textarea', ['textarea']);
+  highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
   const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
+  commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
 
   const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
 
   const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
+  addButton.type = 'submit';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
 
@@ -107,4 +114,35 @@ function customCreateElement(type, classList, innerHTML = '') {
   newElement.classList.add(...classList);
   newElement.innerHTML = innerHTML;
   return newElement;
+}
+
+
+const serverUrl = 'http://localhost:8080';
+// TODO: select between dev host and prod host
+
+async function addItem() {
+  newItem = {
+    sourceLink: 'www.googe.com', // TODO: get actual sourceLink
+    placesId: 'something', // TODO: get actual placesId
+    userId: '5f050952f516f3570ee26724', // TODO: get actual userID
+    highlight: document.getElementById('highlight').value,
+    comment: document.getElementById('comment').value,
+  }
+  
+  try {
+    const response = await fetch(serverUrl + '/item/addItem', {
+        method: 'POST',
+        body: JSON.stringify(newItem),
+        headers: { 'Content-type': 'application/json' }
+    });
+    
+    if (response.statusCode !== 200) {
+      throw new Error(response.statusMessage);
+    } else {
+      // TODO: display success message, timeOut closeSidebar
+      closeSidebar();
+    }
+  } catch(error) {
+    // TODO: display error message on frontend
+  }
 }
