@@ -1,34 +1,34 @@
-//MongoDB Models
+// MongoDB Models
 const Category = require('../db/models/category');
 const User = require('../db/models/user');
 
-//Require Testing Tools
+// Require Testing Tools
 const server = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-//Import MongoDB-connecting functions
+// Import MongoDB-connecting functions
 const { getMongoDB } = require('../db');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
-//Set up Chai
+// Set up Chai
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-//Mock documents used for testing
+// Mock documents used for testing
 let testUser1;
 let testUser2;
 let testCategory1;
 let testCategory2;
 
 before(async () => {
-  //Connect to in-memory mongodb
+  // Connect to in-memory mongodb
   mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
   getMongoDB(mongoUri);
 
-  //Populate the in memory database
+  // Populate the in memory database
   try {
     testUser1 = new User({ email: 'lobster1@gmile.com' });
     await testUser1.save();
@@ -48,7 +48,7 @@ before(async () => {
     });
     await testCategory2.save();
 
-    //TODO: Add Items to DB for further testing
+    // TODO: Add Items to DB for further testing
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -162,10 +162,10 @@ describe('categoryRouter', () => {
           expect(categories.length).to.equal(2);
           expect(categories[0].title).equals(testCategory2.title);
           expect(categories[1].title).equals('User2 Category2');
-          //TODO: Test the deletion of this category in items categoryIds list
+          // TODO: Test the deletion of this category in items categoryIds list
           done();
         });
     });
   });
-  //TODO: ADD TESTS FOR ALL OTHER ROUTERS
+  // TODO: ADD TESTS FOR ALL OTHER ROUTERS
 });
