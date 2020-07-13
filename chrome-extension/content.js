@@ -13,7 +13,12 @@ bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
 //Inject invisible sidebar onto page
-const sidebar = customCreateElement('div', ['panel', 'injection-panel', 'px-4', 'py-4']);
+const sidebar = customCreateElement('div', [
+  'panel',
+  'injection-sidebar',
+  'px-4',
+  'py-4',
+]);
 sidebar.id = 'lobstericecream';
 document.body.appendChild(sidebar);
 
@@ -66,7 +71,11 @@ function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
 
-  const panelHeading = customCreateElement('div', ['message-header'], 'Lobster Ice Cream');
+  const panelHeading = customCreateElement(
+    'div',
+    ['message-header'],
+    'Lobster Ice Cream'
+  );
   //TODO: Include icon in panelhead, update looks
 
   const close = customCreateElement('a', ['delete']);
@@ -76,7 +85,11 @@ function createSidebar(content) {
 
   const form = document.createElement('form');
 
-  const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
+  const highlightLabel = customCreateElement(
+    'label',
+    ['label', 'mt-2'],
+    'Highlighted Text'
+  );
   form.appendChild(highlightLabel);
 
   const highlightTextarea = customCreateElement('textarea', ['textarea']);
@@ -87,9 +100,16 @@ function createSidebar(content) {
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
 
-  const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+  const buttonContainer = customCreateElement('div', [
+    'has-text-centered',
+    'mt-1',
+  ]);
 
-  const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
+  const addButton = customCreateElement(
+    'button',
+    ['button', 'is-link'],
+    'Add Clipping'
+  );
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
 

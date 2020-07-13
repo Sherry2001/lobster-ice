@@ -1,5 +1,4 @@
-/*Sidebar*/
-.injection-panel {
+.injection-sidebar {
   z-index: 9999;
   position: fixed;
   right: 0;
@@ -10,7 +9,6 @@
   display: none;
 }
 
-/*Icon on text-select*/
 .injection-icon {
   z-index: 9999;
   position: absolute;
