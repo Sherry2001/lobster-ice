@@ -7,11 +7,14 @@ export default class AddCategoryForm extends React.Component {
     this.state = {
       hasError: false,
     };
+    this.createCategory = this.createCategory.bind(this);
+    this.clearHasError = this.clearHasError.bind(this);
   }
-  /** This function will be changed later to directly POST request to db instead of calling addCategory */
-  createCategory = async (e) => {
+  // This function will be changed later to directly POST request to db instead of calling addCategory
+  async createCategory(e) {
     e.preventDefault();
     const category = e.target.elements['add-category'].value;
+    e.target.elements['add-category'].value = '';
     const request = {
       method: 'POST',
       body: JSON.stringify({
@@ -29,20 +32,19 @@ export default class AddCategoryForm extends React.Component {
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
-      /** to be deleted once CategoryList fetches from db */
+      // to be deleted once CategoryList fetches from db
       this.props.addCategory(category);
     } catch (error) {
       console.log(error);
       this.setState({ hasError: true });
     }
-    e.target.elements['add-category'].value = '';
-  };
+  }
 
-  clearHasError = () => {
+  clearHasError() {
     this.setState({
       hasError: false,
     });
-  };
+  }
 
   render() {
     return (
