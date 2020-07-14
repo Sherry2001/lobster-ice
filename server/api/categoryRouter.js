@@ -60,7 +60,8 @@ router.get('/getCategoryItems/:categoryId', async (req, res, next) => {
     const response = {};
 
     //get category name and a list of item ids
-    const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
+    const categoryData = await Category.findById(categoryId, 'title items').exec();
+    
     response.title = categoryData.title;
     const itemIds = categoryData.items;
 
@@ -86,7 +87,7 @@ router.delete('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
 
-    await Item.update({}, { $pull: { categoryIds: categoryId } }, { multi: true }).exec();
+    await Item.updateMany({}, { $pull: { categoryIds: categoryId } }).exec();
     await Category.deleteOne({ _id: categoryId }).exec();
 
     res.status(200).send('deleted category');

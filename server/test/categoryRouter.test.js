@@ -19,6 +19,7 @@ chai.use(chaiHttp);
 
 // Mock documents used for testing
 let item1;
+let item2;
 let testUser1;
 let testUser2;
 let testCategory1;
@@ -42,13 +43,12 @@ before(async () => {
       title: 'User1 Category1',
       userId: testUser1._id,
     });
-    await testCategory1.save();
-
+    
     testCategory2 = new Category({
       title: 'User2 Category1',
       userId: testUser2._id,
     });
-    await testCategory2.save();
+    
 
     item1 = new Item({
       sourceLink: 'www.googe.com', 
@@ -60,6 +60,20 @@ before(async () => {
     });
     await item1.save();
 
+    item2 = new Item({
+      sourceLink: 'www.googe.com', 
+      placesId: 'something else', 
+      userId: testUser1._id, 
+      highlight: 'other highlighted words',
+      comment: 'another sample comment',
+      categoryIds: [testCategory1._id],
+    });
+    await item2.save();
+
+    testCategory1.items = [item1._id, item2._id];
+    await testCategory1.save();
+    await testCategory2.save();
+    
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -74,12 +88,14 @@ it('Before: two users and two categories in the database, item1 belongs to User1
   try {
     const categoryCount = await Category.countDocuments({});
     expect(categoryCount).to.equal(2);
+
     const userCount = await User.countDocuments();
     expect(userCount).to.equal(2);
-    const itemCount = await Item.countDocuments();
-    expect(itemCount).to.equal(1);
-    const item = await Item.findById(item1._id);
-    expect(item.categoryIds[0].toString()).equals(testCategory1._id.toString());
+
+    const items = await Item.find({});
+    for (const item of items) {
+      expect(item.categoryIds[0].toString()).equals(testCategory1._id.toString());
+    }
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -159,6 +175,22 @@ describe('categoryRouter', () => {
           expect(response.body).to.be.empty;
           done();
         });
+    });
+  });
+  
+  describe('/getCategoryItems/:categoryId', () => {
+    it('get items in testCategory1, should return 2 objects', (done) => {
+      chai
+        .request(server)
+        .get('/category/getCategoryItems/' + testCategory1._id)
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body.title).equals('User1 Category1');
+          expect(response.body.items.length).equals(2);
+          expect(response.body.items[0]._id.toString()).equals(item1._id.toString());
+          expect(response.body.items[1]._id.toString()).equals(item2._id.toString());
+          done();
+        })
     });
   });
 
