@@ -80,8 +80,11 @@ router.delete('/deleteItem', async (req, res, next) => {
     const itemId = req.body.itemId;
 
     //deleting this itemId from all the categories it belonged to
-    await Category.updateMany({}, { $pull: { items: this.itemId } }, { multi: true }).exec();
-    await Item.deleteOne({ _id: itemId }).exec();
+    const deletedItem = await Item.findByIdAndRemove(itemId).exec();
+    if (!deletedItem) {
+      throw new Error ('ItemID not found in database');
+    }
+    await Category.updateMany({}, { $pull: { items: this.itemId } }).exec();
 
     res.status(200).send('Item successfully deleted from DB');
   } catch (error) {
