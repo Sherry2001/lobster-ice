@@ -100,6 +100,9 @@ it('Before: two users and two categories in the database, item1 item2 belong to 
   }
 });
 
+/**
+ * Category Router Tests
+ */
 describe('categoryRouter', () => {
   describe('/createCategory', function () {
     it('add a second category to Category for user2', (done) => {
@@ -204,7 +207,7 @@ describe('categoryRouter', () => {
     it('get items for invalid categoryId in request, should respond with error status', (done) => {
       chai
         .request(server)
-        .get('/category/getCategoryItems/' + 'wrongId')
+        .get('/category/getCategoryItems/' + item1._id)
         .end((error, response) => {
           expect(response).to.not.have.status(200);
           expect(response.body).to.be.empty;
@@ -240,7 +243,7 @@ describe('categoryRouter', () => {
       chai
         .request(server)
         .delete('/category/deleteCategory')
-        .send({ categoryId: 'invalidId' })
+        .send({ categoryId: item1._id })
         .set('content-type', 'application/json')
         .end(async (error, response) => {
           expect(response).to.not.have.status(200);
@@ -248,5 +251,6 @@ describe('categoryRouter', () => {
         });
     });
   });
-  // TODO: ADD TESTS FOR ALL OTHER ROUTERS
+
+  
 });
