@@ -49,7 +49,6 @@ before(async () => {
       userId: testUser2._id,
     });
     
-
     item1 = new Item({
       sourceLink: 'www.googe.com', 
       placesId: 'something', 
@@ -73,7 +72,7 @@ before(async () => {
     testCategory1.items = [item1._id, item2._id];
     await testCategory1.save();
     await testCategory2.save();
-    
+
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -84,7 +83,7 @@ after(async () => {
   await mongoServer.stop();
 });
 
-it('Before: two users and two categories in the database, item1 belongs to User1 Category1', async () => {
+it('Before: two users and two categories in the database, item1 item2 belong to User1 Category1', async () => {
   try {
     const categoryCount = await Category.countDocuments({});
     expect(categoryCount).to.equal(2);
@@ -113,7 +112,6 @@ describe('categoryRouter', () => {
         })
         .set('content-type', 'application/json')
         .end(async function (error, response) {
-          expect(error).to.be.null;
           expect(response).to.have.status(200);
           try {
             const categories = await Category.find({});
@@ -179,16 +177,37 @@ describe('categoryRouter', () => {
   });
   
   describe('/getCategoryItems/:categoryId', () => {
-    it('get items in testCategory1, should return 2 objects', (done) => {
+    it('get items in testCategory1, should return response.body.items with 2 items', (done) => {
       chai
         .request(server)
         .get('/category/getCategoryItems/' + testCategory1._id)
-        .end(async (error, response) => {
+        .end((error, response) => {
           expect(response).to.have.status(200);
           expect(response.body.title).equals('User1 Category1');
           expect(response.body.items.length).equals(2);
           expect(response.body.items[0]._id.toString()).equals(item1._id.toString());
           expect(response.body.items[1]._id.toString()).equals(item2._id.toString());
+          done();
+        })
+    });
+    it('get items in testCategory2, should return empty items list', (done) => {
+      chai
+        .request(server)
+        .get('/category/getCategoryItems/' + testCategory2._id)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body.title).equals('User2 Category1');
+          expect(response.body.items).to.be.empty;
+          done();
+        })
+    });
+    it('get items for invalid categoryId in request, should respond with error status', (done) => {
+      chai
+        .request(server)
+        .get('/category/getCategoryItems/' + 'wrongId')
+        .end((error, response) => {
+          expect(response).to.not.have.status(200);
+          expect(response.body).to.be.empty;
           done();
         })
     });
@@ -214,6 +233,17 @@ describe('categoryRouter', () => {
           // Check testCategory1 deleted from item1's list
           const item = await Item.findById(item1._id);
           expect(item.categoryIds.length).equals(0); 
+          done();
+        });
+    });
+    it('delete invalid categoryId, respond with error status', (done) => {
+      chai
+        .request(server)
+        .delete('/category/deleteCategory')
+        .send({ categoryId: 'invalidId' })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.not.have.status(200);
           done();
         });
     });
