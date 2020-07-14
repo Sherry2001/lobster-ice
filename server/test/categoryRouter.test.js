@@ -1,6 +1,7 @@
 // MongoDB Models
 const Category = require('../db/models/category');
 const User = require('../db/models/user');
+const Item = require('../db/models/item')
 
 // Require Testing Tools
 const server = require('../index');
@@ -17,6 +18,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 // Mock documents used for testing
+let item1;
 let testUser1;
 let testUser2;
 let testCategory1;
@@ -48,7 +50,16 @@ before(async () => {
     });
     await testCategory2.save();
 
-    // TODO: Add Items to DB for further testing
+    item1 = new Item({
+      sourceLink: 'www.googe.com', 
+      placesId: 'something', 
+      userId: testUser1._id, 
+      highlight: 'highlight words',
+      comment: 'sample comments',
+      categoryIds: [testCategory1._id],
+    });
+    await item1.save();
+
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -59,12 +70,16 @@ after(async () => {
   await mongoServer.stop();
 });
 
-it('Before: There should be two users and two categories in the database', async () => {
+it('Before: two users and two categories in the database, item1 belongs to User1 Category1', async () => {
   try {
     const categoryCount = await Category.countDocuments({});
     expect(categoryCount).to.equal(2);
     const userCount = await User.countDocuments();
     expect(userCount).to.equal(2);
+    const itemCount = await Item.countDocuments();
+    expect(itemCount).to.equal(1);
+    const item = await Item.findById(item1._id);
+    expect(item.categoryIds[0].toString()).equals(testCategory1._id.toString());
   } catch (error) {
     expect(error).to.be.null;
   }
@@ -148,7 +163,7 @@ describe('categoryRouter', () => {
   });
 
   describe('/deleteCategory', () => {
-    it('delete testCategory1 by testUser1 should leave 2 categories left, both by testUser2', (done) => {
+    it('delete testCategory1 should leave 2 categories left and Item1s categoryIds empty', (done) => {
       chai
         .request(server)
         .delete('/category/deleteCategory')
@@ -158,11 +173,15 @@ describe('categoryRouter', () => {
           expect(response).to.have.status(200);
           const deletedDocument = await Category.findById(testCategory1._id);
           expect(deletedDocument).to.be.null;
+
           const categories = await Category.find({});
           expect(categories.length).to.equal(2);
           expect(categories[0].title).equals(testCategory2.title);
           expect(categories[1].title).equals('User2 Category2');
-          // TODO: Test the deletion of this category in items categoryIds list
+
+          // Check testCategory1 deleted from item1's list
+          const item = await Item.findById(item1._id);
+          expect(item.categoryIds.length).equals(0); 
           done();
         });
     });
