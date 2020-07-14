@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// TODO: Add support to highlight active category.
 export default class CategoryList extends React.Component {
   constructor(props){
     super(props);
