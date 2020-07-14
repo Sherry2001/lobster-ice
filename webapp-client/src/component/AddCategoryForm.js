@@ -25,8 +25,9 @@ export default class AddCategoryForm extends React.Component {
       headers: { 'Content-type': 'application/json' },
     };
     try {
+      console.log(process.env.REACT_APP_API_URL + '/category/createCategory');
       const response = await fetch(
-        'http://localhost:8080/category/createCategory',
+        process.env.REACT_APP_API_URL + '/category/createCategory',
         request
       );
       if (response.status !== 200) {
