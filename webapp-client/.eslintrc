@@ -34,7 +34,7 @@
     // 'no-empty-character-class': 'error', // eslint:recommended
     // 'no-ex-assign': 'error', // eslint:recommended
     // 'no-extra-boolean-cast': 'error', // eslint:recommended
-    // 'no-extra-parens': 'off',
+    "no-extra-parens": "error",
     // 'no-extra-semi': 'error', // eslint:recommended
     // 'no-func-assign': 'error', // eslint:recommended
     // 'no-inner-declarations': 'error', // eslint:recommended
@@ -83,7 +83,7 @@
     "no-caller": "error",
     // 'no-case-declarations': 'error', // eslint:recommended
     // 'no-div-regex': 'off',
-    // 'no-else-return': 'off',
+    "no-else-return": "error",
     // 'no-empty-function': 'off',
     // 'no-empty-pattern': 'error', // eslint:recommended
     // 'no-eq-null': 'off',
@@ -97,7 +97,7 @@
     // 'no-implicit-coercion': 'off',
     // 'no-implicit-globals': 'off',
     // 'no-implied-eval': 'off',
-    "no-invalid-this": "error",
+    // "no-invalid-this": "error",
     // 'no-iterator': 'off',
     // 'no-labels': 'off',
     // 'no-lone-blocks': 'off',
@@ -282,7 +282,7 @@
     // 'padding-line-between-statements': 'off',
     "quote-props": ["error", "consistent"],
     "quotes": ["error", "single", { "allowTemplateLiterals": true }],
-    "react/jsx-indent": [0],
+    "react/jsx-indent": 0,
     "require-jsdoc": [
       "off",
       {
@@ -307,7 +307,7 @@
         "named": "never"
       }
     ],
-    // 'space-in-parens': 'off',
+    "space-in-parens": "error",
     // 'space-infix-ops': 'off',
     // 'space-unary-ops': 'off',
     "spaced-comment": ["error", "always"],
