@@ -34,7 +34,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Navbar />
         <div className="columns">
           <div className="column is-one-fifth">
@@ -53,7 +53,7 @@ export default class App extends React.Component {
             <Category categoryName={this.state.currentCategory} />
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
