@@ -1,14 +1,21 @@
+import logo from '../lobster-icon.jpg';
 import React, { Component } from 'react';
 
 class Navbar extends Component {
   render() {
     return (
-      <nav className="navbar mb-1" role="navigation" aria-label="main navigation">
+      <nav
+        className="navbar mb-1"
+        role="navigation"
+        aria-label="main navigation"
+      >
         <div className="navbar-brand">
           <a className="navbar-item" href="">
-            <img src={this.props.logo}
+            <img
+              src={logo}
               alt="Lobster Ice Cream Logo (a cute lobster)"
-              className="is-32x32" />
+              className="is-32x32"
+            />
           </a>
           <a className="navbar-item">
             <h1 className="title is-4">Lobster Ice Cream</h1>

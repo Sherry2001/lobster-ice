@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
@@ -36,7 +35,7 @@ export default class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar logo={logo} />
+        <Navbar />
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
