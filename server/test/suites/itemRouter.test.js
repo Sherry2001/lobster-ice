@@ -1,4 +1,3 @@
-
 // MongoDB Models
 const Category = require('../../db/models/category');
 const User = require('../../db/models/user');
@@ -26,7 +25,6 @@ let testCategory1;
 let testCategory2;
 
 module.exports =  function categorySuite() {
- 
   before(async () => {
     // Connect to in-memory mongodb
     mongoServer = new MongoMemoryServer();
@@ -34,6 +32,7 @@ module.exports =  function categorySuite() {
     getMongoDB(mongoUri);
   
     // Populate the in memory database
+    // TODO: Modify set up a bit 
     try {
       testUser1 = new User({ email: 'lobster1@gmile.com' });
       await testUser1.save();
@@ -107,4 +106,5 @@ module.exports =  function categorySuite() {
   /**
    * Item Router Tests
    */
+  // TODO: Item Router Tests in next PR 
 }
