@@ -7,30 +7,27 @@ export default class CategoryList extends React.Component {
     super(props);
     this.state = {
       hasError: false,
+      categoryList: [],
     };
     this.addAElement = this.addAElement.bind(this);
     this.clearHasError = this.clearHasError.bind(this);
-    this.fetchCategories = this.fetchCategories.bind(this);
   }
 
-  async fetchCategories() {
+  async componentDidMount() {
     const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
           '/category/getCategories/' +
           this.props.userID,
-          header
+        header
       );
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
-      //response.then(result => {this.categoryList = result});
       const categoryList = await response.json();
       console.log(categoryList);
-      return categoryList.map((category, index) =>
-        this.addAElement(category.title, index)
-      );
+      this.setState({ categoryList });
     } catch (error) {
       console.log(error);
       this.setState({ hasError: true });
@@ -56,12 +53,12 @@ export default class CategoryList extends React.Component {
   }
 
   render() {
-    this.fetchCategories();
     return (
-      <React.Fragment>
-        {this.fetchCategories()}
-        {/* {this.categoryList.map((category, index) => this.addAElement(category, index))} */}
-      </React.Fragment>
+      <>
+        {this.state.categoryList.map((category, index) =>
+          this.addAElement(category.title, index)
+        )}
+      </>
     );
   }
 }

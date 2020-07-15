@@ -11,24 +11,14 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // list of category names for now, will be list of category ids later 
-      categories: [this.defaultCategory],
       currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
-    this.addCategory = this.addCategory.bind(this);
   }
 
   setCurrentCategory(category) {
     this.setState({
       currentCategory: category,
-    });
-  }
-
-  // Called in AddCategoryForm, to be deleted later when fetching from db
-  addCategory(category) {
-    this.setState({
-      categories: [...this.state.categories, category],
     });
   }
 
@@ -43,7 +33,6 @@ export default class App extends React.Component {
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
               <CategoryList
-                categories={this.state.categories}
                 setContentPane={this.setCurrentCategory}
                 userID = '5f050952f516f3570ee26724'
               />
