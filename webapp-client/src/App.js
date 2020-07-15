@@ -4,7 +4,6 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import ContentPane from './component/ContentPane';
 import AddCategoryForm from './component/AddCategoryForm';
-import Category from './component/Category';
 import Navbar from './component/Navbar';
 
 export default class App extends React.Component {
