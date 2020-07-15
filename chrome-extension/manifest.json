@@ -1,0 +1,28 @@
+{
+  "name": "Lobster Ice Cream",
+  "version": "0.1",
+  "description": "Trip idea clipper.",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_title": "Lobster Ice Cream Sidebar",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "css": ["content.css"],
+    "js": ["content.js"]
+  }],
+  "web_accessible_resources": [
+    "assets/*"
+  ],
+  "permissions": [
+    "https://*/*",
+    "http://*/*",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "activeTab",
+    "contextMenus"
+  ]
+}

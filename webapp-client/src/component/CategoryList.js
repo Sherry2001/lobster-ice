@@ -1,20 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-// TODO: Add support to highlight active category.
 export default class CategoryList extends React.Component {
-  // this.props.categories: a list of category ids fetched from db
-  // this.props.setContentPane: sets the current category to be displayed
+  constructor(props){
+    super(props);
+    this.addAElement = this.addAElement.bind(this);
+  }
+
+  addAElement(category, index){
+    return (
+      <a className="panel-block is-active" key={index} onClick={() => this.props.setContentPane(category)}>
+        {category}
+      </a>
+    ); 
+  }
+
   render() {
     return (
       <React.Fragment>
-        {this.props.categories.map((category, index) => {
-          return (
-            <a className="panel-block is-active" key={index} onClick={() => this.props.setContentPane(category)}>
-              {category}
-            </a>
-          );
-        })}
+        {this.props.categories.map((category, index) => this.addAElement(category, index))}
       </React.Fragment>
     );
   }
+}
+
+CategoryList.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setContentPane: PropTypes.func.isRequired
 }

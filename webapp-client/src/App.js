@@ -1,20 +1,20 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
-import ContentPane from './component/ContentPane';
 import AddCategoryForm from './component/AddCategoryForm';
+import Category from './component/Category';
 import Navbar from './component/Navbar';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    /** hard-coded for now, will be fetched from db */
-    this.default = 'All';
+    // hard-coded for now, will be fetched from db
+    this.defaultCategory = 'All';
     this.state = {
-      /** list of category names for now, will be list of category ids later */
-      categories: [this.default],
-      currentCategory: this.default,
+      // list of category names for now, will be list of category ids later
+      categories: [this.defaultCategory],
+      currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.addCategory = this.addCategory.bind(this);
@@ -26,7 +26,7 @@ export default class App extends React.Component {
     });
   }
 
-  /** Called in AddCategoryForm, to be deleted later when fetching from db */
+  // Called in AddCategoryForm, to be deleted later when fetching from db
   addCategory(category) {
     this.setState({
       categories: [...this.state.categories, category],
@@ -35,7 +35,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <React.Fragment>
         <Navbar logo={logo} />
         <div className="columns">
           <div className="column is-one-fifth">
@@ -50,10 +50,11 @@ export default class App extends React.Component {
             </nav>
           </div>
           <div className="column">
-            <ContentPane />
+            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
+            <Category categoryName={this.state.currentCategory} />
           </div>
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To reference the server URL: process.env.REACT_APP_API_URL
 
 ## Available Scripts
 
