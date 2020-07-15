@@ -38,9 +38,9 @@ export default class CategoryList extends React.Component {
       <a
         className="panel-block is-active"
         key={index}
-        onClick={() => this.props.setContentPane(category)}
+        onClick={() => this.props.setContentPane(category._id)}
       >
-        {category}
+        {category.title}
       </a>
     );
   }
@@ -55,7 +55,7 @@ export default class CategoryList extends React.Component {
     return (
       <>
         {this.state.categoryList.map((category, index) =>
-          this.addAElement(category._id, index)
+          this.addAElement(category, index)
         )}
       </>
     );
