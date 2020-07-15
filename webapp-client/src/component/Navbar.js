@@ -10,7 +10,7 @@ class Navbar extends Component {
         aria-label="main navigation"
       >
         <div className="navbar-brand">
-          <a className="navbar-item" href="">
+          <a className="navbar-item">
             <img
               src={logo}
               alt="Lobster Ice Cream Logo (a cute lobster)"
