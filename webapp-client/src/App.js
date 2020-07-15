@@ -34,7 +34,7 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
               <CategoryList
                 setContentPane={this.setCurrentCategory}
-                userID = '5f050952f516f3570ee26724'
+                userID="5f050952f516f3570ee26724"
               />
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
