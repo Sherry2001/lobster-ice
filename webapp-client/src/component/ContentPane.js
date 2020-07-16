@@ -14,11 +14,18 @@ export default class ContentPane extends React.Component {
   }
 
   async componentDidMount() {
+    const { category, userId } = this.props;
+    let url;
+    if (category === 'All') {
+      url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
+    } else {
+      url =
+        process.env.REACT_APP_API_URL +
+        '/category/getCategoryItems/' +
+        category;
+    }
     try {
-      const dummyUser = '5f050952f516f3570ee26724';
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + '/item/getItems/' + dummyUser
-      );
+      const response = await fetch(url);
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
