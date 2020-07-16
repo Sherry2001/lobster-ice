@@ -1,7 +1,6 @@
-import React from 'react';
 import Category from './Category';
 import Item from './Item';
-// import '../stylesheets/ContentPane.css';
+import React from 'react';
 
 export default class ContentPane extends React.Component {
   constructor(props) {

@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 export default class CategoryList extends React.Component {
   constructor(props) {

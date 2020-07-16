@@ -3,7 +3,6 @@ import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
-import Category from './component/Category';
 import ContentPane from './component/ContentPane';
 
 export default class App extends React.Component {
@@ -44,7 +43,6 @@ export default class App extends React.Component {
             </nav>
           </div>
           <div className="column">
-            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
             <ContentPane
               category={this.state.currentCategory}
               userId="5f050952f516f3570ee26724"
