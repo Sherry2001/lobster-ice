@@ -1,7 +1,7 @@
 import logo from '../lobster-icon.jpg';
 import React from 'react';
 
-class Navbar extends React.Component {
+export default class Navbar extends React.Component {
   render() {
     return (
       <nav
@@ -29,5 +29,3 @@ class Navbar extends React.Component {
     );
   }
 }
-
-export default Navbar;
