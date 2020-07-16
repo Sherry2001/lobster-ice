@@ -10,12 +10,11 @@
     "react-view": "^2.3.2"
   },
   "devDependencies": {
+    "prettier": "^2.0.5",
+    "eslint-config-google": "^0.14.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "eslint": "^7.4.0",
-    "eslint-config-google": "^0.14.0",
-    "prettier": "^2.0.5",
     "react-scripts": "3.4.1"
   },
   "scripts": {
