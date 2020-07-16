@@ -4,6 +4,7 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
+import ContentPane from './component/ContentPane';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ export default class App extends React.Component {
           </div>
           <div className="column">
             {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.currentCategory} />
+            <ContentPane />
           </div>
         </div>
       </React.Fragment>
