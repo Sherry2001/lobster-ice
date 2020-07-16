@@ -33,8 +33,6 @@ export default class AddCategoryForm extends React.Component {
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
-      // to be deleted once CategoryList fetches from db
-      this.props.addCategory(category);
     } catch (error) {
       console.log(error);
       this.setState({ hasError: true });
@@ -49,7 +47,7 @@ export default class AddCategoryForm extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <form className="my-1" onSubmit={this.createCategory}>
           <label className="label" htmlFor="add-category">
             Add Category:
@@ -66,12 +64,13 @@ export default class AddCategoryForm extends React.Component {
             </button>
           </div>
         </form>
+  
         <ErrorMessage
           hasError={this.state.hasError}
           message={'Error creating category'}
           closePopup={this.clearHasError}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
