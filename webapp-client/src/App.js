@@ -11,10 +11,12 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // categoryID of the current category
+      // list of category names for now, will be list of category ids later
+      categories: [this.defaultCategory],
       currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
+    this.addCategory = this.addCategory.bind(this);
   }
 
   setCurrentCategory(category) {
