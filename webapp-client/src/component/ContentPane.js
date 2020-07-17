@@ -10,7 +10,6 @@ export default class ContentPane extends React.Component {
       displayCategory: <Category categoryName="All" />,
       items: [],
     };
-    this.setContentPane = this.setContentPane.bind(this);
   }
 
   async componentDidMount() {
@@ -38,12 +37,6 @@ export default class ContentPane extends React.Component {
       throw new Error(response.statusMessage);
     }
     return items;
-  }
-
-  setContentPane(content) {
-    this.setState({
-      displayCategory: content,
-    });
   }
 
   render() {
