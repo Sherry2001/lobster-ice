@@ -39,7 +39,7 @@ export default class CategoryList extends React.Component {
       <a
         className="panel-block is-active"
         key={index}
-        onClick={() => this.props.setContentPane(category._id)}
+        onClick={() => this.props.setCurrentCategory(category._id)}
       >
         {category.title}
       </a>
@@ -72,6 +72,6 @@ export default class CategoryList extends React.Component {
 
 CategoryList.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setContentPane: PropTypes.func.isRequired,
+  setCurrentCategory: PropTypes.func.isRequired,
   userID: PropTypes.string.isRequired,
 };
