@@ -57,6 +57,12 @@ export default class CategoryList extends React.Component {
         {this.state.categoryList.map((category, index) =>
           this.addAElement(category, index)
         )}
+
+        <ErrorMessage
+          hasError={this.state.hasError}
+          message={'Error displaying list of category'}
+          closePopup={this.clearHasError}
+        />
       </>
     );
   }
