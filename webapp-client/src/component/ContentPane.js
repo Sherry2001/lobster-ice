@@ -1,5 +1,6 @@
 import Category from './Category';
 import Item from './Item';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 export default class ContentPane extends React.Component {
@@ -14,21 +15,24 @@ export default class ContentPane extends React.Component {
 
   async componentDidMount() {
     const { category, userId } = this.props;
-    let url;
-    if (category === 'All') {
-      url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
-    } else {
-      url =
-        process.env.REACT_APP_API_URL +
-        '/category/getCategoryItems/' +
-        category;
-    }
+    let url, response, items;
     try {
-      const response = await fetch(url);
+      if (category === 'All') {
+        url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
+        response = await fetch(url);
+        items = await response.json();
+      } else {
+        url =
+          process.env.REACT_APP_API_URL +
+          '/category/getCategoryItems/' +
+          category;
+        response = await fetch(url);
+        const categoryObject = await response.json();
+        items = categoryObject.items;
+      }
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
-      const items = await response.json();
       this.setState({ items });
     } catch (error) {
       console.error(error);
@@ -54,3 +58,8 @@ export default class ContentPane extends React.Component {
     );
   }
 }
+
+ContentPane.propTypes = {
+  category: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+};
