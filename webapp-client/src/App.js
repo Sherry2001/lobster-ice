@@ -44,7 +44,8 @@ export default class App extends React.Component {
           </div>
           <div className="column">
             <ContentPane
-              category={this.state.currentCategory}
+              defaultCategory={this.defaultCategory}
+              currentCategory={this.state.currentCategory}
               userId="5f050952f516f3570ee26724"
             />
           </div>

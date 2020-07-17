@@ -14,14 +14,14 @@ export default class ContentPane extends React.Component {
   }
 
   async componentDidMount() {
-    const { category, userId } = this.props;
-    const items = await this.getItems(category, userId);
+    const items = await this.getItems(this.props);
     this.setState({ items });
   }
 
-  async getItems(category, userId) {
+  async getItems(props) {
+    const { currentCategory, defaultCategory, userId } = props;
     let url, response, items;
-    if (category === 'All') {
+    if (currentCategory === defaultCategory) {
       url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
       response = await fetch(url);
       items = await response.json();
@@ -29,7 +29,7 @@ export default class ContentPane extends React.Component {
       url =
         process.env.REACT_APP_API_URL +
         '/category/getCategoryItems/' +
-        category;
+        currentCategory;
       response = await fetch(url);
       const categoryObject = await response.json();
       items = categoryObject.items;
@@ -61,6 +61,7 @@ export default class ContentPane extends React.Component {
 }
 
 ContentPane.propTypes = {
-  category: PropTypes.string.isRequired,
+  currentCategory: PropTypes.string.isRequired,
+  defaultCategory: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
 };
