@@ -71,7 +71,6 @@ router.get('/getCategoryItems/:categoryId', async (req, res, next) => {
     const itemObjects = await Item.find({ _id: { $in: itemIds } }).exec();
 
     response.items = itemObjects;
-
     res.json(response);
   } catch (error) {
     next(error);

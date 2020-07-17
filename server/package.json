@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./test/index.test.js --recursive",
+    "start": "node index.js",
     "test": "mocha"
   },
   "keywords": [],
