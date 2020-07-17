@@ -26,9 +26,10 @@ export default class CategoryList extends React.Component {
         throw new Error(response.statusMessage);
       }
       const categoryList = await response.json();
-      this.setState({ categoryList });
+      this.setState({
+        categoryList,
+      });
     } catch (error) {
-      console.log(error);
       this.setState({ hasError: true });
     }
   }
@@ -54,8 +55,9 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
+        {this.addAElement({title: 'All', _id:'All'},0)}
         {this.state.categoryList.map((category, index) =>
-          this.addAElement(category, index)
+          this.addAElement(category, index + 1)
         )}
 
         <ErrorMessage
@@ -71,4 +73,5 @@ export default class CategoryList extends React.Component {
 CategoryList.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   setContentPane: PropTypes.func.isRequired,
+  userID: PropTypes.string.isRequired,
 };
