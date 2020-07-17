@@ -87,19 +87,20 @@ module.exports = function categorySuite() {
     });
 
     it('add a new category by user2', (done) => {
+      const newCategoryTitle = 'User2 New Category';
       chai
         .request(server)
         .post('/category/createCategory')
         .send({
           userId: testUser2._id,
-          title: 'User2 New Category',
+          title: newCategoryTitle,
         })
         .set('content-type', 'application/json')
         .end(async function (error, response) {
           expect(response).to.have.status(200);
           const categories = await Category.find({});
           expect(categories).to.have.lengthOf(1);
-          expect(categories[0].title).equals('User2 New Category');
+          expect(categories[0].title).equals(newCategoryTitle);
           done();
         });
     });
@@ -208,7 +209,7 @@ module.exports = function categorySuite() {
         .get('/category/getCategoryItems/' + testCategory2._id)
         .end((error, response) => {
           expect(response).to.have.status(200);
-          expect(response.body.title).equals('User2 Category1');
+          expect(response.body.title).equals(testCategory2.title);
           expect(response.body.items).to.be.empty;
           done();
         });
