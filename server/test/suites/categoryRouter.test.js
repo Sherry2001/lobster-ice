@@ -97,14 +97,10 @@ module.exports = function categorySuite() {
         .set('content-type', 'application/json')
         .end(async function (error, response) {
           expect(response).to.have.status(200);
-          try {
-            const categories = await Category.find({});
-            expect(categories).to.have.lengthOf(1);
-            expect(categories[0].title).equals('User2 New Category');
-            done();
-          } catch (error) {
-            expect(error).to.be.null;
-          }
+          const categories = await Category.find({});
+          expect(categories).to.have.lengthOf(1);
+          expect(categories[0].title).equals('User2 New Category');
+          done();
         });
     });
   });
