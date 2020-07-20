@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-class Item extends Component {
+export default class Item extends React.Component {
   formatSourceLink(link) {
     if (link) {
       return <a href={link}>Source</a>;
@@ -24,4 +25,11 @@ class Item extends Component {
   }
 }
 
-export default Item;
+Item.propTypes = {
+  item: PropTypes.shape({
+    comment: PropTypes.string,
+    highlight: PropTypes.string.isRequired,
+    placeId: PropTypes.string,
+    sourceLink: PropTypes.string.isRequired,
+  }).isRequired,
+};
