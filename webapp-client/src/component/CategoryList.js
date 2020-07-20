@@ -39,7 +39,7 @@ export default class CategoryList extends React.Component {
       <a
         className="panel-block is-active"
         key={index}
-        onClick={() => this.props.setCurrentCategory(category._id)}
+        onClick={() => this.props.setCurrentCategory(category._id, category.title)}
       >
         {category.title}
       </a>

@@ -1,6 +1,6 @@
 import Item from './Item';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default class ContentPane extends React.Component {
   constructor(props) {
@@ -10,18 +10,18 @@ export default class ContentPane extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setItems(this.props);
   }
 
-  async componentDidUpdate() {
+  componentDidUpdate() {
     this.setItems(this.props);
   }
 
   async setItems(props) {
-    const { currentCategory, defaultCategory, userId } = props;
+    const { categoryId, defaultCategory, userId } = props;
     let url, response, items;
-    if (currentCategory === defaultCategory) {
+    if (categoryId === defaultCategory) {
       url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
       response = await fetch(url);
       items = await response.json();
@@ -29,7 +29,7 @@ export default class ContentPane extends React.Component {
       url =
         process.env.REACT_APP_API_URL +
         '/category/getCategoryItems/' +
-        currentCategory;
+        categoryId;
       response = await fetch(url);
       const categoryObject = await response.json();
       items = categoryObject.items;

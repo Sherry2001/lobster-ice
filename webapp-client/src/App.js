@@ -12,14 +12,16 @@ export default class App extends React.Component {
     this.defaultCategory = 'All';
     this.state = {
       // categoryID of the current category
-      currentCategory: this.defaultCategory,
+      categoryId: this.defaultCategory,
+      categoryTitle: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
 
-  setCurrentCategory(category) {
+  setCurrentCategory(id, title) {
     this.setState({
-      currentCategory: category,
+      categoryId: id,
+      categoryTitle: title,
     });
   }
 
@@ -45,7 +47,8 @@ export default class App extends React.Component {
           <div className="column">
             <ContentPane
               defaultCategory={this.defaultCategory}
-              currentCategory={this.state.currentCategory}
+              categoryId={this.state.categoryId}
+              categoryTitle={this.state.categoryTitle}
               // TODO: Add the actual user id
               userId="5f050952f516f3570ee26724"
             />
