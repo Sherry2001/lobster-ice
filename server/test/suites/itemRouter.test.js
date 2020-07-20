@@ -86,8 +86,7 @@ module.exports = function categorySuite() {
   /**
    * Item Router Tests
    */
-  // TODO: Item Router Tests in next PR
-  describe('/addItem', function () {
+  describe('/addItem', () => {
     after(async () => {
       await Item.deleteMany({});
     });
@@ -113,12 +112,12 @@ module.exports = function categorySuite() {
     });
   });
 
-  describe('/getItems/:userId', (done) => {
+  describe('/getItems/:userId', () => {
     before(async () => {
       await item1.save();
       await item2.save();
       await item3.save();
-    })
+    });
     
     it('/getItems/:userId SetUp test: 3 items in Itemdb', async () => {
       const documentCount = await Item.countDocuments();
@@ -147,7 +146,7 @@ module.exports = function categorySuite() {
           expect(response.body).to.have.lengthOf(1);
           expect(response.body[0]._id.toString()).equals(item3._id.toString());
           done();
-        })
+        });
     });
 
     it('request userId does not have items, respond with empty body', (done) =>{
@@ -161,4 +160,5 @@ module.exports = function categorySuite() {
         });
     });
   });
+  // TODO: Item Router Tests in next PR
 };
