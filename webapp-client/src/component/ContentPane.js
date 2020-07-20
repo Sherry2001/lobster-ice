@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import Item from './Item';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -8,6 +9,7 @@ export default class ContentPane extends React.Component {
     this.state = {
       items: [],
     };
+    this.setItems = debounce(this.setItems, 1);
   }
 
   componentDidMount() {
