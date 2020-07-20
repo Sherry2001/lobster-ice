@@ -18,7 +18,9 @@ export default class ContentPane extends React.Component {
 
   async getItems(props) {
     const { currentCategory, defaultCategory, userId } = props;
-    let url, response, items;
+    let url;
+    let response;
+    let items;
     if (currentCategory === defaultCategory) {
       url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
       response = await fetch(url);
@@ -39,13 +41,29 @@ export default class ContentPane extends React.Component {
     return items;
   }
 
+  async deleteItem(item) {
+    const url = process.env.REACT_APP_API_URL + '/item/deleteItem/';
+    console.log(item._id);
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: new Headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ itemId: item._id }),
+    });
+    if (response.status !== 200) {
+      console.error(response.statusMessage);
+      throw new Error(response.statusMessage);
+    }
+  }
+
   render() {
     return (
       <>
         <Category categoryName="All" />
         <div className="wrap tile is-ancestor">
           {this.state.items.map((item, index) => {
-            return <Item key={index} item={item} />;
+            return (
+              <Item key={index} item={item} deleteItem={this.deleteItem} />
+            );
           })}
         </div>
       </>

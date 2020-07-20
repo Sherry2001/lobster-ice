@@ -16,7 +16,6 @@ export default class App extends React.Component {
       currentCategory: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
-    this.addCategory = this.addCategory.bind(this);
   }
 
   setCurrentCategory(category) {

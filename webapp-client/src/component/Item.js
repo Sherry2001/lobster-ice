@@ -10,14 +10,32 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, deleteItem } = this.props;
     return (
       <div className="tile is-parent is-4">
         <article className="tile is-child box">
-          <p className="title">{item.highlight}</p>
+          <div className="level">
+            <div className="level-left">
+              <p className="title">{item.highlight}</p>
+            </div>
+            <div className="level-right">
+              <i className="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          </div>
           <div className="content">
             <p>{item.comment}</p>
-            {this.formatSourceLink(item.sourceLink)}
+          </div>
+          <div className="level">
+            <div className="level-left">
+              {this.formatSourceLink(item.sourceLink)}
+            </div>
+            <div className="level-right">
+              <i
+                onClick={() => deleteItem(item)}
+                className="fa fa-trash"
+                aria-hidden="true"
+              ></i>
+            </div>
           </div>
         </article>
       </div>
@@ -32,4 +50,5 @@ Item.propTypes = {
     placeId: PropTypes.string,
     sourceLink: PropTypes.string.isRequired,
   }).isRequired,
+  deleteItem: PropTypes.func.isRequired,
 };
