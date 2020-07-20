@@ -87,7 +87,7 @@ router.delete('/deleteItem', async (req, res, next) => {
     if (!deletedItem) {
       throw new Error ('ItemID not found in database');
     }
-    await Category.updateMany({}, { $pull: { items: this.itemId } }).exec();
+    await Category.updateMany({}, { $pull: { items: itemId } }).exec();
 
     res.status(200).send('Item successfully deleted from DB');
   } catch (error) {
