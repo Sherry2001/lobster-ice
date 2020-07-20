@@ -12,14 +12,16 @@ export default class App extends React.Component {
     this.defaultCategory = 'All';
     this.state = {
       // categoryID of the current category
-      currentCategory: this.defaultCategory,
+      categoryId: this.defaultCategory,
+      categoryTitle: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
 
-  setCurrentCategory(category) {
+  setCurrentCategory(id, title) {
     this.setState({
-      currentCategory: category,
+      categoryId: id,
+      categoryTitle: title,
     });
   }
 
@@ -44,7 +46,7 @@ export default class App extends React.Component {
           </div>
           <div className="column">
             {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.currentCategory} />
+            <Category categoryName={this.state.categoryTitle} />
           </div>
         </div>
       </React.Fragment>
