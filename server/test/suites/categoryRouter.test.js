@@ -124,7 +124,7 @@ module.exports = function categorySuite() {
         .request(server)
         .get('/category/getCategories')
         .end((error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(404);
           expect(response.body).to.be.empty;
           done();
         });
