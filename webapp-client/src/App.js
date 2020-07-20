@@ -48,6 +48,7 @@ export default class App extends React.Component {
             <ContentPane
               defaultCategory={this.defaultCategory}
               currentCategory={this.state.currentCategory}
+              // TODO: Add the actual user id
               userId="5f050952f516f3570ee26724"
             />
           </div>
