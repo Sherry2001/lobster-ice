@@ -20,7 +20,6 @@ export default class AddCategoryForm extends React.Component {
       body: JSON.stringify({
         title: category,
         userId: 'fake-user-id',
-        items: [],
       }),
       headers: { 'Content-type': 'application/json' },
     };
@@ -64,7 +63,7 @@ export default class AddCategoryForm extends React.Component {
             </button>
           </div>
         </form>
-  
+
         <ErrorMessage
           hasError={this.state.hasError}
           message={'Error creating category'}
