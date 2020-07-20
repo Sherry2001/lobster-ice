@@ -7,7 +7,6 @@ export default class ContentPane extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayCategory: <Category categoryName="All" />,
       items: [],
     };
   }
@@ -33,6 +32,7 @@ export default class ContentPane extends React.Component {
       const categoryObject = await response.json();
       items = categoryObject.items;
     }
+    // TODO: Add Cynthia's error message pop-up.
     if (response.status !== 200) {
       throw new Error(response.statusMessage);
     }
@@ -42,10 +42,10 @@ export default class ContentPane extends React.Component {
   render() {
     return (
       <>
-        {this.state.displayCategory}
+        <Category categoryName="All" />
         <div className="wrap tile is-ancestor">
-          {this.state.items.map((item, i) => {
-            return <Item key={i} item={item} />;
+          {this.state.items.map((item, index) => {
+            return <Item key={index} item={item} />;
           })}
         </div>
       </>
