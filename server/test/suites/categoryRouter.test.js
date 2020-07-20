@@ -213,7 +213,7 @@ module.exports = function categorySuite() {
         .request(server)
         .get('/category/getCategoryItems/' + item1._id)
         .end((error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(500);
           expect(response.body).to.be.empty;
           done();
         });
@@ -257,7 +257,7 @@ module.exports = function categorySuite() {
         .send({ categoryId: item1._id })
         .set('content-type', 'application/json')
         .end(async (error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(500);
           done();
         });
     });
