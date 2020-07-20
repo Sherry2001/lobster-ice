@@ -137,9 +137,7 @@ module.exports = function categorySuite() {
           expect(response).to.have.status(200);
           expect(response.body).to.have.lengthOf(1);
           expect(response.body[0].title).equals(testCategory1.title);
-          expect(response.body[0]._id.toString()).equals(
-            testCategory1._id.toString()
-          );
+          expect(response.body[0]._id.toString()).equals(testCategory1._id.toString());
           done();
         });
     });
@@ -194,12 +192,8 @@ module.exports = function categorySuite() {
           expect(response).to.have.status(200);
           expect(response.body.title).equals(testCategory1.title);
           expect(response.body.items).to.have.lengthOf(2);
-          expect(response.body.items[0]._id.toString()).equals(
-            item1._id.toString()
-          );
-          expect(response.body.items[1]._id.toString()).equals(
-            item2._id.toString()
-          );
+          expect(response.body.items[0]._id.toString()).equals(item1._id.toString());
+          expect(response.body.items[1]._id.toString()).equals(item2._id.toString());
           done();
         });
     });
