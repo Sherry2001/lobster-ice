@@ -123,7 +123,7 @@ module.exports = function categorySuite() {
         .request(server)
         .get('/category/getCategories')
         .end((error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(404);
           expect(response.body).to.be.empty;
           done();
         });
@@ -158,7 +158,7 @@ module.exports = function categorySuite() {
     it('request userId invalid or doesnt have documents- response body is empty', (done) => {
       chai
         .request(server)
-        .get('/category/getCategories/' + 'randomUserId')
+        .get('/category/getCategories/' + item1._id)
         .end((error, response) => {
           expect(response).to.have.status(200);
           expect(response.body).to.be.empty;
