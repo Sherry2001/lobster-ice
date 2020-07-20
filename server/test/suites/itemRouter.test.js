@@ -221,7 +221,7 @@ module.exports = function categorySuite() {
         })
         .set('content-type', 'application/json')
         .end(async (error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(500);
           const item1Document = await Item.findById(item1._id);
           expect(item1Document.categoryIds).to.have.lengthOf(1);
           done();
@@ -287,7 +287,7 @@ module.exports = function categorySuite() {
         .send({ categoryId: item1._id })
         .set('content-type', 'application/json')
         .end(async (error, response) => {
-          expect(response).to.not.have.status(200);
+          expect(response).to.have.status(500);
           done();
         });
     });  
