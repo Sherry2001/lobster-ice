@@ -58,8 +58,11 @@ router.put('/addItemToCategory', async (req, res, next) => {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
     //TODO: VERIFICATION OF USERID, SEE ISSUE #12
-    await Item.updateOne({ _id: itemId }, { $push: { categoryIds: this.categoryId } }).exec();
-    await Category.updateOne({ _id: categoryId }, { $push: { items: this.itemId } }).exec();
+    const originalCategory = await Category.findOneAndUpdate({ _id: categoryId }, { $push: { items: itemId } }).exec();
+    if (!originalCategory) {
+      throw new Error('CategoryId not found in database');
+    }
+    await Item.updateOne({ _id: itemId }, { $push: { categoryIds: categoryId } }).exec();
     res.status(200).send('Item added to category');
   } catch (error) {
     next(error);

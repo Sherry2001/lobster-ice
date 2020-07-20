@@ -160,5 +160,79 @@ module.exports = function categorySuite() {
         });
     });
   });
+ 
+  describe('/addItemToCategory', () => {
+    before(async () => {
+      await testCategory2.save();
+      await testCategory1.save();
+    });
+
+    it('/addItemToCategory SetUp test: 3 items in Item db, 2 categories in Category db', async () => {
+      const itemCount = await Item.countDocuments();
+      expect(itemCount).equals(3);
+      const categoryCount = await Category.countDocuments();
+      expect(categoryCount).equals(2);
+    });
+
+    it('add item3 to category2, category2 should now have 1 item', (done) => {
+      chai 
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item3._id,
+          categoryId: testCategory2._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const item3Document = await Item.findById(item3._id);
+          expect(item3Document.categoryIds).to.have.lengthOf(1);
+          expect(item3Document.categoryIds[0].toString()).equals(testCategory2._id.toString());
+          const category2Document = await Category.findById(testCategory2._id);
+          expect(category2Document.items).to.have.lengthOf(1);
+          expect(category2Document.items[0].toString()).equals(item3._id.toString());
+          done();
+        });
+    });
+
+    it('add item3 to category1, category1 should now have 3 items', (done) => {
+      chai 
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item3._id,
+          categoryId: testCategory1._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const item3Document = await Item.findById(item3._id);
+          expect(item3Document.categoryIds).to.have.lengthOf(2);
+          expect(item3Document.categoryIds[0].toString()).equals(testCategory2._id.toString());
+          expect(item3Document.categoryIds[1].toString()).equals(testCategory1._id.toString());
+          const category1Document = await Category.findById(testCategory1._id);
+          expect(category1Document.items).to.have.lengthOf(3);
+          expect(category1Document.items[2].toString()).equals(item3._id.toString());
+          done();
+        });
+    });
+
+    it('add item1 to invalid categoryId, expect error status and no action', (done) => {
+      chai
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item1._id,
+          categoryId: item2._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.not.have.status(200);
+          const item1Document = await Item.findById(item1._id);
+          expect(item1Document.categoryIds).to.have.lengthOf(1);
+          done();
+        });
+    });
+  });
   // TODO: Item Router Tests in next PR
 };
