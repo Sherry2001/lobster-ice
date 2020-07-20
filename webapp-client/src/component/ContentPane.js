@@ -1,4 +1,3 @@
-import Category from './Category';
 import Item from './Item';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,11 +11,14 @@ export default class ContentPane extends React.Component {
   }
 
   async componentDidMount() {
-    const items = await this.getItems(this.props);
-    this.setState({ items });
+    this.setItems(this.props);
   }
 
-  async getItems(props) {
+  async componentDidUpdate() {
+    this.setItems(this.props);
+  }
+
+  async setItems(props) {
     const { currentCategory, defaultCategory, userId } = props;
     let url, response, items;
     if (currentCategory === defaultCategory) {
@@ -36,13 +38,17 @@ export default class ContentPane extends React.Component {
     if (response.status !== 200) {
       throw new Error(response.statusMessage);
     }
-    return items;
+    this.setState({ items });
   }
 
   render() {
     return (
       <>
-        <Category categoryName="All" />
+        <nav className="level">
+          <h1 className="level-item has-text-centered title">
+            {this.props.categoryTitle}
+          </h1>
+        </nav>
         <div className="wrap tile is-ancestor">
           {this.state.items.map((item, index) => {
             return <Item key={index} item={item} />;
@@ -54,7 +60,8 @@ export default class ContentPane extends React.Component {
 }
 
 ContentPane.propTypes = {
-  currentCategory: PropTypes.string.isRequired,
+  categoryTitle: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   defaultCategory: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
 };
