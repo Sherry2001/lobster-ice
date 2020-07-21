@@ -35,7 +35,7 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
               <CategoryList
                 setCurrentCategory={this.setCurrentCategory}
-                {/*TODO: Take in userID from OAuth*/}
+                //TODO: Take in userID from OAuth */
                 userID="5f050952f516f3570ee26724"
               />
               <div className="panel-block"></div>
