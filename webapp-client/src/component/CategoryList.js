@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
+import DragContainer from './DragContainer';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ export default class CategoryList extends React.Component {
       hasError: false,
       categoryList: [],
     };
-    this.addAElement = this.addAElement.bind(this);
+    this.addCategoryElement = this.addCategoryElement.bind(this);
     this.clearHasError = this.clearHasError.bind(this);
   }
 
@@ -34,15 +35,16 @@ export default class CategoryList extends React.Component {
     }
   }
 
-  addAElement(category, index) {
+  addCategoryElement(category, index) {
     return (
-      <a
-        className="panel-block is-active"
-        key={index}
-        onClick={() => this.props.setCurrentCategory(category._id, category.title)}
-      >
-        {category.title}
-      </a>
+      <>
+        <DragContainer
+          title={category.title}
+          id={category._id}
+          index={index}
+          setCurrentCategory={this.props.setCurrentCategory}
+        />
+      </>
     );
   }
 
@@ -55,9 +57,9 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addAElement({title: 'All', _id:'All'},0)}
+        {this.addCategoryElement({ title: 'All', _id: 'All' }, 0)}
         {this.state.categoryList.map((category, index) =>
-          this.addAElement(category, index + 1)
+          this.addCategoryElement(category, index + 1)
         )}
 
         <ErrorMessage
