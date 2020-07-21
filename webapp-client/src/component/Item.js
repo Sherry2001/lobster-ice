@@ -14,14 +14,14 @@ export default class Item extends React.Component {
     return (
       <div className="tile is-parent is-4">
         <article className="tile is-child box">
-          <div className="level">
-            <div className="level-left">
+          <article className="media">
+            <div className="media-content">
               <p className="title">{item.highlight}</p>
             </div>
-            <div className="level-right">
+            <div className="media-right">
               <i className="fa fa-plus" aria-hidden="true"></i>
             </div>
-          </div>
+          </article>
           <div className="content">
             <p>{item.comment}</p>
           </div>
