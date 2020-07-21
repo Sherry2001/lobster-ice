@@ -14,9 +14,9 @@ const router = express();
  * response: status 200 for success
  */
 router.post('/createCategory', async (req, res, next) => {
-  const newCategory = req.body;
   try {
-    await Category.create(newCategory).exec();
+    const newCategory = new Category(req.body); 
+    await newCategory.save();
     res.status(200).send('Successfully created a new category');
   } catch (error) {
     next(error);
@@ -60,7 +60,11 @@ router.get('/getCategoryItems/:categoryId', async (req, res, next) => {
     const response = {};
 
     //get category name and a list of item ids
-    const categoryData = await Category.findOne({ _id: categoryId }, 'title items').exec();
+    const categoryData = await Category.findById(categoryId, 'title items').exec();
+    
+    if (!categoryData) {
+      throw new Error('CategoryId does not exist in database');
+    }
     response.title = categoryData.title;
     const itemIds = categoryData.items;
 
@@ -86,9 +90,11 @@ router.delete('/deleteCategory', async (req, res, next) => {
   try {
     const categoryId = req.body.categoryId;
 
-    await Item.update({}, { $pull: { categoryIds: this.categoryId } }, { multi: true }, done).exec();
-    await Category.deleteOne({ _id: categoryId }).exec();
-
+    const deletedCategory = await Category.findByIdAndRemove(categoryId).exec();
+    if (!deletedCategory) {
+      throw new Error('CategoryId does not exist in database');
+    }
+    await Item.updateMany({}, { $pull: { categoryIds: categoryId } }).exec();
     res.status(200).send('deleted category');
   } catch (error) {
     next(error);
