@@ -6,11 +6,7 @@ export default class AddCategoryForm extends React.Component {
     e.preventDefault();
     const category = e.target.elements['add-category'].value;
     this.props.addCategory(category);
-<<<<<<< HEAD
     e.target.elements['add-category'].value = ''; 
-=======
-    e.target.elements['add-category'].value = '';
->>>>>>> dc12133bcba5d912ffd4bfb7ef79875a5bbe2ffa
   };
 
   render() {
