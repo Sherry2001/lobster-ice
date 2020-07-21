@@ -9,7 +9,7 @@ export default class CategoryList extends React.Component {
       hasError: false,
       categoryList: [],
     };
-    this.addAElement = this.addAElement.bind(this);
+    this.addCategoryElement = this.addCategoryElement.bind(this);
     this.clearHasError = this.clearHasError.bind(this);
   }
 
@@ -34,7 +34,7 @@ export default class CategoryList extends React.Component {
     }
   }
 
-  addAElement(category, index) {
+  addCategoryElement(category, index) {
     return (
       <a
         className="panel-block is-active"
@@ -55,9 +55,9 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addAElement({title: 'All', _id:'All'},0)}
+        {this.addCategoryElement({title: 'All', _id:'All'},0)}
         {this.state.categoryList.map((category, index) =>
-          this.addAElement(category, index + 1)
+          this.addCategoryElement(category, index + 1)
         )}
 
         <ErrorMessage
