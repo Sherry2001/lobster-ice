@@ -1,0 +1,25 @@
+{
+  "short_name": "Lobster Ice Cream",
+  "name": "Lobster Ice Cream Webview",
+  "icons": [
+    {
+      "src": "lobster_icon_192.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "lobster_icon_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "lobster_icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
