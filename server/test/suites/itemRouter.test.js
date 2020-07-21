@@ -102,7 +102,7 @@ module.exports = function categorySuite() {
           highlight: highlightWords,
         })
         .set('content-type', 'application/json')
-        .end(async function (error, response) {
+        .end(async (error, response) => {
           expect(response).to.have.status(200);
           const items = await Item.find({});
           expect(items).to.have.lengthOf(1);
