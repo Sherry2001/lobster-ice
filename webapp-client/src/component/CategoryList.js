@@ -26,9 +26,10 @@ export default class CategoryList extends React.Component {
         throw new Error(response.statusMessage);
       }
       const categoryList = await response.json();
-      this.setState({ categoryList });
+      this.setState({
+        categoryList,
+      });
     } catch (error) {
-      console.log(error);
       this.setState({ hasError: true });
     }
   }
@@ -38,7 +39,7 @@ export default class CategoryList extends React.Component {
       <a
         className="panel-block is-active"
         key={index}
-        onClick={() => this.props.setContentPane(category._id)}
+        onClick={() => this.props.setCurrentCategory(category._id, category.title)}
       >
         {category.title}
       </a>
@@ -54,9 +55,16 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
+        {this.addAElement({title: 'All', _id:'All'},0)}
         {this.state.categoryList.map((category, index) =>
-          this.addAElement(category, index)
+          this.addAElement(category, index + 1)
         )}
+
+        <ErrorMessage
+          hasError={this.state.hasError}
+          message={'Error displaying list of category'}
+          closePopup={this.clearHasError}
+        />
       </>
     );
   }
@@ -64,5 +72,6 @@ export default class CategoryList extends React.Component {
 
 CategoryList.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setContentPane: PropTypes.func.isRequired,
+  setCurrentCategory: PropTypes.func.isRequired,
+  userID: PropTypes.string.isRequired,
 };

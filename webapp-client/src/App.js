@@ -11,16 +11,17 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // list of category names for now, will be list of category ids later
-      categories: [this.defaultCategory],
-      currentCategory: this.defaultCategory,
+      // categoryID of the current category
+      categoryId: this.defaultCategory,
+      categoryTitle: this.defaultCategory,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
 
-  setCurrentCategory(category) {
+  setCurrentCategory(id, title) {
     this.setState({
-      currentCategory: category,
+      categoryId: id,
+      categoryTitle: title,
     });
   }
 
@@ -35,7 +36,7 @@ export default class App extends React.Component {
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
               <CategoryList
-                setContentPane={this.setCurrentCategory}
+                setCurrentCategory={this.setCurrentCategory}
                 userID="5f050952f516f3570ee26724"
               />
               <div className="panel-block"></div>
@@ -46,7 +47,8 @@ export default class App extends React.Component {
           <div className="column">
             <ContentPane
               defaultCategory={this.defaultCategory}
-              currentCategory={this.state.currentCategory}
+              categoryId={this.state.categoryId}
+              categoryTitle={this.state.categoryTitle}
               // TODO: Add the actual user id
               userId="5f050952f516f3570ee26724"
             />
