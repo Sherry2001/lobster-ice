@@ -136,7 +136,7 @@ async function addItem() {
         headers: { 'Content-type': 'application/json' }
     });
     
-    if (response.statusCode !== 200) {
+    if (response.status !== 200) {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
