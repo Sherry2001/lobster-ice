@@ -96,7 +96,7 @@ module.exports = function categorySuite() {
           title: newCategoryTitle,
         })
         .set('content-type', 'application/json')
-        .end(async function (error, response) {
+        .end(async (error, response) => {
           expect(response).to.have.status(200);
           const categories = await Category.find({});
           expect(categories).to.have.lengthOf(1);
