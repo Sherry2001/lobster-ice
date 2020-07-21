@@ -122,7 +122,7 @@ const serverUrl = 'http://localhost:8080';
 
 async function addItem() {
   newItem = {
-    sourceLink: 'www.googe.com', // TODO: get actual sourceLink
+    sourceLink: window.location.toString(), // TODO: get actual sourceLink
     placesId: 'something', // TODO: get actual placesId
     userId: '5f050952f516f3570ee26724', // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
