@@ -1,0 +1,20 @@
+.injection-sidebar {
+  z-index: 9999;
+  position: fixed;
+  right: 0;
+  top: 20px;
+  width: 300px;
+  max-height: 80vh;
+  background-color: #fff;
+  display: none;
+}
+
+.injection-icon {
+  z-index: 9999;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+  display: none;
+}
