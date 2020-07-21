@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 import Item from './Item';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export default class ContentPane extends React.Component {
   constructor(props) {
