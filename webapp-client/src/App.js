@@ -11,7 +11,7 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // categoryID of the current category
+    // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
     };
