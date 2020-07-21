@@ -1,3 +1,4 @@
+import '../stylesheets/ContentPane.css';
 import { debounce } from 'lodash';
 import Item from './Item';
 import PropTypes from 'prop-types';
