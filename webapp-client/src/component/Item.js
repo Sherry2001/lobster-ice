@@ -1,3 +1,4 @@
+import '../stylesheets/Item.css';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -30,11 +31,13 @@ export default class Item extends React.Component {
               {this.formatSourceLink(item.sourceLink)}
             </div>
             <div className="level-right">
-              <i
-                onClick={() => deleteItem(item)}
-                className="fa fa-trash"
-                aria-hidden="true"
-              ></i>
+              <a className="trash">
+                <i
+                  onClick={() => deleteItem(item)}
+                  className="fa fa-trash"
+                  aria-hidden="true"
+                ></i>
+              </a>
             </div>
           </div>
         </article>
