@@ -9,6 +9,7 @@ export default class ContentPane extends React.Component {
     this.state = {
       items: [],
     };
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   componentDidMount() {
@@ -58,6 +59,7 @@ export default class ContentPane extends React.Component {
       console.error(response.statusMessage);
       throw new Error(response.statusMessage);
     }
+    this.setItems(this.props);
   }
 
   render() {
