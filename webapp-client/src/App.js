@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
+import Navbar from './component/Navbar';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // list of category names for now, will be list of category ids later 
+      // list of category names for now, will be list of category ids later
       categories: [this.defaultCategory],
       currentCategory: this.defaultCategory,
     };
@@ -34,11 +34,8 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className="App">
-          <h1>Lobster Ice Cream</h1>
-          <img src={logo} className="app-logo" alt="logo" />
-        </div>
+      <>
+        <Navbar />
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
@@ -56,7 +53,7 @@ export default class App extends React.Component {
             <Category categoryName={this.state.currentCategory} />
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
