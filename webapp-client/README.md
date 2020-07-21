@@ -1,5 +1,5 @@
 To reference the server URL: process.env.REACT_APP_API_URL
- 
+
 ## Available Scripts
 
 In the project directory, you can run:
