@@ -1,5 +1,4 @@
 import '../stylesheets/ContentPane.css';
-import { debounce } from 'lodash';
 import Item from './Item';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,20 +9,23 @@ export default class ContentPane extends React.Component {
     this.state = {
       items: [],
     };
-    this.setItems = debounce(this.setItems, 1);
   }
 
   componentDidMount() {
     this.setItems(this.props);
   }
 
-  componentDidUpdate() {
-    this.setItems(this.props);
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.setItems(this.props);
+    }
   }
 
   async setItems(props) {
     const { categoryId, defaultCategory, userId } = props;
-    let url, response, items;
+    let url;
+    let response;
+    let items;
     if (categoryId === defaultCategory) {
       url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
       response = await fetch(url);
