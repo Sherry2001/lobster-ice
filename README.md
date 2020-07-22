@@ -2,6 +2,8 @@
 STEP 2020 Capstone Project :) 
 
 ### Step 0: Make sure to have or install Node.Js version 10 or above
+We recommend using Node Version Manager (nvm): 
+- Find instructions here: https://github.com/nvm-sh/nvm
 
 ### Step 1: Start Server API Node on Port 8080
 Connecting to Our Remote MongoDB Atlas 
