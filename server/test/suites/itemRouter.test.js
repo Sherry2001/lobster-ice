@@ -236,6 +236,7 @@ module.exports = function categorySuite() {
       const itemCount = await Item.countDocuments();
       expect(itemCount).equals(3);
     });
+
     it('delete item3, should also remove item3 from category1 category2', (done) => {
       chai
         .request(server)
@@ -275,7 +276,7 @@ module.exports = function categorySuite() {
           expect(categories[0].title).equals(testCategory1.title);
           expect(categories[0].items).to.have.lengthOf(1);
           expect(categories[1].title).equals(testCategory2.title);
-          expect(categories[1].items).to.have.lengthOf(0);
+          expect(categories[1].items).to.be.empty;
           done();
         });
     });
