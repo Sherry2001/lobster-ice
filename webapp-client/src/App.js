@@ -51,7 +51,7 @@ export default class App extends React.Component {
           </div>
           <div className="column">
             {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.categoryTitle} />
+            <Category categoryName={this.state.categoryId} />
           </div>
         </div>
       </React.Fragment>

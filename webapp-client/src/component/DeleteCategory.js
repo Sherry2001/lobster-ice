@@ -1,17 +1,11 @@
 import React from 'react';
 import ErrorMessage from './ErrorMessage';
 
-export default class DeleteCategory {
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasError: false,
-    };
-    this.deleteCategory = this.deleteCategory.bind(this);
-    this.clearHasError = this.clearHasError.bind(this);
-  }
+export default function DeleteCategory (props) {
+  let hasError = false;
 
-  async deleteCategory() {
+  const deleteCategory = async () => {
+    console.log("in deleteCategory");
     const request = {
       method: 'POST',
       body: JSON.stringify({
@@ -28,25 +22,21 @@ export default class DeleteCategory {
         throw new Error(response.statusMessage);
       }
     } catch (error) {
-      this.setState({ hasError: true });
+      hasError = true;
     }
-  }
+  };
 
-  clearHasError() {
-    this.setState({
-      hasError: false,
-    });
-  }
+  const clearHasError = () => {
+    hasError= false;
+  };
 
-  render() {
-    return (
-      <>
-        <ErrorMessage
-          hasError={this.state.hasError}
-          message={'Error deleting category'}
-          closePopup={this.clearHasError}
-        />
-      </>
-    );
-  }
+  return (
+    <>
+      <ErrorMessage
+        hasError={hasError}
+        message={'Error deleting category'}
+        closePopup={clearHasError}
+      />
+    </>
+  );
 }

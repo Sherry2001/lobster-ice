@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
 import DragContainer from './DragContainer';
+import DropContainer from './DropContainer';
+import DeleteCategory from './DeleteCategory';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -57,6 +59,7 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
+        <DropContainer />
         {this.addCategoryElement({ title: 'All', _id: 'All' }, 0)}
         {this.state.categoryList.map((category, index) =>
           this.addCategoryElement(category, index + 1)
