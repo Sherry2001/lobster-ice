@@ -47,11 +47,6 @@ module.exports = function categorySuite() {
     userId: testUser2._id,
   });
 
-  testCategory3 = new Category({
-    title: 'User2 Category2',
-    userId: testUser2._id,
-  });
-
   item1 = new Item({
     sourceLink: 'www.googe.com',
     placesId: 'something',
@@ -67,7 +62,6 @@ module.exports = function categorySuite() {
     userId: testUser1._id,
     highlight: 'other highlighted words',
     comment: 'another sample comment',
-    categoryIds: [testCategory1._id],
   });
 
   item3 = new Item({
@@ -77,7 +71,7 @@ module.exports = function categorySuite() {
     comment: 'another comment',
   })
 
-  testCategory1.items = [item1._id, item2._id];
+  testCategory1.items = [item1._id];
   after(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
@@ -160,5 +154,143 @@ module.exports = function categorySuite() {
         });
     });
   });
-  // TODO: Item Router Tests in next PR
+ 
+  describe('/addItemToCategory', () => {
+    before(async () => {
+      await testCategory1.save();
+      await testCategory2.save();
+    });
+
+    it('/addItemToCategory SetUp test: 3 items in Item db, 2 categories in Category db', async () => {
+      const itemCount = await Item.countDocuments();
+      expect(itemCount).equals(3);
+      const categoryCount = await Category.countDocuments();
+      expect(categoryCount).equals(2);
+    });
+
+    it('add item3 to category2, category2 should now have 1 item', (done) => {
+      chai 
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item3._id,
+          categoryId: testCategory2._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const item3Document = await Item.findById(item3._id);
+          expect(item3Document.categoryIds).to.have.lengthOf(1);
+          expect(item3Document.categoryIds[0].toString()).equals(testCategory2._id.toString());
+          const category2Document = await Category.findById(testCategory2._id);
+          expect(category2Document.items).to.have.lengthOf(1);
+          expect(category2Document.items[0].toString()).equals(item3._id.toString());
+          done();
+        });
+    });
+
+    it('add item3 to category1, category1 should now have 2 items', (done) => {
+      chai 
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item3._id,
+          categoryId: testCategory1._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const item3Document = await Item.findById(item3._id);
+          expect(item3Document.categoryIds).to.have.lengthOf(2);
+          expect(item3Document.categoryIds[0].toString()).equals(testCategory2._id.toString());
+          expect(item3Document.categoryIds[1].toString()).equals(testCategory1._id.toString());
+          const category1Document = await Category.findById(testCategory1._id);
+          expect(category1Document.items).to.have.lengthOf(2);
+          expect(category1Document.items[1].toString()).equals(item3._id.toString());
+          done();
+        });
+    });
+
+    it('add item1 to invalid categoryId, expect error status and no action', (done) => {
+      chai
+        .request(server)
+        .put('/item/addItemToCategory')
+        .send({
+          itemId: item1._id,
+          categoryId: item2._id,
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(500);
+          const item1Document = await Item.findById(item1._id);
+          expect(item1Document.categoryIds).to.have.lengthOf(1);
+          done();
+        });
+    });
+  });
+
+  describe('/deleteItem', () => {
+    it('/deleteItem SetUp test: 3 items in Item db, 2 categories in Category Db', async () => {
+      const categoryCount = await Category.countDocuments();
+      expect(categoryCount).equals(2);
+      const itemCount = await Item.countDocuments();
+      expect(itemCount).equals(3);
+    });
+
+    it('delete item3, should also remove item3 from category1 category2', (done) => {
+      chai
+        .request(server)
+        .delete('/item/deleteItem')
+        .send({ itemId: item3._id })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const deletedDocument = await Item.findById(item3._id);
+          expect(deletedDocument).to.be.null;
+          const itemCount = await Item.countDocuments();
+          expect(itemCount).equals(2);
+
+          const categories = await Category.find({});
+          expect(categories[0].title).equals(testCategory1.title);
+          expect(categories[0].items).to.have.lengthOf(1);
+          expect(categories[1].title).equals(testCategory2.title);
+          expect(categories[1].items).to.have.lengthOf(0);
+          done();
+        });
+    });
+
+    it('delete item2, which does not belong to a category', (done) => {
+      chai
+        .request(server)
+        .delete('/item/deleteItem')
+        .send({ itemId: item2._id })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const deletedDocument = await Item.findById(item2._id);
+          expect(deletedDocument).to.be.null;
+          const itemCount = await Item.countDocuments();
+          expect(itemCount).equals(1);
+
+          const categories = await Category.find({});
+          expect(categories[0].title).equals(testCategory1.title);
+          expect(categories[0].items).to.have.lengthOf(1);
+          expect(categories[1].title).equals(testCategory2.title);
+          expect(categories[1].items).to.be.empty;
+          done();
+        });
+    });
+
+    it('delete invalid itemId, respond with error status', (done) => {
+      chai
+        .request(server)
+        .delete('/item/deleteItem')
+        .send({ categoryId: item1._id })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(500);
+          done();
+        });
+    });  
+  })
 };
