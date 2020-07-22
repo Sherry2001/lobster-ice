@@ -14,3 +14,8 @@ Start Server
 - $ cd ./server
 - $ npm install
 - $ npm start
+
+### Testing Server API
+$ cd ./server
+$ npm install
+$ npm test
