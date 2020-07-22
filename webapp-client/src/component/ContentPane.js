@@ -1,6 +1,5 @@
 import '../stylesheets/ContentPane.css';
 import errorify from '../errorify.js';
-import ErrorMessage from './ErrorMessage';
 import Item from './Item';
 import PropTypes from 'prop-types';
 import React from 'react';
