@@ -1,4 +1,4 @@
-import ErrorMessage from './ErrorMessage';
+import errorify from '../errorify.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -6,11 +6,10 @@ export default class CategoryList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasError: false,
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
-    this.clearHasError = this.clearHasError.bind(this);
+    errorify(this);
   }
 
   async componentDidMount() {
@@ -30,7 +29,7 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.setState({ hasError: true });
+      this.showErrorMessage();
     }
   }
 
@@ -48,12 +47,6 @@ export default class CategoryList extends React.Component {
     );
   }
 
-  clearHasError() {
-    this.setState({
-      hasError: false,
-    });
-  }
-
   render() {
     return (
       <>
@@ -61,12 +54,7 @@ export default class CategoryList extends React.Component {
         {this.state.categoryList.map((category, index) =>
           this.addCategoryElement(category, index + 1)
         )}
-
-        <ErrorMessage
-          hasError={this.state.hasError}
-          message={'Error displaying list of category'}
-          closePopup={this.clearHasError}
-        />
+        {this.renderErrorMessage('Error displaying categories')}
       </>
     );
   }
