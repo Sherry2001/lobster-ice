@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
@@ -7,6 +6,7 @@ import Category from './component/Category';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
+import Navbar from './component/Navbar';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,11 +30,8 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className="App">
-          <h1>Lobster Ice Cream</h1>
-          <img src={logo} className="app-logo" alt="logo" />
-        </div>
+      <>
+        <Navbar />
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
@@ -54,7 +51,7 @@ export default class App extends React.Component {
             <Category categoryName={this.state.categoryId} />
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
