@@ -137,11 +137,12 @@ const serverUrl = 'http://localhost:8080';
  */
 async function getCategoryDropdown(userId) {
   const categoryDropdown = customCreateElement('select', []);
+  categoryDropdown.setAttribute('multiple', true);
+
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
   defaultOption.value = '';
   defaultOption.disabled = true;
   defaultOption.selected = true; 
-  defaultOption.setAttribute('multiple', true);
   categoryDropdown.options.add(defaultOption);
 
   try {
@@ -170,9 +171,10 @@ async function addItem() {
     comment: document.getElementById('comment').value,
   }
   
-  const categorySelected = document.getElementById('categoryDropdown').value;
-  if(categorySelected && categorySelected !== '') {
-    newItem.categoryIds = [categorySelected];
+  const selectedCategories = getSelectedOptions('categoryDropdown'); 
+  
+  if(selectedCategories.length) {
+    newItem.categoryIds = selectedCategories;
   }
 
   try {
@@ -191,4 +193,19 @@ async function addItem() {
   } catch(error) {
     // TODO: display error message on frontend
   }
+}
+
+/**
+ * Helper to return a list of selected options from a multi-select dropdown
+ * @param {String} dropdownElementId 
+ */
+function getSelectedOptions(dropdownElementId) {
+  const selectedCategories = [];
+  const categoryOptions = document.getElementById(dropdownElementId).options;
+  for(option of categoryOptions) {
+    if (option.selected) {
+      selectedCategories.push(option.value);
+    }
+  }
+  return selectedCategories;
 }
