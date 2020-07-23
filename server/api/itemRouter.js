@@ -16,9 +16,9 @@ const router = express.Router();
  * response: status 200 for success
  */
 router.post('/addItem', async (req, res, next) => {
-  const newItem = req.body;
   try {
-    await Item.create(newItem).exec();
+    const newItem = new Item(req.body); 
+    await newItem.save();
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
     next(error);
@@ -58,8 +58,11 @@ router.put('/addItemToCategory', async (req, res, next) => {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
     //TODO: VERIFICATION OF USERID, SEE ISSUE #12
-    await Item.update({ _id: itemId }, { $push: { categoryIds: this.categoryId } }, done).exec();
-    await Category.update({ _id: categoryId }, { $push: { items: this.itemId } }, done).exec();
+    const originalCategory = await Category.findOneAndUpdate({ _id: categoryId }, { $push: { items: itemId } }).exec();
+    if (!originalCategory) {
+      throw new Error('CategoryId not found in database');
+    }
+    await Item.updateOne({ _id: itemId }, { $push: { categoryIds: categoryId } }).exec();
     res.status(200).send('Item added to category');
   } catch (error) {
     next(error);
@@ -80,8 +83,11 @@ router.delete('/deleteItem', async (req, res, next) => {
     const itemId = req.body.itemId;
 
     //deleting this itemId from all the categories it belonged to
-    await Category.update({}, { $pull: { items: this.itemId } }, { multi: true }, done).exec();
-    await Item.deleteOne({ _id: itemId }).exec();
+    const deletedItem = await Item.findByIdAndRemove(itemId).exec();
+    if (!deletedItem) {
+      throw new Error ('ItemID not found in database');
+    }
+    await Category.updateMany({}, { $pull: { items: itemId } }).exec();
 
     res.status(200).send('Item successfully deleted from DB');
   } catch (error) {
