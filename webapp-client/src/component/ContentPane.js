@@ -1,5 +1,5 @@
 import '../stylesheets/ContentPane.css';
-import errorify from '../errorify.js';
+import allowErrorMessage from '../errorify.js';
 import Item from './Item';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,7 +10,7 @@ export default class ContentPane extends React.Component {
     this.state = {
       items: [],
     };
-    errorify(this);
+    allowErrorMessage(this);
   }
 
   componentDidMount() {

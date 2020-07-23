@@ -1,15 +1,16 @@
-import errorify from '../errorify.js';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
+import ErrorMessage from './ErrorMessage';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasError: false,
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
-    errorify(this);
+    this.clearHasError = this.clearHasError.bind(this);
   }
 
   async componentDidMount() {
@@ -18,7 +19,7 @@ export default class CategoryList extends React.Component {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
           '/category/getCategories/' +
-          this.props.userId,
+          this.props.userID,
         header
       );
       if (response.status !== 200) {
@@ -29,7 +30,7 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.showErrorMessage();
+      this.setState({ hasError: true });
     }
   }
 
@@ -38,29 +39,39 @@ export default class CategoryList extends React.Component {
       <a
         className="panel-block is-active"
         key={index}
-        onClick={() =>
-          this.props.setCurrentCategory(category._id, category.title)
-        }
+        onClick={() => this.props.setCurrentCategory(category._id, category.title)}
       >
         {category.title}
       </a>
     );
   }
 
+  clearHasError() {
+    this.setState({
+      hasError: false,
+    });
+  }
+
   render() {
     return (
       <>
-        {this.addCategoryElement({ title: 'All', _id: 'All' }, 0)}
+        {this.addCategoryElement({title: 'All', _id:'All'},0)}
         {this.state.categoryList.map((category, index) =>
           this.addCategoryElement(category, index + 1)
         )}
-        {this.renderErrorMessage('Error displaying categories')}
+
+        <ErrorMessage
+          hasError={this.state.hasError}
+          message={'Error displaying list of category'}
+          closePopup={this.clearHasError}
+        />
       </>
     );
   }
 }
 
 CategoryList.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
+  userID: PropTypes.string.isRequired,
 };
