@@ -161,9 +161,7 @@ async function getCategoryDropdown(userId) {
 /**
  * Add new item to databse
  */
-async function addItem() {
-  console.log(document.getElementById('categoryDropdown').value);
-  
+async function addItem() {  
   newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
