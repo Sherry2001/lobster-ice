@@ -138,6 +138,7 @@ const serverUrl = 'http://localhost:8080';
 async function getCategoryDropdown(userId) {
   const categoryDropdown = customCreateElement('select', []);
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
+  defaultOption.value = '';
   defaultOption.disabled = true;
   defaultOption.selected = true; 
   defaultOption.setAttribute('multiple', true);
@@ -157,15 +158,25 @@ async function getCategoryDropdown(userId) {
   return categoryDropdown
 }
 
+/**
+ * Add new item to databse
+ */
 async function addItem() {
+  console.log(document.getElementById('categoryDropdown').value);
+  
   newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    userId: '5f050952f516f3570ee26724', // TODO: get actual userID
+    userId: '66616b652d757365722d6964', // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   }
   
+  const categorySelected = document.getElementById('categoryDropdown').value;
+  if(categorySelected && categorySelected !== '') {
+    newItem.categoryIds = [categorySelected];
+  }
+
   try {
     const response = await fetch(serverUrl + '/item/addItem', {
         method: 'POST',
