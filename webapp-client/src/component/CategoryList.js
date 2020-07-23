@@ -18,7 +18,7 @@ export default class CategoryList extends React.Component {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
           '/category/getCategories/' +
-          this.props.userID,
+          this.props.userId,
         header
       );
       if (response.status !== 200) {
@@ -61,7 +61,6 @@ export default class CategoryList extends React.Component {
 }
 
 CategoryList.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
-  userID: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
 };

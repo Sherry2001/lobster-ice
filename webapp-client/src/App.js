@@ -14,6 +14,8 @@ export default class App extends React.Component {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
+      // TODO: Take in userID from OAuth
+      userId: '5f050952f516f3570ee26724',
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
@@ -34,8 +36,8 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
               <CategoryList
                 setCurrentCategory={this.setCurrentCategory}
-                //TODO: Take in userID from OAuth */
-                userID="5f050952f516f3570ee26724"
+                // TODO: Take in userID from OAuth
+                userId="5f050952f516f3570ee26724"
               />
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
