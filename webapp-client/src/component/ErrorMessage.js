@@ -5,7 +5,7 @@ export default class ErrorMessage extends React.Component {
     super(props);
     this.state = {
       openWindow: true,
-    }
+    };
     this.displayError = this.displayError.bind(this);
   }
 
@@ -18,14 +18,10 @@ export default class ErrorMessage extends React.Component {
         </div>
       );
     }
-    return (
-      <div></div>
-    );
+    return null;
   }
 
   render() {
-    return (
-      this.displayError()
-    );
+    return this.displayError();
   }
 }
