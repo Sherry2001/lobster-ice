@@ -1,5 +1,6 @@
 import React from 'react';
 import ErrorMessage from './ErrorMessage';
+import allowErrorMessage from '../errorify';
 
 export default class AddCategoryForm extends React.Component {
   constructor(props) {
@@ -7,14 +8,17 @@ export default class AddCategoryForm extends React.Component {
     this.state = {
       hasError: false,
     };
+    // post request to db to add the category
     this.createCategory = this.createCategory.bind(this);
-    this.clearHasError = this.clearHasError.bind(this);
+    allowErrorMessage(this);
   }
-  // This function will be changed later to directly POST request to db instead of calling addCategory
   async createCategory(e) {
     e.preventDefault();
     const category = e.target.elements['add-category'].value;
     e.target.elements['add-category'].value = '';
+    if (category.trim() === '') {
+      return;
+    }
     const request = {
       method: 'POST',
       body: JSON.stringify({
@@ -29,19 +33,13 @@ export default class AddCategoryForm extends React.Component {
         request
       );
       if (response.status !== 200) {
-        throw new Error(response.statusMessage);
+        throw new Error();
       }
     } catch (error) {
-      this.setState({ hasError: true });
+      this.showErrorMessage();
     }
   }
-
-  clearHasError() {
-    this.setState({
-      hasError: false,
-    });
-  }
-
+  
   render() {
     return (
       <>
@@ -62,11 +60,7 @@ export default class AddCategoryForm extends React.Component {
           </div>
         </form>
 
-        <ErrorMessage
-          hasError={this.state.hasError}
-          message={'Error creating category'}
-          closePopup={this.clearHasError}
-        />
+        {this.renderErrorMessage('Error creating categories')}
       </>
     );
   }
