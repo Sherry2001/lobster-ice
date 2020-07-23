@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './lobster-icon.jpg';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';

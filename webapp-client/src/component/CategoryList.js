@@ -37,7 +37,11 @@ export default class CategoryList extends React.Component {
   addCategoryElement(category) {
     return (
       <a
-        className={this.props.currentCategoryId === category._id ? "panel-block has-background-light" : "panel-block"}
+        className={
+          this.props.currentCategoryId === category._id
+            ? 'panel-block has-background-light'
+            : 'panel-block'
+        }
         key={category._id}
         onClick={() => {
           this.props.setCurrentCategory(category._id, category.title);
@@ -51,7 +55,7 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({title: 'All', _id:'All'})}
+        {this.addCategoryElement({ title: 'All', _id: 'All' })}
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}
