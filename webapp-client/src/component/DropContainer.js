@@ -10,13 +10,16 @@ export default function DropContainer() {
     }),
   });
   const isActive = canDrop && isOver;
+  let backgroundColor = 'white';
+  let textMessage = 'Drag category here'
   if (isActive) {
-    return (
-      <i ref={drop}  className="fa fa-trash-o fa-3x" aria-hidden="true"></i>
-    );
-  } else {
-    return (
-      <i ref={drop} className="fa fa-trash fa-3x" aria-hidden="true"></i>
-    );
+    backgroundColor = 'red';
+    textMessage = 'Release to delete'
   }
+  return (
+    <div className="btn-default" ref={drop} style={{color:'black', backgroundColor}}>
+      <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+      {textMessage}
+    </div>
+  );
 }

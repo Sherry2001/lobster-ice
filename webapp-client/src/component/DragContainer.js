@@ -4,9 +4,7 @@ import { useDrag } from 'react-dnd';
 export default function DragContainer(props) {
   const title = props.title;
   const id = props.id;
-  const index = props.index;
   const deleteCategory = async () => {
-    console.log("in deleteCategory");
     const request = {
       method: 'DELETE',
       body: JSON.stringify({
@@ -32,7 +30,6 @@ export default function DragContainer(props) {
     end: (item, monitor) => {
       const isDropped = monitor.getDropResult();
       if (item && isDropped) {
-        console.log(id);
         deleteCategory(id);
       }
     },
@@ -44,9 +41,9 @@ export default function DragContainer(props) {
   return (
     <a
       ref={drag}
-      style={{ opacity: isDragging ? 0.6 : 1 }}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
       className="panel-block is-active"
-      key={index}
+      key={id}
       onClick={() => props.setCurrentCategory(id, title)}
     >
       {title}
