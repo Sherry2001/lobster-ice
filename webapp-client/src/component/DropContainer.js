@@ -11,13 +11,17 @@ export default function DropContainer() {
   });
   const isActive = canDrop && isOver;
   let backgroundColor = 'white';
-  let textMessage = 'Drag category here'
+  let textMessage = 'Drag category here';
   if (isActive) {
     backgroundColor = 'red';
-    textMessage = 'Release to delete'
+    textMessage = 'Release to delete';
   }
   return (
-    <div className="btn-default" ref={drop} style={{color:'black', backgroundColor}}>
+    <div
+      className="btn-default"
+      ref={drop}
+      style={{ color: 'black', backgroundColor }}
+    >
       <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
       {textMessage}
     </div>

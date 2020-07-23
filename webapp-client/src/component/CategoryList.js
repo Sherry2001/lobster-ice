@@ -50,7 +50,7 @@ export default class CategoryList extends React.Component {
       <>
         <DragContainer
           title={category.title}
-          id={category._id}
+          id={category._id}Ï
           key={key}
           setCurrentCategory={this.props.setCurrentCategory}
         />

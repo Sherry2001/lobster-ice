@@ -21,8 +21,8 @@ export default function DragContainer(props) {
         throw new Error(response.statusMessage);
       }
     } catch (error) {
-      console.log("delete category error");
-      //hasError = true;
+      // TODO: use errorify to handle errors
+      console.log('delete category error');
     }
   };
   const [{ isDragging }, drag] = useDrag({
