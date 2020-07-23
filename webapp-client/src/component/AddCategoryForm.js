@@ -19,7 +19,7 @@ export default class AddCategoryForm extends React.Component {
       method: 'POST',
       body: JSON.stringify({
         title: category,
-        userId: 'fake-user-id',
+        userId: '5f050952f516f3570ee26724',
       }),
       headers: { 'Content-type': 'application/json' },
     };
