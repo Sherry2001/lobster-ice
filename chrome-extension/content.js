@@ -12,6 +12,9 @@ bulmaLink.setAttribute(
 bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
+// TODO: get actual user id
+const currentUserId = '66616b652d757365722d6964';
+
 // Inject invisible sidebar onto page
 const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
 sidebar.id = 'lobstericecream';
@@ -79,6 +82,7 @@ async function createSidebar(content) {
     event.preventDefault();
     addItem();
   });
+  sidebar.appendChild(form);
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   highlightLabel.htmlFor = 'highlight';
@@ -89,7 +93,11 @@ async function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
+  const commentLabel = customCreateElement('label', ['label', 'mt-2'], 'Note to Self');
+  commentLabel.htmlFor = 'comment';
+  form.appendChild(commentLabel);
+
+  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-2']);
   commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
@@ -99,7 +107,7 @@ async function createSidebar(content) {
   dropdownLabel.htmlFor = 'categoryDropdown';
   form.appendChild(dropdownLabel);
 
-  const categoryDropdown = await getCategoryDropdown('66616b652d757365722d6964');
+  const categoryDropdown = await getCategoryDropdown(currentUserId);
   categoryDropdown.id = 'categoryDropdown';
   form.appendChild(categoryDropdown);
 
@@ -109,8 +117,6 @@ async function createSidebar(content) {
   addButton.type = 'submit';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
-
-  sidebar.appendChild(form);
 }
 
 /**
@@ -166,14 +172,14 @@ async function addItem() {
   newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    userId: '66616b652d757365722d6964', // TODO: get actual userID
+    userId: currentUserId, // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   }
   
   const selectedCategories = getSelectedOptions('categoryDropdown'); 
   
-  if(selectedCategories.length) {
+  if (selectedCategories.length) {
     newItem.categoryIds = selectedCategories;
   }
 
