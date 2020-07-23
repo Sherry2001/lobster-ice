@@ -41,7 +41,6 @@ export default class Navbar extends React.Component {
   }
 
   formatUser() {
-    console.log(this.state.loggedIn);
     if (this.state.loggedIn) {
       const user = this.state.authInstance.currentUser.get();
       const profile = user.getBasicProfile();

@@ -18,7 +18,6 @@ export default class App extends React.Component {
       userId: '5f050952f516f3570ee26724',
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
-    this.setUserId = this.setUserId.bind(this);
   }
 
   setCurrentCategory(id, title) {
@@ -26,10 +25,6 @@ export default class App extends React.Component {
       categoryId: id,
       categoryTitle: title,
     });
-  }
-
-  setUserId(userId) {
-    this.setState({ userId });
   }
 
   render() {
@@ -41,7 +36,7 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
               <CategoryList
                 setCurrentCategory={this.setCurrentCategory}
-                userID={this.userId}
+                userId={this.state.userId}
               />
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
@@ -53,8 +48,7 @@ export default class App extends React.Component {
               defaultCategory={this.defaultCategory}
               categoryId={this.state.categoryId}
               categoryTitle={this.state.categoryTitle}
-              userId={this.userId}
-              setUserId={this.setUserId}
+              userId={this.state.userId}
             />
           </div>
         </div>

@@ -9,7 +9,7 @@ import React from 'react';
  * @param {React.Component} component - A react component
  */
 export default function allowErrorMessage(component) {
-  component.setState({ hasError: false });
+  component.state.hasError = false;
   component.clearErrorMessage = function () {
     component.setState({
       hasError: false,
@@ -23,7 +23,7 @@ export default function allowErrorMessage(component) {
       <ErrorMessage
         hasError={component.state.hasError}
         message={message}
-        closePopup={component.clearHasError}
+        closePopup={component.clearErrorMessage}
       />
     );
   };
