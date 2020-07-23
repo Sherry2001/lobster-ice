@@ -62,7 +62,7 @@ function closeSidebar() {
 }
 
 // Inject sidebar html content
-function createSidebar(content) {
+async function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
 
@@ -81,6 +81,7 @@ function createSidebar(content) {
   });
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
+  highlightLabel.htmlFor = 'highlight';
   form.appendChild(highlightLabel);
 
   const highlightTextarea = customCreateElement('textarea', ['textarea']);
@@ -92,6 +93,15 @@ function createSidebar(content) {
   commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
+
+  // Create select dropdown with options fetched from categories db
+  const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
+  dropdownLabel.htmlFor = 'categoryDropdown';
+  form.appendChild(dropdownLabel);
+
+  const categoryDropdown = await getCategoryDropdown('66616b652d757365722d6964');
+  categoryDropdown.id = 'categoryDropdown';
+  form.appendChild(categoryDropdown);
 
   const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
 
@@ -120,9 +130,36 @@ function customCreateElement(type, classList, innerHTML = '') {
 const serverUrl = 'http://localhost:8080';
 // TODO: select between dev host and prod host
 
+/**
+ * Returns a Promise that resolves to a <select> element,
+ * a multi-select dropdown menu of category options from fetching db
+ * @param {String} userId 
+ */
+async function getCategoryDropdown(userId) {
+  const categoryDropdown = customCreateElement('select', []);
+  const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
+  defaultOption.disabled = true;
+  defaultOption.selected = true; 
+  defaultOption.setAttribute('multiple', true);
+  categoryDropdown.options.add(defaultOption);
+
+  try {
+    const response = await fetch(serverUrl + '/category/getCategories/' + userId);
+    const categories = await response.json();
+    categories.map((category) => {
+      const newOption = customCreateElement('option', [], category.title);
+      newOption.value = category._id;
+      categoryDropdown.options.add(newOption);
+    });
+  } catch (error) {
+    // TODO: Handle this error? 
+  }
+  return categoryDropdown
+}
+
 async function addItem() {
   newItem = {
-    sourceLink: window.location.toString(), // TODO: get actual sourceLink
+    sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
     userId: '5f050952f516f3570ee26724', // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
