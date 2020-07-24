@@ -35,6 +35,7 @@ export default class App extends React.Component {
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
               <CategoryList
+                currentCategoryId={this.state.categoryId}
                 setCurrentCategory={this.setCurrentCategory}
                 userId={this.state.userId}
               />
