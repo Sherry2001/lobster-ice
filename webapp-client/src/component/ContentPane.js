@@ -30,10 +30,12 @@ export default class ContentPane extends React.Component {
     let items;
     try {
       if (categoryId === defaultCategory) {
+        // Fetches all of the user's items
         url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
         response = await fetch(url);
         items = await response.json();
       } else {
+        // Fetches only the items belonging to the current category
         url =
           process.env.REACT_APP_API_URL +
           '/category/getCategoryItems/' +
