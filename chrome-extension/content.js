@@ -132,14 +132,13 @@ function customCreateElement(type, classList, innerHTML = '') {
   return newElement;
 }
 
-
 const serverUrl = 'http://localhost:8080';
 // TODO: select between dev host and prod host
 
 /**
  * Returns a Promise that resolves to a <select> element,
  * a multi-select dropdown menu of category options from fetching db
- * @param {String} userId 
+ * @param {String} userId
  */
 async function getCategoryDropdown(userId) {
   const categoryDropdown = customCreateElement('select', []);
@@ -148,11 +147,13 @@ async function getCategoryDropdown(userId) {
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
   defaultOption.value = '';
   defaultOption.disabled = true;
-  defaultOption.selected = true; 
+  defaultOption.selected = true;
   categoryDropdown.options.add(defaultOption);
 
   try {
-    const response = await fetch(serverUrl + '/category/getCategories/' + userId);
+    const response = await fetch(
+      serverUrl + '/category/getCategories/' + userId
+    );
     const categories = await response.json();
     categories.map((category) => {
       const newOption = customCreateElement('option', [], category.title);
@@ -160,55 +161,55 @@ async function getCategoryDropdown(userId) {
       categoryDropdown.options.add(newOption);
     });
   } catch (error) {
-    // TODO: Handle this error? 
+    // TODO: Handle this error?
   }
-  return categoryDropdown
+  return categoryDropdown;
 }
 
 /**
  * Add new item to databse
  */
-async function addItem() {  
+async function addItem() {
   newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
     userId: currentUserId, // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
-  }
-  
-  const selectedCategories = getSelectedOptions('categoryDropdown'); 
-  
+  };
+
+  const selectedCategories = getSelectedOptions('categoryDropdown');
+
   if (selectedCategories.length) {
     newItem.categoryIds = selectedCategories;
   }
 
   try {
     const response = await fetch(serverUrl + '/item/addItem', {
-        method: 'POST',
-        body: JSON.stringify(newItem),
-        headers: { 'Content-type': 'application/json' }
+      method: 'POST',
+      body: JSON.stringify(newItem),
+      headers: { 'Content-type': 'application/json' },
     });
-    
+
     if (response.status !== 200) {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
       closeSidebar();
     }
-  } catch(error) {
+  } catch (error) {
     // TODO: display error message on frontend
   }
 }
 
 /**
  * Helper to return a list of selected options from a multi-select dropdown
- * @param {String} dropdownElementId 
+ * @param {String} dropdownElementId
  */
 function getSelectedOptions(dropdownElementId) {
   const selectedCategories = [];
   const categoryOptions = document.getElementById(dropdownElementId).options;
-  for(option of categoryOptions) {
+  for (option of categoryOptions) {
     if (option.selected) {
       selectedCategories.push(option.value);
     }
