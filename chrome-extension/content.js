@@ -82,7 +82,6 @@ async function createSidebar(content) {
     event.preventDefault();
     addItem();
   });
-  sidebar.appendChild(form);
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   highlightLabel.htmlFor = 'highlight';
@@ -106,6 +105,8 @@ async function createSidebar(content) {
   const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
   dropdownLabel.htmlFor = 'categoryDropdown';
   form.appendChild(dropdownLabel);
+  
+  sidebar.appendChild(form);
 
   const categoryDropdown = await getCategoryDropdown(currentUserId);
   categoryDropdown.id = 'categoryDropdown';
