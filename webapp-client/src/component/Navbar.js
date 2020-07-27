@@ -22,8 +22,7 @@ export default class Navbar extends React.Component {
 
   gapiSetState() {
     window.gapi.auth2.init({
-      client_id:
-        '754826226409-b9lm9u3d3r59ne301dti1ajbosnkjga5.apps.googleusercontent.com',
+      client_id: process.env.REACT_APP_CLIENT_ID,
     });
     /* Ready. Make a call to gapi.auth2.init or some other API */
     const authInstance = window.gapi.auth2.getAuthInstance();
