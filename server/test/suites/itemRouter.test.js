@@ -81,8 +81,24 @@ module.exports = function categorySuite() {
    * Item Router Tests
    */
   describe('/addItem', () => {
+    before(async () => {
+      testCategory3 = new Category({
+        title: '/addItem category test dummy1',
+        userId: testUser2._id,
+        items: [item1._id, item2._id],
+      });
+
+      testCategory4 = new Category({
+        title: '/addItem category test dummy2',
+        userId: testUser2._id,
+      });
+
+      await testCategory3.save();
+      await testCategory4.save();
+    });
     after(async () => {
       await Item.deleteMany({});
+      await Category.deleteMany({});
     });
 
     it('add a new item by user1', (done) => {
@@ -104,6 +120,33 @@ module.exports = function categorySuite() {
           done();
         });
     });
+
+    it('add new item by user1 and also to 2 categories', (done) => {
+      const highlightWords = 'testing add to category from sidebar';
+      chai
+        .request(server)
+        .post('/item/addItem')
+        .send({
+          sourceLink: 'www.googe.com',
+          userId: testUser1._id,
+          highlight: highlightWords,
+          categoryIds: [testCategory3._id, testCategory4._id],
+        })
+        .set('content-type', 'application/json')
+        .end(async (error, response) => {
+          expect(response).to.have.status(200);
+          const items = await Item.find({});
+          expect(items).to.have.lengthOf(2);
+          expect(items[1].highlight).equals(highlightWords);
+          expect(items[1].categoryIds).to.have.lengthOf(2);
+          expect(items[1].categoryIds[0].toString()).equals(testCategory3._id.toString());
+          expect(items[1].categoryIds[1].toString()).equals(testCategory4._id.toString());
+          const categories = await Category.find({});
+          expect(categories[0].items).to.have.lengthOf(3);
+          expect(categories[1].items).to.have.lengthOf(1)
+          done();
+        });
+    })
   });
 
   describe('/getItems/:userId', () => {
