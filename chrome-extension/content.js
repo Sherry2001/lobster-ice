@@ -122,7 +122,7 @@ async function createSidebar(content) {
         const mongoId = await response.json();
         console.log('the response from /getUserId response.body')
         console.log(mongoId);
-
+        
         // Create select dropdown with options fetched from categories db
         const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
         dropdownLabel.htmlFor = 'categoryDropdown';
@@ -132,26 +132,25 @@ async function createSidebar(content) {
         categoryDropdown.id = 'categoryDropdown';
         form.appendChild(categoryDropdown);
 
-        const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
-
-        const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
-        addButton.type = 'submit';
-        buttonContainer.appendChild(addButton);
-        form.appendChild(buttonContainer);
-
         userEmailNote.innerHTML =  'Signed in as ' +  email;
-        form.appendChild(userEmailNote);  
       } catch (error) {
         console.log('error', error);
         // TODO: do something if there's an error
       }
     } else {
       userEmailNote.innerHTML = 'Sign into Chrome to save your clipping'
-      form.appendChild(userEmailNote);
     }
-  });
+
+    const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+
+    const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
+    addButton.type = 'submit';
+    buttonContainer.appendChild(addButton);
+    form.appendChild(buttonContainer);
+    form.appendChild(userEmailNote);
+  })
+   
 }
-  
 
 /**
  * Helper to create an HTML Element
@@ -231,6 +230,7 @@ async function addItem() {
   }
 
   try {
+    console.log("got into fetch try")
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
@@ -244,6 +244,7 @@ async function addItem() {
       closeSidebar();
     }
   } catch (error) {
+    alert('There was an error adding this clipping to your account')
     // TODO: display error message on frontend
   }
 }
