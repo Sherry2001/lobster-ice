@@ -25,6 +25,7 @@ export default class CategoryList extends React.Component {
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
+      // Gets an array of Mongo Cateogry objects, each with _id and title fields
       const categoryList = await response.json();
       this.setState({
         categoryList,
@@ -34,6 +35,11 @@ export default class CategoryList extends React.Component {
     }
   }
 
+  /**
+   * Given Mongo category object, creates panel block displaying category title and updates current category id and
+   *  title on click
+   * @param {{_id, title}} category - Mongo category object with _id and title fields
+   */
   addCategoryElement(category) {
     return (
       <a
