@@ -118,6 +118,16 @@ async function createSidebar(content) {
   addButton.type = 'submit';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
+
+  chrome.extension.sendMessage({}, (response) => {
+    const userEmail = customCreateElement('div', []);
+    if (response.email) {
+      userEmail.innerHTML =  'Signed in as ' +  response.email;
+    } else {
+      userEmail.innerHTML = 'Sign into Chrome to save your clipping'
+    }
+    form.appendChild(userEmail);
+  });
 }
 
 /**
@@ -148,7 +158,6 @@ async function getCategoryDropdown(userId) {
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
   defaultOption.value = '';
   defaultOption.disabled = true;
-  defaultOption.selected = true;
   categoryDropdown.options.add(defaultOption);
 
   try {
@@ -171,17 +180,29 @@ async function getCategoryDropdown(userId) {
  * Add new item to databse
  */
 async function addItem() {
-  newItem = {
+  // Get chrome user info
+  const newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    userId: currentUserId, // TODO: get actual userID
+    // userId: currentUserId, // TODO: test
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
 
-  const selectedCategories = getSelectedOptions('categoryDropdown');
+  chrome.extension.sendMessage({}, (response) => {
+    console.log("Got user:", response.email);
+    console.log("user Id: " + response.id);
+    if(!response.id) {
+      alert('Please sign into Chrome to save your clipping');
+    } else { 
+      newItem.userId = response.id;
+    }
+  });
 
-  if (selectedCategories.length) {
+  // Handle categories selected by user for new Item
+  const selectedCategories = getSelectedOptions('categoryDropdown');
+  if (selectedCategories.length > 0) {
+    console.log(selectedCategories);
     newItem.categoryIds = selectedCategories;
   }
 
