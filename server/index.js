@@ -2,19 +2,34 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const apiPort = 8080;
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 //Import Routers
 const categoryRouter = require('./api/categoryRouter.js');
 const itemRouter = require('./api/itemRouter.js');
+const userRouter = require('./api/userRouter.js');
 //connected to mongoose through db/index.js
+let mongoDB;
+let mongoStore;
 if (require.main === module) {
   const { getMongoDB, uri } = require('./db');
-  const mongoDB = getMongoDB(uri);
-  mongoDB.on('error', console.error.bind(console, 'MongoDB connection error: '));
+  mongoDB = getMongoDB(uri);
+  mongoDB.on(
+    'error',
+    console.error.bind(console, 'MongoDB connection error: ')
+  );
+  mongoStore = new MongoStore({ mongooseConnection: mongoDB });
 }
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
+app.use(
+  session({
+    store: mongoStore, // When mongoStore is undefined, the dev store is used
+    secret: 'dogman',
+  })
+);
 
 app.get('/', (req, res) => {
   res.send('Hello Word!');
@@ -22,6 +37,9 @@ app.get('/', (req, res) => {
 
 app.use('/category', categoryRouter);
 app.use('/item', itemRouter);
+app.use('/user', userRouter);
 
-const server = app.listen(apiPort, () => console.log('Server running on port %s', apiPort));
+const server = app.listen(apiPort, () =>
+  console.log('Server running on port %s', apiPort)
+);
 module.exports = server;
