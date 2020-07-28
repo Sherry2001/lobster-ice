@@ -100,35 +100,58 @@ async function createSidebar(content) {
   commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
-
-  // Create select dropdown with options fetched from categories db
-  const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
-  dropdownLabel.htmlFor = 'categoryDropdown';
-  form.appendChild(dropdownLabel);
   
   sidebar.appendChild(form);
+  
+  const userEmailNote = customCreateElement('div', []);
+  chrome.extension.sendMessage({}, async (userInfo) => {
+    const email = userInfo.email; 
+    const googleId = userInfo.id;
+    console.log('printing from userInfo.stuf');
+    console.log(email);
+    console.log(googleId);
+   
+    if(googleId) { 
+      console.log('hi');
+      // TODO: fetch currentUserId from server
+      try {
+        const response = await fetch(
+          serverUrl + '/user/getUserId/' + googleId
+        );
 
-  const categoryDropdown = await getCategoryDropdown(currentUserId);
-  categoryDropdown.id = 'categoryDropdown';
-  form.appendChild(categoryDropdown);
+        const mongoId = await response.json();
+        console.log('the response from /getUserId response.body')
+        console.log(mongoId);
 
-  const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+        // Create select dropdown with options fetched from categories db
+        const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
+        dropdownLabel.htmlFor = 'categoryDropdown';
+        form.appendChild(dropdownLabel);
 
-  const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
-  addButton.type = 'submit';
-  buttonContainer.appendChild(addButton);
-  form.appendChild(buttonContainer);
+        const categoryDropdown = await getCategoryDropdown(mongoId);
+        categoryDropdown.id = 'categoryDropdown';
+        form.appendChild(categoryDropdown);
 
-  chrome.extension.sendMessage({}, (response) => {
-    const userEmail = customCreateElement('div', []);
-    if (response.email) {
-      userEmail.innerHTML =  'Signed in as ' +  response.email;
+        const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+
+        const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
+        addButton.type = 'submit';
+        buttonContainer.appendChild(addButton);
+        form.appendChild(buttonContainer);
+
+        userEmailNote.innerHTML =  'Signed in as ' +  email;
+        form.appendChild(userEmailNote);  
+      } catch (error) {
+        console.log('error', error);
+        // TODO: do something if there's an error
+      }
     } else {
-      userEmail.innerHTML = 'Sign into Chrome to save your clipping'
+      userEmailNote.innerHTML = 'Sign into Chrome to save your clipping'
+      form.appendChild(userEmailNote);
     }
-    form.appendChild(userEmail);
   });
 }
+  
 
 /**
  * Helper to create an HTML Element
@@ -171,7 +194,7 @@ async function getCategoryDropdown(userId) {
       categoryDropdown.options.add(newOption);
     });
   } catch (error) {
-    // TODO: Handle this error?
+    alert('There was an error adding your clipping to database. Please try again!');
   }
   return categoryDropdown;
 }
@@ -184,18 +207,19 @@ async function addItem() {
   const newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    // userId: currentUserId, // TODO: test
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
 
-  chrome.extension.sendMessage({}, (response) => {
-    console.log("Got user:", response.email);
-    console.log("user Id: " + response.id);
-    if(!response.id) {
+  // Get actual userId 
+  chrome.extension.sendMessage({}, (userInfo) => {
+    console.log("Got user:", userInfo.email);
+    console.log("user Id: " + userInfo.id);
+    const googleId = userInfo.id; 
+    if (googleId) {
+      newItem.userId = googleId;
+    } else {
       alert('Please sign into Chrome to save your clipping');
-    } else { 
-      newItem.userId = response.id;
     }
   });
 
