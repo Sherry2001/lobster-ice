@@ -3,6 +3,10 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import ContentPane from './component/ContentPane';
+import Category from './component/Category';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 import Navbar from './component/Navbar';
 
 export default class App extends React.Component {
@@ -11,7 +15,7 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // categoryID of the current category
+    // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
       // TODO: Take in userID from OAuth
@@ -34,10 +38,12 @@ export default class App extends React.Component {
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
+            <DndProvider backend={HTML5Backend}>
               <CategoryList
                 setCurrentCategory={this.setCurrentCategory}
                 userId={this.state.userId}
               />
+            </DndProvider>
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
               <AddCategoryForm addCategory={this.addCategory} />

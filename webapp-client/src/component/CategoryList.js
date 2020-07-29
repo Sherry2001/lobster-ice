@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
+import DragContainer from './DragContainer';
+import DropContainer from './DropContainer';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -11,9 +13,10 @@ export default class CategoryList extends React.Component {
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
     this.clearHasError = this.clearHasError.bind(this);
+    this.getCategoryList = this.getCategoryList.bind(this);
   }
 
-  async componentDidMount() {
+  async getCategoryList(){
     const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
@@ -34,15 +37,24 @@ export default class CategoryList extends React.Component {
     }
   }
 
-  addCategoryElement(category, index) {
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  componentDidUpdate() {
+    this.getCategoryList();
+  }
+
+  addCategoryElement(category, key) {
     return (
-      <a
-        className="panel-block is-active"
-        key={index}
-        onClick={() => this.props.setCurrentCategory(category._id, category.title)}
-      >
-        {category.title}
-      </a>
+      <>
+        <DragContainer
+          title={category.title}
+          id={category._id}Ï
+          key={key}
+          setCurrentCategory={this.props.setCurrentCategory}
+        />
+      </>
     );
   }
 
@@ -55,9 +67,9 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({title: 'All', _id:'All'},0)}
-        {this.state.categoryList.map((category, index) =>
-          this.addCategoryElement(category, index + 1)
+        {this.addCategoryElement({ title: 'All', _id: 'All' }, 'All')}
+        {this.state.categoryList.map((category) =>
+          this.addCategoryElement(category)
         )}
 
         <ErrorMessage
@@ -65,6 +77,7 @@ export default class CategoryList extends React.Component {
           message={'Error displaying list of category'}
           closePopup={this.clearHasError}
         />
+        <DropContainer />
       </>
     );
   }
