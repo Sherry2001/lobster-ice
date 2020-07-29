@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
 import allowErrorMessage from '../errorify';
 
@@ -7,9 +7,11 @@ import allowErrorMessage from '../errorify';
  * Draggable category container displayed in category list
  * @param {*} props
  */
-function Drag(props) {
+function DragAndDrop(props) {
   const title = props.title;
   const id = props.id;
+
+  // Drag action dragging categories
   const [{ isDragging }, drag] = useDrag({
     item: { title, type: 'category' },
     end: (item, monitor) => {
@@ -23,10 +25,33 @@ function Drag(props) {
     }),
   });
 
+  //Drop action accepting items
+  const [{ canDrop, isOver }, drop] = useDrop({
+    accept: 'item',
+    drop: () => ({ categoryId: id }),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+  const isActive = canDrop && isOver;
+  let backgroundColor = 'white';
+  if (isActive) {
+    backgroundColor = 'lightgrey';
+  }
+
+  const mergeRef = (...refs) => {
+    return (inst) => {
+      for (let ref of refs) {
+        ref(inst);
+      }
+    };
+  };
+
   return (
     <a
-      ref={drag}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={mergeRef(drag, drop)}
+      style={{ opacity: isDragging ? 0.5 : 1, backgroundColor }}
       className="panel-block is-active"
       key={id}
       onClick={() => props.setCurrentCategory(id, title)}
@@ -36,7 +61,7 @@ function Drag(props) {
   );
 }
 
-Drag.propTypes = {
+DragAndDrop.propTypes = {
   title: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   deleteCategory: PropTypes.func.isRequired,
@@ -78,7 +103,7 @@ export default class DragContainer extends React.Component {
   render() {
     return (
       <>
-        <Drag
+        <DragAndDrop
           title={this.props.title}
           id={this.props.id}
           deleteCategory={this.deleteCategory}
