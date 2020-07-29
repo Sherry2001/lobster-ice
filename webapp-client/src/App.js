@@ -3,7 +3,6 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import ContentPane from './component/ContentPane';
-import Category from './component/Category';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -50,12 +49,14 @@ export default class App extends React.Component {
             </nav>
           </div>
           <div className="column">
-            <ContentPane
-              defaultCategory={this.defaultCategory}
-              categoryId={this.state.categoryId}
-              categoryTitle={this.state.categoryTitle}
-              userId={this.state.userId}
-            />
+            <DndProvider backend={HTML5Backend}>
+              <ContentPane
+                defaultCategory={this.defaultCategory}
+                categoryId={this.state.categoryId}
+                categoryTitle={this.state.categoryTitle}
+                userId={this.state.userId}
+              />
+            </DndProvider>
           </div>
         </div>
       </>
