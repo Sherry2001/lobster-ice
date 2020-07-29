@@ -25,9 +25,6 @@
     "tabs",
     "webRequest",
     "webRequestBlocking",
-    "storage",
-    "activeTab",
-    "contextMenus",
     "identity",
     "identity.email"
   ],
