@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
-import DragContainer from './DragContainer';
+import DragContainer from './DragDropContainer';
 import DropContainer from './DropContainer';
 
 export default class CategoryList extends React.Component {
