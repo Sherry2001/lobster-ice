@@ -9,7 +9,7 @@ import allowErrorMessage from '../errorify';
  */
 function DragAndDrop(props) {
   const title = props.title;
-  const id = props.id;
+  const categoryId = props.categoryId;
 
   // Drag action dragging categories
   const [{ isDragging }, drag] = useDrag({
@@ -17,7 +17,7 @@ function DragAndDrop(props) {
     end: (item, monitor) => {
       const isDropped = monitor.getDropResult();
       if (item && isDropped) {
-        props.deleteCategory(id);
+        props.deleteCategory(categoryId);
       }
     },
     collect: (monitor) => ({
@@ -28,7 +28,7 @@ function DragAndDrop(props) {
   //Drop action accepting items
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'item',
-    drop: () => ({ categoryId: id }),
+    drop: () => ({ categoryId: categoryId }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -52,9 +52,13 @@ function DragAndDrop(props) {
     <a
       ref={mergeRef(drag, drop)}
       style={{ opacity: isDragging ? 0.5 : 1, backgroundColor }}
-      className="panel-block is-active"
-      key={id}
-      onClick={() => props.setCurrentCategory(id, title)}
+      className={
+        props.currentCategoryId === categoryId
+          ? 'panel-block has-background-light'
+          : 'panel-block'
+      }
+      key={categoryId}
+      onClick={() => props.setCurrentCategory(categoryId, title)}
     >
       {title}
     </a>
@@ -63,9 +67,10 @@ function DragAndDrop(props) {
 
 DragAndDrop.propTypes = {
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   deleteCategory: PropTypes.func.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
+  currentCategoryId: PropTypes.string.isRequired,
 };
 
 /**
@@ -83,7 +88,7 @@ export default class DragContainer extends React.Component {
     const request = {
       method: 'DELETE',
       body: JSON.stringify({
-        categoryId: this.props.id,
+        categoryId: this.props.categoryId,
       }),
       headers: { 'Content-type': 'application/json' },
     };
@@ -105,9 +110,10 @@ export default class DragContainer extends React.Component {
       <>
         <DragAndDrop
           title={this.props.title}
-          id={this.props.id}
+          categoryId={this.props.categoryId}
           deleteCategory={this.deleteCategory}
-          setCurrentCategory={this.setCurrentCategory}
+          setCurrentCategory={this.props.setCurrentCategory}
+          currentCategoryId={this.props.currentCategoryId}
         />
         {this.renderErrorMessage('Error deleting category')}
       </>
@@ -117,5 +123,7 @@ export default class DragContainer extends React.Component {
 
 DragContainer.propTypes = {
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
+  setCurrentCategory: PropTypes.func.isRequired,
+  currentCategoryId: PropTypes.string.isRequired,
 };
