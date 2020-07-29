@@ -1,7 +1,12 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import PropTypes from 'prop-types';
 import allowErrorMessage from '../errorify';
 
+/**
+ * Draggable category container displayed in category list
+ * @param {*} props
+ */
 function Drag(props) {
   const title = props.title;
   const id = props.id;
@@ -31,6 +36,16 @@ function Drag(props) {
   );
 }
 
+Drag.propTypes = {
+  title: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  deleteCategory: PropTypes.func.isRequired,
+  setCurrentCategory: PropTypes.func.isRequired,
+};
+
+/**
+ * Wrapper around Drag functional component that handles error and displays error message
+ */
 export default class DragContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -74,3 +89,8 @@ export default class DragContainer extends React.Component {
     );
   }
 }
+
+DragContainer.propTypes = {
+  title: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+};

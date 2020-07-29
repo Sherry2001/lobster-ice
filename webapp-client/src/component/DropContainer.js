@@ -1,6 +1,9 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
+/**
+ * Drop area to delete a category
+ */
 export default function DropContainer() {
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'category',
