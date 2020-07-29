@@ -17,8 +17,14 @@ export default class App extends React.Component {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
+      userId: '',
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
+    this.setUserId = this.setUserId.bind(this);
+  }
+
+  setUserId(userId) {
+    this.setState({ userId });
   }
 
   setCurrentCategory(id, title) {
@@ -31,7 +37,7 @@ export default class App extends React.Component {
   render() {
     return (
       <>
-        <Navbar />
+        <Navbar userID={this.state.userId} setUserId={this.setUserId} />
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
@@ -40,7 +46,7 @@ export default class App extends React.Component {
                 currentCategoryId={this.state.categoryId}
                 setCurrentCategory={this.setCurrentCategory}
                 //TODO: Take in userID from OAuth */
-                userID="5f050952f516f3570ee26724"
+                userID={this.state.userId}
               />
             </DndProvider>
               <div className="panel-block"></div>
