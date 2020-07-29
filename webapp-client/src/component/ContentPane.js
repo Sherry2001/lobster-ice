@@ -80,7 +80,7 @@ export default class ContentPane extends React.Component {
             {this.props.categoryTitle}
           </h1>
         </nav>
-        {this.renderErrorMessage('Error retrieving clippings')}
+        {this.renderErrorMessage(this.state.errorMessage)}
         <div className="wrap tile is-ancestor">
           {this.state.items.map((item, index) => {
             return (
