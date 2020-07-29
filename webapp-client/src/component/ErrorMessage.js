@@ -1,14 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 export default class ErrorMessage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      openWindow: true,
+    };
     this.displayError = this.displayError.bind(this);
   }
 
   displayError() {
-    if (this.props.hasError) {
+    if (this.props.hasError && this.state.openWindow) {
       return (
         <div className="notification is-warning">
           <button className="delete" onClick={this.props.closePopup}></button>
@@ -16,16 +18,10 @@ export default class ErrorMessage extends React.Component {
         </div>
       );
     }
-    return <div></div>;
+    return null;
   }
 
   render() {
     return this.displayError();
   }
 }
-
-ErrorMessage.propTypes = {
-  closePopup: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired,
-  hasError: PropTypes.bool,
-};
