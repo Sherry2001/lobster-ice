@@ -12,8 +12,8 @@ bulmaLink.setAttribute(
 bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
-// TODO: get actual user id
-const currentUserId = '66616b652d757365722d6964';
+const serverUrl = 'http://localhost:8080';
+// TODO: select between dev host and prod host
 
 // Inject invisible sidebar onto page
 const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
@@ -78,10 +78,6 @@ async function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    addItem();
-  });
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   highlightLabel.htmlFor = 'highlight';
@@ -104,25 +100,20 @@ async function createSidebar(content) {
   sidebar.appendChild(form);
   
   const userEmailNote = customCreateElement('div', []);
+  let mongoId;
+
+  // Get logged-in user info
   chrome.extension.sendMessage({}, async (userInfo) => {
     const email = userInfo.email; 
     const googleId = userInfo.id;
-    console.log('printing from userInfo.stuf');
-    console.log(email);
-    console.log(googleId);
-   
+  
     if(googleId) { 
-      console.log('hi');
-      // TODO: fetch currentUserId from server
       try {
         const response = await fetch(
           serverUrl + '/user/getUserId/' + googleId
         );
-
-        const mongoId = await response.json();
-        console.log('the response from /getUserId response.body')
-        console.log(mongoId);
-        
+        mongoId = await response.json();
+         
         // Create select dropdown with options fetched from categories db
         const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
         dropdownLabel.htmlFor = 'categoryDropdown';
@@ -134,22 +125,24 @@ async function createSidebar(content) {
 
         userEmailNote.innerHTML =  'Signed in as ' +  email;
       } catch (error) {
-        console.log('error', error);
         // TODO: do something if there's an error
       }
     } else {
       userEmailNote.innerHTML = 'Sign into Chrome to save your clipping'
     }
 
-    const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      addItem(mongoId);
+    });
 
+    const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
     const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
     addButton.type = 'submit';
     buttonContainer.appendChild(addButton);
     form.appendChild(buttonContainer);
     form.appendChild(userEmailNote);
   })
-   
 }
 
 /**
@@ -165,13 +158,10 @@ function customCreateElement(type, classList, innerHTML = '') {
   return newElement;
 }
 
-const serverUrl = 'http://localhost:8080';
-// TODO: select between dev host and prod host
-
 /**
  * Returns a Promise that resolves to a <select> element,
  * a multi-select dropdown menu of category options from fetching db
- * @param {String} userId
+ * @param {String (Mongoose.ObjectId)} userId
  */
 async function getCategoryDropdown(userId) {
   const categoryDropdown = customCreateElement('select', []);
@@ -193,7 +183,7 @@ async function getCategoryDropdown(userId) {
       categoryDropdown.options.add(newOption);
     });
   } catch (error) {
-    alert('There was an error adding your clipping to database. Please try again!');
+    // TODO: Handle error 
   }
   return categoryDropdown;
 }
@@ -201,8 +191,7 @@ async function getCategoryDropdown(userId) {
 /**
  * Add new item to databse
  */
-async function addItem() {
-  // Get chrome user info
+async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
@@ -210,27 +199,19 @@ async function addItem() {
     comment: document.getElementById('comment').value,
   };
 
-  // Get actual userId 
-  chrome.extension.sendMessage({}, (userInfo) => {
-    console.log("Got user:", userInfo.email);
-    console.log("user Id: " + userInfo.id);
-    const googleId = userInfo.id; 
-    if (googleId) {
-      newItem.userId = googleId;
-    } else {
-      alert('Please sign into Chrome to save your clipping');
-    }
-  });
+  if(mongoId) {
+    newItem.userId = mongoId;
+  } else {
+    alert('Please sign into Chrome to save your clipping');
+  }
 
   // Handle categories selected by user for new Item
   const selectedCategories = getSelectedOptions('categoryDropdown');
   if (selectedCategories.length > 0) {
-    console.log(selectedCategories);
     newItem.categoryIds = selectedCategories;
   }
 
   try {
-    console.log("got into fetch try")
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
@@ -241,11 +222,15 @@ async function addItem() {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
-      closeSidebar();
+      sidebar.removeChild(sidebar.childNodes[1]);
+      sidebar.appendChild(
+          //TODO: To be styled
+          customCreateElement('div', [], 'Succesfully added clipping to your account!')
+      );
+      setTimeout(closeSidebar, 3000);
     }
   } catch (error) {
     alert('There was an error adding this clipping to your account')
-    // TODO: display error message on frontend
   }
 }
 

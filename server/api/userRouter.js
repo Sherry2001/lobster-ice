@@ -12,14 +12,18 @@ const router = express.Router();
  */
 router.get('/getUserId/:googleId', async (req, res, next) => {
   const googleId = req.params.googleId;
-  const userDocument = await User.findOne({ googleId: googleId }).exec(); 
-  if (userDocument) {
-    res.json(userDocument._id);
-  } else {
-    const newUser = new User(req.body);
-    newUser.save();
-    res.json(newUser._id);
-  } 
+  try {
+    const userDocument = await User.findOne({ googleId: googleId }).exec(); 
+    if (userDocument) {
+      res.json(userDocument._id);
+    } else {
+      const newUser = new User({ googleId: googleId});
+      newUser.save();
+      res.json(newUser._id);
+    } 
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
