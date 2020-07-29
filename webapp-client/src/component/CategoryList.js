@@ -12,10 +12,11 @@ export default class CategoryList extends React.Component {
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
+    this.getCategoryList = this.getCategoryList.bind(this);
     allowErrorMessage(this);
   }
 
-  async componentDidMount() {
+  async getCategoryList() {
     const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
@@ -37,6 +38,14 @@ export default class CategoryList extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  componentDidUpdate() {
+    this.getCategoryList();
+  }
+
   /**
    * Given Mongo category object, creates panel block displaying category title and updates current category id and
    *  title on click
@@ -45,13 +54,14 @@ export default class CategoryList extends React.Component {
   addCategoryElement(category) {
     return (
       <>
-      <DragContainer
-        title={category.title}
-        categoryId={category._id}Ï
-        currentCategoryId={this.props.currentCategoryId}
-        setCurrentCategory={this.props.setCurrentCategory}
-      />
-    </>
+        <DragContainer
+          title={category.title}
+          categoryId={category._id}
+          Ï
+          currentCategoryId={this.props.currentCategoryId}
+          setCurrentCategory={this.props.setCurrentCategory}
+        />
+      </>
     );
   }
 
