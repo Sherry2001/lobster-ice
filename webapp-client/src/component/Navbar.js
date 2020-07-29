@@ -4,9 +4,7 @@ import React from 'react';
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    // hard-coded for now, will be fetched from db
     this.state = {
-      // categoryID of the current category
       loggedIn: false,
       authInstance: null,
     };
@@ -24,7 +22,6 @@ export default class Navbar extends React.Component {
     window.gapi.auth2.init({
       client_id: process.env.REACT_APP_CLIENT_ID,
     });
-    /* Ready. Make a call to gapi.auth2.init or some other API */
     const authInstance = window.gapi.auth2.getAuthInstance();
     this.setState({ authInstance });
     authInstance.isSignedIn.listen(this.setLoggedIn);
