@@ -9,6 +9,7 @@ export default class ContentPane extends React.Component {
     super(props);
     this.state = {
       items: [],
+      errorMessage: '',
     };
     this.deleteItem = this.deleteItem.bind(this);
     allowErrorMessage(this);
@@ -48,6 +49,7 @@ export default class ContentPane extends React.Component {
       }
       this.setState({ items });
     } catch (error) {
+      this.setState({ errorMessage: 'Error retrieving clippings' });
       this.showErrorMessage();
     }
   }
@@ -65,6 +67,7 @@ export default class ContentPane extends React.Component {
       }
       this.setItems(this.props);
     } catch (error) {
+      this.setState({ errorMessage: 'Error deleting clipping' });
       this.showErrorMessage();
     }
   }
