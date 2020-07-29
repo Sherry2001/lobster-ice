@@ -40,7 +40,8 @@ export default class App extends React.Component {
             <DndProvider backend={HTML5Backend}>
               <CategoryList
                 setCurrentCategory={this.setCurrentCategory}
-                userId={this.state.userId}
+                currentCategoryId={this.state.categoryId}
+                userID={this.state.userId}
               />
             </DndProvider>
               <div className="panel-block"></div>
