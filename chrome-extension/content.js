@@ -96,24 +96,22 @@ async function createSidebar(content) {
   commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
-  
+
   sidebar.appendChild(form);
-  
+
   const userEmailNote = customCreateElement('div', []);
   let mongoId;
 
   // Get logged-in user info
   chrome.extension.sendMessage({}, async (userInfo) => {
-    const email = userInfo.email; 
+    const email = userInfo.email;
     const googleId = userInfo.id;
-  
-    if(googleId) { 
+
+    if (googleId) {
       try {
-        const response = await fetch(
-          serverUrl + '/user/getUserId/' + googleId
-        );
+        const response = await fetch(serverUrl + '/user/getUserId/' + googleId);
         mongoId = await response.json();
-         
+
         // Create select dropdown with options fetched from categories db
         const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
         dropdownLabel.htmlFor = 'categoryDropdown';
@@ -123,12 +121,12 @@ async function createSidebar(content) {
         categoryDropdown.id = 'categoryDropdown';
         form.appendChild(categoryDropdown);
 
-        userEmailNote.innerHTML =  'Signed in as ' +  email;
+        userEmailNote.innerHTML = 'Signed in as ' + email;
       } catch (error) {
         // TODO: do something if there's an error
       }
     } else {
-      userEmailNote.innerHTML = 'Sign into Chrome to save your clipping'
+      userEmailNote.innerHTML = 'Sign into Chrome to save your clipping';
     }
 
     form.addEventListener('submit', (event) => {
@@ -142,7 +140,7 @@ async function createSidebar(content) {
     buttonContainer.appendChild(addButton);
     form.appendChild(buttonContainer);
     form.appendChild(userEmailNote);
-  })
+  });
 }
 
 /**
@@ -183,7 +181,7 @@ async function getCategoryDropdown(userId) {
       categoryDropdown.options.add(newOption);
     });
   } catch (error) {
-    // TODO: Handle error 
+    // TODO: Handle error
   }
   return categoryDropdown;
 }
@@ -199,7 +197,7 @@ async function addItem(mongoId) {
     comment: document.getElementById('comment').value,
   };
 
-  if(mongoId) {
+  if (mongoId) {
     newItem.userId = mongoId;
   } else {
     alert('Please sign into Chrome to save your clipping');
@@ -230,7 +228,7 @@ async function addItem(mongoId) {
       setTimeout(closeSidebar, 3000);
     }
   } catch (error) {
-    alert('There was an error adding this clipping to your account')
+    alert('There was an error adding this clipping to your account');
   }
 }
 
