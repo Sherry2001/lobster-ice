@@ -19,6 +19,10 @@ router.post('/addItem', async (req, res, next) => {
   try {
     const newItem = new Item(req.body); 
     await newItem.save();
+    const categoryOptions = req.body.categoryIds;
+    if (categoryOptions) {
+      await Category.updateMany({ _id: { $in: categoryOptions } }, { $push: { items: newItem._id } }).exec();
+    }
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
     next(error);
@@ -58,8 +62,11 @@ router.put('/addItemToCategory', async (req, res, next) => {
     const itemId = req.body.itemId;
     const categoryId = req.body.categoryId;
     //TODO: VERIFICATION OF USERID, SEE ISSUE #12
-    await Item.updateOne({ _id: itemId }, { $push: { categoryIds: this.categoryId } }).exec();
-    await Category.updateOne({ _id: categoryId }, { $push: { items: this.itemId } }).exec();
+    const originalCategory = await Category.findOneAndUpdate({ _id: categoryId }, { $push: { items: itemId } }).exec();
+    if (!originalCategory) {
+      throw new Error('CategoryId not found in database');
+    }
+    await Item.updateOne({ _id: itemId }, { $push: { categoryIds: categoryId } }).exec();
     res.status(200).send('Item added to category');
   } catch (error) {
     next(error);
@@ -84,7 +91,7 @@ router.delete('/deleteItem', async (req, res, next) => {
     if (!deletedItem) {
       throw new Error ('ItemID not found in database');
     }
-    await Category.updateMany({}, { $pull: { items: this.itemId } }).exec();
+    await Category.updateMany({}, { $pull: { items: itemId } }).exec();
 
     res.status(200).send('Item successfully deleted from DB');
   } catch (error) {
