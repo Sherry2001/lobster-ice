@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ErrorMessage from './ErrorMessage';
 import DragContainer from './DragContainer';
 import DropContainer from './DropContainer';
+import allowErrorMessage from '../errorify';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -12,11 +12,10 @@ export default class CategoryList extends React.Component {
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
-    this.clearHasError = this.clearHasError.bind(this);
-    this.getCategoryList = this.getCategoryList.bind(this);
+    allowErrorMessage(this);
   }
 
-  async getCategoryList(){
+  async componentDidMount() {
     const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
@@ -28,6 +27,7 @@ export default class CategoryList extends React.Component {
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
+      // Gets an array of Mongo Cateogry objects, each with _id and title fields
       const categoryList = await response.json();
       this.setState({
         categoryList,
@@ -67,24 +67,19 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({ title: 'All', _id: 'All' }, 'All')}
+        {this.addCategoryElement({ title: 'All', _id: 'All' })}
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}
 
-        <ErrorMessage
-          hasError={this.state.hasError}
-          message={'Error displaying list of category'}
-          closePopup={this.clearHasError}
-        />
-        <DropContainer />
+        {this.renderErrorMessage('Error displaying list of category')}
       </>
     );
   }
 }
 
 CategoryList.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currentCategoryId: PropTypes.string.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
   userID: PropTypes.string.isRequired,
 };

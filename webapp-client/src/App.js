@@ -14,7 +14,7 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-    // categoryID of the current category
+      // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
     };
@@ -37,7 +37,9 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
             <DndProvider backend={HTML5Backend}>
               <CategoryList
+                currentCategoryId={this.state.categoryId}
                 setCurrentCategory={this.setCurrentCategory}
+                //TODO: Take in userID from OAuth */
                 userID="5f050952f516f3570ee26724"
               />
             </DndProvider>
@@ -48,7 +50,7 @@ export default class App extends React.Component {
           </div>
           <div className="column">
             {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.categoryId} />
+            <Category categoryName={this.state.categoryTitle} />
           </div>
         </div>
       </>
