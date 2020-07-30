@@ -27,9 +27,6 @@ function DragItem(props) {
           <div className="media-content">
             <p className="title">{savedItem.highlight}</p>
           </div>
-          <div className="media-right">
-            <i className="fa fa-plus" aria-hidden="true"></i>
-          </div>
         </article>
         <div className="content">
           <p>{savedItem.comment}</p>
