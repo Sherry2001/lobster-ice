@@ -37,7 +37,8 @@ export default class App extends React.Component {
               <CategoryList
                 currentCategoryId={this.state.categoryId}
                 setCurrentCategory={this.setCurrentCategory}
-                userId={this.state.userId}
+                //TODO: Take in userID from OAuth */
+                userID="5f050952f516f3570ee26724"
               />
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
