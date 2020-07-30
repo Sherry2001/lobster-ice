@@ -27,7 +27,11 @@ function Drag(props) {
     <a
       ref={drag}
       style={{ opacity: isDragging ? 0.5 : 1 }}
-      className="panel-block is-active"
+      className={
+        props.currentCategoryId === id
+          ? 'panel-block has-background-light'
+          : 'panel-block'
+      }
       key={id}
       onClick={() => props.setCurrentCategory(id, title)}
     >
@@ -41,6 +45,7 @@ Drag.propTypes = {
   id: PropTypes.string.isRequired,
   deleteCategory: PropTypes.func.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
+  currentCategoryId: PropTypes.string.isRequired,
 };
 
 /**
@@ -82,7 +87,8 @@ export default class DragContainer extends React.Component {
           title={this.props.title}
           id={this.props.id}
           deleteCategory={this.deleteCategory}
-          setCurrentCategory={this.setCurrentCategory}
+          setCurrentCategory={this.props.setCurrentCategory}
+          currentCategoryId={this.props.currentCategoryId}
         />
         {this.renderErrorMessage('Error deleting category')}
       </>
@@ -93,4 +99,6 @@ export default class DragContainer extends React.Component {
 DragContainer.propTypes = {
   title: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  setCurrentCategory: PropTypes.func.isRequired,
+  currentCategoryId: PropTypes.string.isRequired,
 };
