@@ -12,10 +12,11 @@ export default class CategoryList extends React.Component {
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
+    this.getCategoryList = this.getCategoryList.bind(this);
     allowErrorMessage(this);
   }
 
-  async componentDidMount() {
+  async getCategoryList() {
     const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
@@ -53,6 +54,7 @@ export default class CategoryList extends React.Component {
           id={category._id}Ï
           key={key}
           setCurrentCategory={this.props.setCurrentCategory}
+          currentCategoryId={this.props.currentCategoryId}
         />
       </>
     );
@@ -71,8 +73,8 @@ export default class CategoryList extends React.Component {
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}
-
         {this.renderErrorMessage('Error displaying list of category')}
+        <DropContainer />
       </>
     );
   }
