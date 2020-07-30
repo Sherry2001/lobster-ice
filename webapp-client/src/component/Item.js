@@ -33,7 +33,7 @@ export default class Item extends React.Component {
             <div className="level-right">
               <a className="trash">
                 <i
-                  onClick={() => deleteItem(item)}
+                  onClick={() => this.props.deleteItem(item)}
                   className="fa fa-trash"
                   aria-hidden="true"
                 ></i>
