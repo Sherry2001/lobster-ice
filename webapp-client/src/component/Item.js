@@ -11,7 +11,7 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const { item, deleteItem } = this.props;
+    const item = this.props.item;
     return (
       <div className="tile is-parent is-4">
         <article className="tile is-child box">
