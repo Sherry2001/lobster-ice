@@ -27,9 +27,5 @@
     "webRequestBlocking",
     "identity",
     "identity.email"
-  ],
-  "oauth2": {
-    "client_id": "37652710111-9i14b191phogsofqh3cn99fripb8brpf.apps.googleusercontent.com",
-    "scopes":[""]
-  }
+  ]
 }
