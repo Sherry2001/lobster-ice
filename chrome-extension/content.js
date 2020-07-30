@@ -12,6 +12,9 @@ bulmaLink.setAttribute(
 bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
+// TODO: get actual user id
+const currentUserId = '66616b652d757365722d6964';
+
 // Inject invisible sidebar onto page
 const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
 sidebar.id = 'lobstericecream';
@@ -62,7 +65,7 @@ function closeSidebar() {
 }
 
 // Inject sidebar html content
-function createSidebar(content) {
+async function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
 
@@ -81,6 +84,7 @@ function createSidebar(content) {
   });
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
+  highlightLabel.htmlFor = 'highlight';
   form.appendChild(highlightLabel);
 
   const highlightTextarea = customCreateElement('textarea', ['textarea']);
@@ -88,10 +92,25 @@ function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-6']);
+  const commentLabel = customCreateElement('label', ['label', 'mt-2'], 'Note to Self');
+  commentLabel.htmlFor = 'comment';
+  form.appendChild(commentLabel);
+
+  const commentTextarea = customCreateElement('textarea', ['textarea', 'mt-2']);
   commentTextarea.id = 'comment';
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
+
+  // Create select dropdown with options fetched from categories db
+  const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
+  dropdownLabel.htmlFor = 'categoryDropdown';
+  form.appendChild(dropdownLabel);
+  
+  sidebar.appendChild(form);
+
+  const categoryDropdown = await getCategoryDropdown(currentUserId);
+  categoryDropdown.id = 'categoryDropdown';
+  form.appendChild(categoryDropdown);
 
   const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
 
@@ -99,8 +118,6 @@ function createSidebar(content) {
   addButton.type = 'submit';
   buttonContainer.appendChild(addButton);
   form.appendChild(buttonContainer);
-
-  sidebar.appendChild(form);
 }
 
 /**
@@ -116,33 +133,87 @@ function customCreateElement(type, classList, innerHTML = '') {
   return newElement;
 }
 
-
 const serverUrl = 'http://localhost:8080';
 // TODO: select between dev host and prod host
 
+/**
+ * Returns a Promise that resolves to a <select> element,
+ * a multi-select dropdown menu of category options from fetching db
+ * @param {String} userId
+ */
+async function getCategoryDropdown(userId) {
+  const categoryDropdown = customCreateElement('select', []);
+  categoryDropdown.setAttribute('multiple', true);
+
+  const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
+  defaultOption.value = '';
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  categoryDropdown.options.add(defaultOption);
+
+  try {
+    const response = await fetch(
+      serverUrl + '/category/getCategories/' + userId
+    );
+    const categories = await response.json();
+    categories.map((category) => {
+      const newOption = customCreateElement('option', [], category.title);
+      newOption.value = category._id;
+      categoryDropdown.options.add(newOption);
+    });
+  } catch (error) {
+    // TODO: Handle this error?
+  }
+  return categoryDropdown;
+}
+
+/**
+ * Add new item to databse
+ */
 async function addItem() {
   newItem = {
-    sourceLink: 'www.googe.com', // TODO: get actual sourceLink
+    sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    userId: '5f050952f516f3570ee26724', // TODO: get actual userID
+    userId: currentUserId, // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
+  };
+
+  const selectedCategories = getSelectedOptions('categoryDropdown');
+
+  if (selectedCategories.length) {
+    newItem.categoryIds = selectedCategories;
   }
-  
+
   try {
     const response = await fetch(serverUrl + '/item/addItem', {
-        method: 'POST',
-        body: JSON.stringify(newItem),
-        headers: { 'Content-type': 'application/json' }
+      method: 'POST',
+      body: JSON.stringify(newItem),
+      headers: { 'Content-type': 'application/json' },
     });
-    
-    if (response.statusCode !== 200) {
+
+    if (response.status !== 200) {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
       closeSidebar();
     }
-  } catch(error) {
+  } catch (error) {
     // TODO: display error message on frontend
   }
+}
+
+/**
+ * Helper to return a list of selected options from a multi-select dropdown
+ * @param {String} dropdownElementId
+ */
+function getSelectedOptions(dropdownElementId) {
+  const selectedCategories = [];
+  const categoryOptions = document.getElementById(dropdownElementId).options;
+  for (option of categoryOptions) {
+    if (option.selected) {
+      selectedCategories.push(option.value);
+    }
+  }
+  return selectedCategories;
 }

@@ -19,6 +19,10 @@ router.post('/addItem', async (req, res, next) => {
   try {
     const newItem = new Item(req.body); 
     await newItem.save();
+    const categoryOptions = req.body.categoryIds;
+    if (categoryOptions) {
+      await Category.updateMany({ _id: { $in: categoryOptions } }, { $push: { items: newItem._id } }).exec();
+    }
     res.status(200).send('Successfully added a new Item to DB');
   } catch (error) {
     next(error);
