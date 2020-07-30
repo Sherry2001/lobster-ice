@@ -18,22 +18,6 @@ export default class Navbar extends React.Component {
     window.gapi.load('auth2', this.gapiSetState);
   }
 
-  async componentDidUpdate() {
-    if (!this.props.userId && this.state.authInstance) {
-      const user = this.state.authInstance.currentUser;
-      const idToken = user.getAuthResponse().id_token;
-      const userId = await fetch(
-        process.env.REACT_APP_API_URL + 'user/authenticate',
-        {
-          method: 'POST',
-          body: JSON.stringify({ id: idToken }),
-          headers: { 'Content-type': 'application/json' },
-        }
-      );
-      this.props.setUserId(userId);
-    }
-  }
-
   gapiSetState() {
     window.gapi.auth2.init({
       client_id: process.env.REACT_APP_CLIENT_ID,
@@ -52,8 +36,32 @@ export default class Navbar extends React.Component {
     window.location.reload();
   }
 
+  async fetchUserId(props) {
+    if (props.getUserId()) {
+      return;
+    }
+    try {
+      const user = this.state.authInstance.currentUser.get();
+      const idToken = user.getAuthResponse().id_token;
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + '/user/authenticate',
+        {
+          method: 'POST',
+          body: JSON.stringify({ id: idToken }),
+          headers: { 'Content-type': 'application/json' },
+        }
+      );
+      const userId = await response.json();
+      props.setUserId(userId);
+    } catch (error) {
+      // TODO: Display error
+      props.setUserId('error');
+    }
+  }
+
   formatUser() {
     if (this.state.loggedIn) {
+      this.fetchUserId(this.props);
       const user = this.state.authInstance.currentUser.get();
       const profile = user.getBasicProfile();
       return (

@@ -17,14 +17,19 @@ export default class App extends React.Component {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
-      userId: '',
+      userId: null,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.setUserId = this.setUserId.bind(this);
+    this.getUserId = this.getUserId.bind(this);
   }
 
   setUserId(userId) {
     this.setState({ userId });
+  }
+
+  getUserId() {
+    return this.state.userId;
   }
 
   setCurrentCategory(id, title) {
@@ -37,7 +42,7 @@ export default class App extends React.Component {
   render() {
     return (
       <>
-        <Navbar userID={this.state.userId} setUserId={this.setUserId} />
+        <Navbar setUserId={this.setUserId} getUserId={this.getUserId} />
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">

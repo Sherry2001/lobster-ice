@@ -33,7 +33,7 @@ router.post('/authenticate', async (req, res, next) => {
   try {
     const idToken = req.body.id;
     const googleId = await verify(idToken);
-    const userId = getMongoUserId(googleId);
+    const mongoId = await getMongoUserId(googleId);
     res.json(mongoId);
   } catch (error) {
     next(error);
@@ -61,7 +61,7 @@ async function getMongoUserId(googleId) {
   }
 }
 
-// Verifies a Google Sign-In ID token using Google's node package
+// Verifies a Google Sign-In ID token using google-auth-library
 async function verify(idToken) {
   const ticket = await client.verifyIdToken({
     idToken,
