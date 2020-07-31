@@ -1,3 +1,4 @@
+import allowErrorMessage from '../errorify';
 import logo from '../lobster-icon.jpg';
 import React from 'react';
 
@@ -8,10 +9,12 @@ export default class Navbar extends React.Component {
       loggedIn: false,
       authInstance: null,
     };
+    allowErrorMessage(this);
     this.formatUser = this.formatUser.bind(this);
     this.gapiSetState = this.gapiSetState.bind(this);
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.onAuth2Init = this.onAuth2Init.bind(this);
   }
 
   componentDidMount() {
@@ -19,20 +22,31 @@ export default class Navbar extends React.Component {
   }
 
   gapiSetState() {
-    window.gapi.auth2.init({
-      client_id: process.env.REACT_APP_CLIENT_ID,
-    });
+    window.gapi.auth2
+      .init({
+        client_id: process.env.REACT_APP_CLIENT_ID,
+      })
+      .then(
+        this.onAuth2Init,
+        // Called if there is an init error
+        this.showErrorMessage
+      );
+  }
+
+  onAuth2Init() {
     const authInstance = window.gapi.auth2.getAuthInstance();
-    this.setState({ authInstance });
+    this.setState({authInstance, loggedIn: authInstance.isSignedIn.get()});
     authInstance.isSignedIn.listen(this.setLoggedIn);
   }
 
   setLoggedIn(loggedIn) {
-    this.setState({ loggedIn });
+    this.setState({loggedIn});
   }
 
   signOut() {
-    this.state.authInstance.signOut();
+    if (this.state.authInstance) {
+      this.state.authInstance.signOut();
+    }
     window.location.reload();
   }
 
@@ -71,7 +85,10 @@ export default class Navbar extends React.Component {
             <h1 className="title is-4">Lobster Ice Cream</h1>
           </a>
         </div>
-        <div className="navbar-end">{this.formatUser(this.props)}</div>
+        <div className="navbar-end">
+          {this.renderErrorMessage('Error signing in')}
+          {this.formatUser()}
+        </div>
       </nav>
     );
   }
