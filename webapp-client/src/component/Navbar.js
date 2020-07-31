@@ -17,20 +17,19 @@ export default class Navbar extends React.Component {
     this.onAuth2Init = this.onAuth2Init.bind(this);
   }
 
-  componentDidMount() {
-    window.gapi.load('auth2', this.gapiSetState);
+  async componentDidMount() {
+    await window.gapi.load('auth2', this.gapiSetState);
   }
 
-  gapiSetState() {
-    window.gapi.auth2
-      .init({
+  async gapiSetState() {
+    try {
+      await window.gapi.auth2.init({
         client_id: process.env.REACT_APP_CLIENT_ID,
-      })
-      .then(
-        this.onAuth2Init,
-        // Called if there is an init error
-        this.showErrorMessage
-      );
+      });
+      this.onAuth2Init();
+    } catch (error) {
+      this.showErrorMessage();
+    }
   }
 
   onAuth2Init() {
@@ -44,9 +43,7 @@ export default class Navbar extends React.Component {
   }
 
   signOut() {
-    if (this.state.authInstance) {
-      this.state.authInstance.signOut();
-    }
+    this.state.authInstance.signOut();
     window.location.reload();
   }
 
