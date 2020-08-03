@@ -17,7 +17,7 @@ export default class CategoryList extends React.Component {
   }
 
   async getCategoryList() {
-    const header = { 'Content-Type': 'application/json' };
+    const header = {'Content-Type': 'application/json'};
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
@@ -46,12 +46,13 @@ export default class CategoryList extends React.Component {
     this.getCategoryList();
   }
 
+  /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
   addCategoryElement(category, key) {
     return (
       <>
         <DragContainer
           title={category.title}
-          id={category._id}Ï
+          id={category._id}
           key={key}
           setCurrentCategory={this.props.setCurrentCategory}
           currentCategoryId={this.props.currentCategoryId}
@@ -63,7 +64,7 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({ title: 'All', _id: 'All' })}
+        {this.addCategoryElement({title: 'All', _id: 'All'})}
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}
