@@ -18,6 +18,7 @@ class App extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={MainPage} />
+          <Route exact path="/sign-in" component={SignInPage} />
           <Route exact path="/404" component={NotFoundPage} />
           <Redirect to="/404" />
         </Switch>
