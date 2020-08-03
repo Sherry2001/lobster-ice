@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DropContainer from './DropContainer';
 import allowErrorMessage from '../errorify';
-import DragContainer from './DragDropContainer';
+import DragDropContainer from './DragDropContainer';
 import DropContainer from './DropContainer';
 
 export default class CategoryList extends React.Component {
@@ -34,7 +35,7 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.showErrorMessage();
+      this.clearErrorMessage();
     }
   }
 
@@ -54,10 +55,9 @@ export default class CategoryList extends React.Component {
   addCategoryElement(category) {
     return (
       <>
-        <DragContainer
+        <DragDropContainer
           title={category.title}
           categoryId={category._id}
-          Ï
           currentCategoryId={this.props.currentCategoryId}
           setCurrentCategory={this.props.setCurrentCategory}
         />
@@ -68,7 +68,7 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({ title: 'All', _id: 'All' })}
+        {this.addCategoryElement({title: 'All', _id: 'All'})}
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}

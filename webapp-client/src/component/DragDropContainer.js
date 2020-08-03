@@ -76,7 +76,7 @@ DragAndDrop.propTypes = {
 /**
  * Wrapper around Drag functional component that handles error and displays error message
  */
-export default class DragContainer extends React.Component {
+export default class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
     this.deleteCategory = this.deleteCategory.bind(this);
@@ -121,7 +121,7 @@ export default class DragContainer extends React.Component {
   }
 }
 
-DragContainer.propTypes = {
+DragDropContainer.propTypes = {
   title: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
