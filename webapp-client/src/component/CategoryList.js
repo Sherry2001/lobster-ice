@@ -34,7 +34,7 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.setState({ hasError: true });
+      this.clearErrorMessage();
     }
   }
 
@@ -58,12 +58,6 @@ export default class CategoryList extends React.Component {
         />
       </>
     );
-  }
-
-  clearHasError() {
-    this.setState({
-      hasError: false,
-    });
   }
 
   render() {
