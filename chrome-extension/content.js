@@ -78,6 +78,7 @@ async function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
+  form.id = 'sidebarForm';
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   highlightLabel.htmlFor = 'highlight';
@@ -123,7 +124,9 @@ async function createSidebar(content) {
 
         userEmailNote.innerHTML = 'Signed in as ' + email;
       } catch (error) {
-        // TODO: do something if there's an error
+        // TODO: better error handling
+        userEmailNote.innerHTML = 'Error while getting user information';
+        console.log(error);
       }
     } else {
       userEmailNote.innerHTML = 'Sign into Chrome to save your clipping';
@@ -187,7 +190,8 @@ async function getCategoryDropdown(userId) {
 }
 
 /**
- * Add new item to databse
+ * Add new item to database
+ * Side bar turns to success message panel once item successfully added  
  */
 async function addItem(mongoId) {
   const newItem = {
@@ -200,7 +204,9 @@ async function addItem(mongoId) {
   if (mongoId) {
     newItem.userId = mongoId;
   } else {
+    // TODO: alert message coming from website, not extension
     alert('Please sign into Chrome to save your clipping');
+    return;
   }
 
   // Handle categories selected by user for new Item
@@ -210,6 +216,8 @@ async function addItem(mongoId) {
   }
 
   try {
+    console.log('here after return');
+
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
@@ -220,7 +228,7 @@ async function addItem(mongoId) {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
-      sidebar.removeChild(sidebar.childNodes[1]);
+      sidebar.removeChild(document.getElementById('sidebarForm'));
       sidebar.appendChild(
           //TODO: To be styled
           customCreateElement('div', [], 'Succesfully added clipping to your account!')

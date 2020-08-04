@@ -6,7 +6,7 @@ const router = express.Router();
  * Responsds with the mongoId of a user based on their google account id.
  * If the user doesn't exist in mongo user db, new user created in mongo.
  * 
- * req.body: {googleId: String}
+ * req.params: {googleId: String}
  * 
  * response: String (Mongoose.objectId)
  */
