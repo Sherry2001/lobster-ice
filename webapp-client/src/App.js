@@ -3,7 +3,6 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import ContentPane from './component/ContentPane';
-import Category from './component/Category';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
