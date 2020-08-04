@@ -15,14 +15,17 @@
   "web_accessible_resources": [
     "assets/*"
   ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+    },
   "permissions": [
     "https://*/*",
     "http://*/*",
     "tabs",
     "webRequest",
     "webRequestBlocking",
-    "storage",
-    "activeTab",
-    "contextMenus"
+    "identity",
+    "identity.email"
   ]
 }
