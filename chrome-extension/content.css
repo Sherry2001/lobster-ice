@@ -4,6 +4,7 @@
   right: 0;
   top: 20px;
   width: 300px;
+  min-height: 500px;
   max-height: 80vh;
   background-color: #fff;
   display: none;

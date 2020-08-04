@@ -5,6 +5,8 @@ const apiPort = 8080;
 //Import Routers
 const categoryRouter = require('./api/categoryRouter.js');
 const itemRouter = require('./api/itemRouter.js');
+const userRouter = require('./api/userRouter.js');
+
 //connected to mongoose through db/index.js
 if (require.main === module) {
   const { getMongoDB, uri } = require('./db');
@@ -22,6 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/category', categoryRouter);
 app.use('/item', itemRouter);
+app.use('/user', userRouter);
 
 const server = app.listen(apiPort, () => console.log('Server running on port %s', apiPort));
 module.exports = server;
