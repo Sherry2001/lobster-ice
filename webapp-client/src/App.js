@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Link,
-  Redirect,
-  Router,
-} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
 import MainPage from './pages/main';
 import SignInPage from './pages/sign-in';
@@ -17,8 +10,8 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={MainPage} />
-          <Route exact path="/sign-in" component={SignInPage} />
+          <Route exact path="/" component={SignInPage} />
+          <Route exact path="/app" component={MainPage} />
           <Route exact path="/404" component={NotFoundPage} />
           <Redirect to="/404" />
         </Switch>

@@ -15,7 +15,7 @@ export default class MainPage extends React.Component {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
-      userId: null,
+      userId: this.props.location.state.userId,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.setUserId = this.setUserId.bind(this);

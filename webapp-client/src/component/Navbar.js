@@ -1,20 +1,25 @@
 import logo from '../lobster-icon.jpg';
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loggedIn: false,
-      authInstance: null,
     };
     this.formatUser = this.formatUser.bind(this);
     this.gapiSetState = this.gapiSetState.bind(this);
+    this.loadGapi = this.gapiSetState.bind(this);
     this.setLoggedIn = this.setLoggedIn.bind(this);
     this.signOut = this.signOut.bind(this);
   }
 
   componentDidMount() {
+    // this.loadGapi();
+  }
+
+  loadGapi() {
     window.gapi.load('auth2', this.gapiSetState);
   }
 
@@ -23,17 +28,19 @@ export default class Navbar extends React.Component {
       client_id: process.env.REACT_APP_CLIENT_ID,
     });
     const authInstance = window.gapi.auth2.getAuthInstance();
-    this.setState({ authInstance });
+    this.setState({authInstance});
     authInstance.isSignedIn.listen(this.setLoggedIn);
   }
 
   setLoggedIn(loggedIn) {
-    this.setState({ loggedIn });
+    this.setState({loggedIn});
   }
 
   signOut() {
-    this.state.authInstance.signOut();
-    window.location.reload();
+    if (this.state.authInstance) {
+      this.loadGapi();
+      this.state.authInstance.signOut();
+    }
   }
 
   async fetchUserId(props) {
@@ -47,8 +54,8 @@ export default class Navbar extends React.Component {
         process.env.REACT_APP_API_URL + '/user/authenticate',
         {
           method: 'POST',
-          body: JSON.stringify({ id: idToken }),
-          headers: { 'Content-type': 'application/json' },
+          body: JSON.stringify({id: idToken}),
+          headers: {'Content-type': 'application/json'},
         }
       );
       const userId = await response.json();
@@ -60,6 +67,10 @@ export default class Navbar extends React.Component {
   }
 
   formatUser() {
+    if (!this.state.loggedIn) {
+      this.signOut();
+      return <Redirect to="/" />;
+    }
     if (this.state.loggedIn) {
       this.fetchUserId(this.props);
       const user = this.state.authInstance.currentUser.get();
