@@ -92,10 +92,6 @@ export default class SignInPage extends React.Component {
       <div className="tile is-ancestor mt-6">
         <div className="tile is-parent columns is-centered has-text-centered">
           <div className="tile is-child box content is-4 column">
-            <script
-              src="https://apis.google.com/js/platform.js?onload=renderButton"
-              defer
-            />
             <h1>Please sign in: </h1>
             <div className="columns is-centered my-5">
               <div id="g-signin2"></div>

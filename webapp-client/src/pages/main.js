@@ -83,7 +83,7 @@ export default class MainPage extends React.Component {
 MainPage.propTypes = {
   location: PropTypes.shape({
     state: PropTypes.shape({
-      userId: PropTypes.string.isRequired(),
+      userId: PropTypes.string.isRequired,
     }),
   }),
 };

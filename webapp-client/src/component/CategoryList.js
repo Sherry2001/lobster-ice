@@ -19,6 +19,9 @@ export default class CategoryList extends React.Component {
   async getCategoryList() {
     const header = {'Content-Type': 'application/json'};
     try {
+      if (this.props.userID === 'error') {
+        throw new Error('UserId not defined');
+      }
       const response = await fetch(
         process.env.REACT_APP_API_URL +
           '/category/getCategories/' +
@@ -34,7 +37,7 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.clearErrorMessage();
+      this.showErrorMessage();
     }
   }
 
@@ -42,8 +45,10 @@ export default class CategoryList extends React.Component {
     this.getCategoryList();
   }
 
-  componentDidUpdate() {
-    this.getCategoryList();
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.getCategoryList();
+    }
   }
 
   /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
