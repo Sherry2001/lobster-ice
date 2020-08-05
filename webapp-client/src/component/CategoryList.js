@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DragContainer from './DragContainer';
+import DropContainer from './DropContainer';
 import allowErrorMessage from '../errorify';
 
 export default class CategoryList extends React.Component {
@@ -10,11 +12,12 @@ export default class CategoryList extends React.Component {
       categoryList: [],
     };
     this.addCategoryElement = this.addCategoryElement.bind(this);
+    this.getCategoryList = this.getCategoryList.bind(this);
     allowErrorMessage(this);
   }
 
-  async componentDidMount() {
-    const header = { 'Content-Type': 'application/json' };
+  async getCategoryList() {
+    const header = {'Content-Type': 'application/json'};
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
@@ -31,42 +34,42 @@ export default class CategoryList extends React.Component {
         categoryList,
       });
     } catch (error) {
-      this.showErrorMessage();
+      this.clearErrorMessage();
     }
   }
 
-  /**
-   * Given Mongo category object, creates panel block displaying category title and updates current category id and
-   *  title on click
-   * @param {{_id, title}} category - Mongo category object with _id and title fields
-   */
-  addCategoryElement(category) {
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  componentDidUpdate() {
+    this.getCategoryList();
+  }
+
+  /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
+  addCategoryElement(category, key) {
     return (
-      <a
-        className={
-          this.props.currentCategoryId === category._id
-            ? 'panel-block has-background-light'
-            : 'panel-block'
-        }
-        key={category._id}
-        onClick={() => {
-          this.props.setCurrentCategory(category._id, category.title);
-        }}
-      >
-        {category.title}
-      </a>
+      <>
+        <DragContainer
+          title={category.title}
+          id={category._id}
+          key={key}
+          setCurrentCategory={this.props.setCurrentCategory}
+          currentCategoryId={this.props.currentCategoryId}
+        />
+      </>
     );
   }
 
   render() {
     return (
       <>
-        {this.addCategoryElement({ title: 'All', _id: 'All' })}
+        {this.addCategoryElement({title: 'All', _id: 'All'})}
         {this.state.categoryList.map((category) =>
           this.addCategoryElement(category)
         )}
-
         {this.renderErrorMessage('Error displaying list of category')}
+        <DropContainer />
       </>
     );
   }
