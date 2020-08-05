@@ -5,26 +5,18 @@ export default class SignInPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      authInstance: null,
       loggedIn: false,
       userId: null,
     };
     this.onSignIn = this.onSignIn.bind(this);
-    this.gapiInit = this.gapiInit.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.gapiSetState = this.gapiSetState.bind(this);
-    this.signIn = this.signIn.bind(this);
     this.setLoggedIn = this.setLoggedIn.bind(this);
   }
 
-  signIn() {
-    // this.setState({loggedIn: true});
-    // this.state.loggedIn = true;
-  }
-
   onSignIn(googleUser) {
-    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-    this.signIn();
+    console.log(googleUser);
+    this.setLoggedIn(true);
   }
 
   onFailure(error) {
@@ -43,33 +35,27 @@ export default class SignInPage extends React.Component {
     });
   }
 
-  gapiSetState() {
-    window.gapi.auth2.init({
-      client_id: process.env.REACT_APP_CLIENT_ID,
-    });
-    const authInstance = window.gapi.auth2.getAuthInstance();
-    authInstance.isSignedIn.listen(this.setLoggedIn);
-    this.setState({authInstance});
+  async gapiSetState() {
+    try {
+      this.renderButton();
+      await window.gapi.auth2.init({
+        client_id: process.env.REACT_APP_CLIENT_ID,
+      });
+      const authInstance = window.gapi.auth2.getAuthInstance();
+      authInstance.isSignedIn.listen(this.setLoggedIn);
+      this.setState({loggedIn: authInstance.isSignedIn.get()});
+    } catch (error) {
+      console.error(error);
+      // this.showErrorMessage();
+    }
   }
 
   setLoggedIn(loggedIn) {
     this.setState({loggedIn});
   }
 
-  async gapiInit() {
-    window.gapi.load('auth2', this.gapiSetState);
-    this.renderButton();
-  }
-
   async componentDidMount() {
-    const clientIdTag = document.createElement('meta');
-    clientIdTag.name = 'google-signin-client_id';
-    clientIdTag.content = process.env.REACT_APP_CLIENT_ID;
-    document.head.appendChild(clientIdTag);
-    window.gapiInit = this.gapiInit;
-    const script = document.createElement('script');
-    script.src = 'https://apis.google.com/js/platform.js?onload=gapiInit';
-    document.body.appendChild(script);
+    await window.gapi.load('auth2', this.gapiSetState);
   }
 
   render() {
@@ -80,7 +66,6 @@ export default class SignInPage extends React.Component {
             pathname: '/app',
             state: {
               userId: this.state.userId,
-              authInstance: this.state.authInstance,
             },
           }}
         />

@@ -6,40 +6,31 @@ export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
+      authInstance: null,
+      redirect: false,
     };
     this.formatUser = this.formatUser.bind(this);
-    this.gapiSetState = this.gapiSetState.bind(this);
-    this.loadGapi = this.gapiSetState.bind(this);
-    this.setLoggedIn = this.setLoggedIn.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.setAuthInstance = this.setAuthInstance.bind(this);
+  }
+
+  setAuthInstance() {
+    try {
+      const authInstance = window.gapi.auth2.getAuthInstance();
+      this.setState({authInstance});
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   componentDidMount() {
-    // this.loadGapi();
-  }
-
-  loadGapi() {
-    window.gapi.load('auth2', this.gapiSetState);
-  }
-
-  gapiSetState() {
-    window.gapi.auth2.init({
-      client_id: process.env.REACT_APP_CLIENT_ID,
-    });
-    const authInstance = window.gapi.auth2.getAuthInstance();
-    this.setState({authInstance});
-    authInstance.isSignedIn.listen(this.setLoggedIn);
-  }
-
-  setLoggedIn(loggedIn) {
-    this.setState({loggedIn});
+    this.setAuthInstance();
   }
 
   signOut() {
     if (this.state.authInstance) {
-      this.loadGapi();
       this.state.authInstance.signOut();
+      this.setState({redirect: true});
     }
   }
 
@@ -67,11 +58,7 @@ export default class Navbar extends React.Component {
   }
 
   formatUser() {
-    if (!this.state.loggedIn) {
-      this.signOut();
-      return <Redirect to="/" />;
-    }
-    if (this.state.loggedIn) {
+    if (this.state.authInstance) {
       this.fetchUserId(this.props);
       const user = this.state.authInstance.currentUser.get();
       const profile = user.getBasicProfile();
@@ -88,6 +75,9 @@ export default class Navbar extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <nav
         className="navbar mb-1"

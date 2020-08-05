@@ -5,17 +5,26 @@ import Category from '../component/Category';
 import Navbar from '../component/Navbar';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
+import {Redirect} from 'react-router-dom';
 
 export default class MainPage extends React.Component {
   constructor(props) {
     super(props);
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
+    let redirect = false;
+    let userId = null;
+    if (!this.props.location.state) {
+      redirect = true;
+    } else {
+      userId = this.props.location.state.userId;
+    }
     this.state = {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
-      userId: this.props.location.state.userId,
+      userId,
+      redirect,
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
     this.setUserId = this.setUserId.bind(this);
@@ -38,6 +47,9 @@ export default class MainPage extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <>
         <Navbar setUserId={this.setUserId} getUserId={this.getUserId} />
