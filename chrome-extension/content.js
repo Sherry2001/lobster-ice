@@ -89,6 +89,17 @@ async function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
+  // GET PLACES API RESULTS
+  const searchResults = await placesSearch(content);
+  if (searchResults) {
+    // TODO: Display search results!!! 
+    console.log(searchResults);
+    console.log('received search results')
+  } else {
+    // display could not find anything in Google places search. 
+    console.log('didnt get anything')
+  } 
+
   const commentLabel = customCreateElement('label', ['label', 'mt-2'], 'Note to Self');
   commentLabel.htmlFor = 'comment';
   form.appendChild(commentLabel);
@@ -187,6 +198,34 @@ async function getCategoryDropdown(userId) {
     // TODO: Handle error
   }
   return categoryDropdown;
+}
+
+/**
+ * Helper function that sends a request to Google Places Search and returns a list of
+ * search results, if there are.
+ * @param {String} text 
+ */
+async function placesSearch(text) {
+  try {
+    const response = await fetch(
+      'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + 
+      content + '&inputtype=textquery&fields=place_id,icon,photos,formatted_address,name,rating,opening_hours,geometry' + 
+      '&key=AIzaSyBfQXZ3F-buzSRz5RvVB0iIvQN_K2UxRVk'
+    ); 
+    console.log('this is response');
+    console.log(response);
+    const searchResult = await response.json();
+    console.log('this is searchResult')
+    console.log(searchResult);
+    if (searchResult.candidates) {
+      console.log(candidates); 
+      return searchResult.candidates; 
+    }
+  } catch (error) {
+      console.log('heres an error from places search');
+      console.log(error);
+      return;
+  }
 }
 
 /**
