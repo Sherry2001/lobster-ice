@@ -5,6 +5,7 @@ import Category from '../component/Category';
 import Navbar from '../component/Navbar';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
+import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 
 export default class MainPage extends React.Component {
@@ -78,3 +79,11 @@ export default class MainPage extends React.Component {
     );
   }
 }
+
+MainPage.propTypes = {
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      userId: PropTypes.string.isRequired(),
+    }),
+  }),
+};
