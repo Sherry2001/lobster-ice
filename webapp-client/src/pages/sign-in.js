@@ -15,13 +15,7 @@ export default class SignInPage extends React.Component {
   }
 
   onSignIn(googleUser) {
-    console.log(googleUser);
     this.setLoggedIn(true);
-  }
-
-  onFailure(error) {
-    // TODO: Show error message?
-    console.log(error);
   }
 
   renderButton() {
@@ -31,7 +25,9 @@ export default class SignInPage extends React.Component {
       longtitle: true,
       theme: 'dark',
       onsuccess: this.signIn,
-      onfailure: this.onFailure,
+      onfailure: (error) => {
+        console.error(error);
+      },
     });
   }
 
@@ -42,11 +38,12 @@ export default class SignInPage extends React.Component {
         client_id: process.env.REACT_APP_CLIENT_ID,
       });
       const authInstance = window.gapi.auth2.getAuthInstance();
+      const userId = await this.fetchUserId(authInstance);
+      this.setState({userId, loggedIn: authInstance.isSignedIn.get()});
       authInstance.isSignedIn.listen(this.setLoggedIn);
-      this.setState({loggedIn: authInstance.isSignedIn.get()});
     } catch (error) {
+      // TODO: add error message rendering
       console.error(error);
-      // this.showErrorMessage();
     }
   }
 
@@ -56,6 +53,26 @@ export default class SignInPage extends React.Component {
 
   async componentDidMount() {
     await window.gapi.load('auth2', this.gapiSetState);
+  }
+
+  async fetchUserId(authInstance) {
+    try {
+      const user = authInstance.currentUser.get();
+      const idToken = user.getAuthResponse().id_token;
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + '/user/authenticate',
+        {
+          method: 'POST',
+          body: JSON.stringify({id: idToken}),
+          headers: {'Content-type': 'application/json'},
+        }
+      );
+      const userId = await response.json();
+      return userId;
+    } catch (error) {
+      // TODO: Display error
+      return 'error';
+    }
   }
 
   render() {

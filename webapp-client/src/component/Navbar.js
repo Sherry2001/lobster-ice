@@ -19,6 +19,7 @@ export default class Navbar extends React.Component {
       const authInstance = window.gapi.auth2.getAuthInstance();
       this.setState({authInstance});
     } catch (error) {
+      // TODO: show error
       console.error(error);
     }
   }
@@ -34,32 +35,8 @@ export default class Navbar extends React.Component {
     }
   }
 
-  async fetchUserId(props) {
-    if (props.getUserId()) {
-      return;
-    }
-    try {
-      const user = this.state.authInstance.currentUser.get();
-      const idToken = user.getAuthResponse().id_token;
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + '/user/authenticate',
-        {
-          method: 'POST',
-          body: JSON.stringify({id: idToken}),
-          headers: {'Content-type': 'application/json'},
-        }
-      );
-      const userId = await response.json();
-      props.setUserId(userId);
-    } catch (error) {
-      // TODO: Display error
-      props.setUserId('error');
-    }
-  }
-
   formatUser() {
     if (this.state.authInstance) {
-      this.fetchUserId(this.props);
       const user = this.state.authInstance.currentUser.get();
       const profile = user.getBasicProfile();
       return (
@@ -71,7 +48,6 @@ export default class Navbar extends React.Component {
         </span>
       );
     }
-    return <div className="navbar-item g-signin2" />;
   }
 
   render() {
