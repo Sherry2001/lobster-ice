@@ -3,8 +3,8 @@ import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
 import Category from './component/Category';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import Navbar from './component/Navbar';
 
@@ -32,18 +32,17 @@ export default class App extends React.Component {
     return (
       <>
         <Navbar />
-        <div className="columns">
-          <div className="column is-one-fifth">
+        <div className="columns is-gapless">
+          <div className="column is-one-fifth is-flex is-fullheight">
             <nav className="panel pb-1">
-            <DndProvider backend={HTML5Backend}>
-              <CategoryList
-                currentCategoryId={this.state.categoryId}
-                setCurrentCategory={this.setCurrentCategory}
-                //TODO: Take in userID from OAuth */
-                userID="5f050952f516f3570ee26724"
-              />
-            </DndProvider>
-              <div className="panel-block"></div>
+              <DndProvider backend={HTML5Backend}>
+                <CategoryList
+                  currentCategoryId={this.state.categoryId}
+                  setCurrentCategory={this.setCurrentCategory}
+                  //TODO: Take in userID from OAuth */
+                  userID="5f050952f516f3570ee26724"
+                />
+              </DndProvider>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
               <AddCategoryForm addCategory={this.addCategory} />
             </nav>

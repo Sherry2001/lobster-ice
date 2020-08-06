@@ -42,8 +42,10 @@ export default class CategoryList extends React.Component {
     this.getCategoryList();
   }
 
-  componentDidUpdate() {
-    this.getCategoryList();
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.getCategoryList();
+    }
   }
 
   /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
@@ -64,11 +66,13 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({title: 'All', _id: 'All'})}
-        {this.state.categoryList.map((category) =>
-          this.addCategoryElement(category)
-        )}
-        {this.renderErrorMessage('Error displaying list of category')}
+        <div className="partial">
+          {this.addCategoryElement({title: 'All', _id: 'All'})}
+          {this.state.categoryList.map((category) =>
+            this.addCategoryElement(category)
+          )}
+          {this.renderErrorMessage('Error displaying list of category')}
+        </div>
         <DropContainer />
       </>
     );
