@@ -1,5 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {func} from 'prop-types';
+
+function NoLocation() {
+  return (
+    <div
+      className="notification has-text-centered"
+      style={{margin: '30vh auto', fontSize: '25px'}}
+    >
+      No location linked
+    </div>
+  );
+}
+
+function HasLocation(props) {
+  return (
+    <div
+      ref={props.googleMapRef}
+      style={{width: '550px', height: '412.5px', margin: '25vh auto'}}
+    ></div>
+  );
+}
 
 export default class GoogleMap extends React.Component {
   constructor(props) {
@@ -28,10 +48,9 @@ export default class GoogleMap extends React.Component {
   }
 
   loadMap = () => {
-    if (!this.props.placeId) {
+    if (!this.props.placeId || this.props.placeId === 'something') {
       this.noLocation();
-    }
-    else{
+    } else {
       const map = new window.google.maps.Map(this.googleMapRef.current, {
         zoom: 8,
         center: {lat: 40.72, lng: -73.96},
@@ -88,12 +107,9 @@ export default class GoogleMap extends React.Component {
   render() {
     let content;
     if (this.state.hasLocation) {
-      content = <div
-        ref={this.googleMapRef}
-        style={{width: '550px', height: '412.5px', margin: '25vh auto'}}
-      ></div>;
+      content = <HasLocation googleMapRef={this.googleMapRef} />;
     } else {
-      content=<p>No location linked</p>;
+      content = <NoLocation />;
     }
     return (
       <>
