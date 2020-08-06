@@ -204,7 +204,7 @@ async function getCategoryDropdown(userId) {
  */
 async function getPlacesSelection(text) {
   const searchResults = await placesSearch(text);
-  if (searchResults) {
+  if (searchResults.length > 0) {
     const placesSelection = customCreateElement('select', []);
     
     const defaultOption = customCreateElement('option', [], 'Optional: Select a Known Location');
