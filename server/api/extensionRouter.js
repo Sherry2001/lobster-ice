@@ -7,7 +7,17 @@ const fetch = require("node-fetch");
  * 
  * req.params: {text: String}
  * 
- * response: JSON object 
+ * response: JSON Object, example: 
+ * [{
+      formatted_address: '93-01 Astoria Blvd, Queens, NY 11369, United States',
+      geometry: [Object],
+      icon: 'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png',
+      name: 'Buccaneer Diner',
+      opening_hours: [Object],
+      photos: [Array],
+      place_id: 'ChIJIdl5QpdfwokRB2Ajbz5eRJw',
+      rating: 4.2
+    }]
  */
 router.get('/placesSearch/:text', async (req, res, next) => {
   try {

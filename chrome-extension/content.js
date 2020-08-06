@@ -89,17 +89,7 @@ async function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
   
-  // GET PLACES API RESULTS
-  // const searchResults = await placesSearch(content);
-  // if (searchResults) {
-  //   // TODO: Display search results!!! 
-  //   console.log('received search results')
-  //   console.log(searchResults);
-  // } else {
-  //   // display could not find anything in Google places search. 
-  //   console.log('didnt get anything')
-  // } 
-
+  // Get selector for places api search results
   const placesSelector = await getPlacesSelection(content);
   if (placesSelector) {
     placesSelector.id = 'placesSelector';
@@ -209,7 +199,7 @@ async function getCategoryDropdown(userId) {
 }
 
 /**
- * Returns select element of places search result options
+ * Returns select HTML element of places search result options
  * @param {String} text 
  */
 async function getPlacesSelection(text) {
@@ -260,7 +250,7 @@ async function placesSearch(text) {
 async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
-    placesId: document.getElementById('placesSelector').value, // TODO: get actual placesId
+    placesId: document.getElementById('placesSelector').value,
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
