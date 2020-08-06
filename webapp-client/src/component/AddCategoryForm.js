@@ -12,6 +12,7 @@ export default class AddCategoryForm extends React.Component {
     this.createCategory = this.createCategory.bind(this);
     allowErrorMessage(this);
   }
+
   async createCategory(e) {
     e.preventDefault();
     const category = e.target.elements['add-category'].value;
@@ -23,7 +24,7 @@ export default class AddCategoryForm extends React.Component {
       method: 'POST',
       body: JSON.stringify({
         title: category,
-        userId: '5f050952f516f3570ee26724',
+        userId: this.props.userId,
       }),
       headers: {'Content-type': 'application/json'},
     };

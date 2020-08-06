@@ -26,7 +26,7 @@ export default class ContentPane extends React.Component {
   }
 
   async setItems(props) {
-    const { categoryId, defaultCategory, userId } = props;
+    const {categoryId, defaultCategory, userId} = props;
     let url;
     let response;
     let items;
@@ -49,9 +49,9 @@ export default class ContentPane extends React.Component {
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
-      this.setState({ items });
+      this.setState({items});
     } catch (error) {
-      this.setState({ errorMessage: 'Error retrieving clippings' });
+      this.setState({errorMessage: 'Error retrieving clippings'});
       this.showErrorMessage();
     }
   }
@@ -61,15 +61,15 @@ export default class ContentPane extends React.Component {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: new Headers({ 'content-type': 'application/json' }),
-        body: JSON.stringify({ itemId: item._id }),
+        headers: new Headers({'content-type': 'application/json'}),
+        body: JSON.stringify({itemId: item._id}),
       });
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }
       this.setItems(this.props);
     } catch (error) {
-      this.setState({ errorMessage: 'Error deleting clipping' });
+      this.setState({errorMessage: 'Error deleting clipping'});
       this.showErrorMessage();
     }
   }
@@ -83,7 +83,7 @@ export default class ContentPane extends React.Component {
           </h1>
         </nav>
         {this.renderErrorMessage(this.state.errorMessage)}
-        <div className="wrap tile is-ancestor">
+        <div className="wrap tile is-ancestor content-pane is-fullheight-with-navbar">
           {this.state.items.map((item, index) => {
             return (
               <Item key={index} item={item} deleteItem={this.deleteItem} />
