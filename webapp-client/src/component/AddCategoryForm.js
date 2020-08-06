@@ -1,5 +1,4 @@
 import React from 'react';
-import ErrorMessage from './ErrorMessage';
 import allowErrorMessage from '../errorify';
 
 export default class AddCategoryForm extends React.Component {
@@ -20,6 +19,7 @@ export default class AddCategoryForm extends React.Component {
     if (category.trim() === '') {
       return;
     }
+    console.log(this.props.userId);
     const request = {
       method: 'POST',
       body: JSON.stringify({
@@ -39,6 +39,7 @@ export default class AddCategoryForm extends React.Component {
     } catch (error) {
       this.showErrorMessage();
     }
+    this.props.getCategoryList();
   }
 
   render() {

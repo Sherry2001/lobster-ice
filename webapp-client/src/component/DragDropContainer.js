@@ -97,6 +97,7 @@ export default class DragDropContainer extends React.Component {
         process.env.REACT_APP_API_URL + '/category/deleteCategory',
         request
       );
+      this.props.getCategoryList();
       if (response.status !== 200) {
         throw new Error(response.statusMessage);
       }

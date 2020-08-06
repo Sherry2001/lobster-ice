@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DropContainer from './DropContainer';
 import allowErrorMessage from '../errorify';
 import DragDropContainer from './DragDropContainer';
+import AddCategoryForm from './AddCategoryForm';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -64,6 +65,7 @@ export default class CategoryList extends React.Component {
           categoryId={category._id}
           currentCategoryId={this.props.currentCategoryId}
           setCurrentCategory={this.props.setCurrentCategory}
+          getCategoryList={this.getCategoryList}
         />
       </>
     );
@@ -80,6 +82,7 @@ export default class CategoryList extends React.Component {
           {this.renderErrorMessage('Error displaying list of category')}
         </div>
         <DropContainer />
+        <AddCategoryForm userId={this.props.userID} getCategoryList={this.getCategoryList} />
       </>
     );
   }

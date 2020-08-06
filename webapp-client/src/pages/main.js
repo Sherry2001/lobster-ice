@@ -1,6 +1,5 @@
 import React from 'react';
 import CategoryList from '../component/CategoryList';
-import AddCategoryForm from '../component/AddCategoryForm';
 import ContentPane from '../component/ContentPane';
 import Navbar from '../component/Navbar';
 import {DndProvider} from 'react-dnd';
@@ -66,11 +65,6 @@ export default class MainPage extends React.Component {
                 />
               </DndProvider>
               <div className="panel-block"></div>
-              {/* TODO: Pull AddCategoryForm to the bottom of the page */}
-              <AddCategoryForm
-                userId={this.state.userId}
-                addCategory={this.addCategory}
-              />
             </nav>
           </div>
           <div className="column">
