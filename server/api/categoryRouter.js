@@ -5,6 +5,7 @@ const Category = require('../db/models/category');
 const express = require('express');
 const Item = require('../db/models/item');
 const router = express();
+const fetch = require("node-fetch");
 
 /**
  * Create a new category

@@ -88,13 +88,13 @@ async function createSidebar(content) {
   highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
-
+  
   // GET PLACES API RESULTS
   const searchResults = await placesSearch(content);
   if (searchResults) {
     // TODO: Display search results!!! 
-    console.log(searchResults);
     console.log('received search results')
+    console.log(searchResults);
   } else {
     // display could not find anything in Google places search. 
     console.log('didnt get anything')
@@ -201,6 +201,24 @@ async function getCategoryDropdown(userId) {
 }
 
 /**
+ * Returns select element of places search result options
+ * @param {String} text 
+ */
+async function getPlacesSelection(text) {
+  const searchResults = await placesSearch(text);
+  if (searchResults) {
+    const placesSelection = customCreateElement('select', []);
+    searchResults.map((place) => {
+      const newOption = customCreateElement('option', [], place.name);
+      newOption.value = place.place_id
+      placesSelection.options.add(newOption);
+    })
+    return searchResults;
+  }
+  return null;
+}
+
+/**
  * Helper function that sends a request to Google Places Search and returns a list of
  * search results, if there are.
  * @param {String} text 
@@ -208,23 +226,15 @@ async function getCategoryDropdown(userId) {
 async function placesSearch(text) {
   try {
     const response = await fetch(
-      'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + 
-      content + '&inputtype=textquery&fields=place_id,icon,photos,formatted_address,name,rating,opening_hours,geometry' + 
-      '&key=AIzaSyBfQXZ3F-buzSRz5RvVB0iIvQN_K2UxRVk'
-    ); 
-    console.log('this is response');
-    console.log(response);
-    const searchResult = await response.json();
-    console.log('this is searchResult')
-    console.log(searchResult);
-    if (searchResult.candidates) {
-      console.log(candidates); 
-      return searchResult.candidates; 
-    }
+      serverUrl + '/extension/placesSearch/' + text
+    );
+    const candidates = await response.json();
+    console.log('response', candidates);
+    return candidates
   } catch (error) {
-      console.log('heres an error from places search');
-      console.log(error);
-      return;
+    console.log('heres an error from places search');
+    console.log(error);
+    return null;  
   }
 }
 
