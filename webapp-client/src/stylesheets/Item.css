@@ -1,0 +1,7 @@
+a.trash {
+  color: hsl(0, 0%, 30%);
+}
+
+a.trash:hover {
+  color: hsl(0, 0%, 4%);
+}
