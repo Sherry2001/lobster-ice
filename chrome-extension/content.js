@@ -92,14 +92,14 @@ async function createSidebar(content) {
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
 
-
-  // Get selector for places api search results
+  // Get search results and selector for places api search results
   const placesSelector = await getPlacesSelection(content);
   if (placesSelector) {
+    placesSelector.id = 'placesSelector';
+
     const placesResultLabel = customCreateElement('label', ['label'], 'Google Maps Search Results')
     placesResultLabel.htmlFor = 'placesSelector';
     form.appendChild(placesResultLabel);
-    placesSelector.id = 'placesSelector';
     form.appendChild(placesSelector);
   } else {
     // TODO: Show that Places API did not find place?
@@ -191,16 +191,21 @@ function createNewCategoryForm(userId) {
   categoryButton.type = 'submit';
   buttonControl.appendChild(categoryButton);
   newCategoryBar.append(inputControl, buttonControl);
-  newCategoryForm.appendChild(newCategoryBar)
+  newCategoryForm.appendChild(newCategoryBar);
 
   return newCategoryForm;
 }
 
+/**
+ * Helper to add a new category to db upon form submission
+ * and add a new option to categoryDropdown
+ * @param {String} userId 
+ */
 async function addNewCategory(userId) {
   console.log('got into get new category');
   const newCategoryTitle = document.getElementById('newCategoryInput').value;
   const newCategory = {userId: userId,
-                       title: newCategoryTitle}
+                       title: newCategoryTitle};
   try {
     const response = await fetch(serverUrl + '/category/createCategory', {
       method: 'POST',
@@ -213,7 +218,9 @@ async function addNewCategory(userId) {
     } else {
       const newOption = customCreateElement('option', [], newCategoryTitle);
       console.log('this is new cat response', response);
-      newOption.value = response.body;
+      const newCategoryId = await response.json();
+      console.log(newCategoryId);
+      newOption.value = newCategoryId;
       categoryDropdown.options.add(newOption);
       document.getElementById('newCategoryInput').value = '';
     }
@@ -272,7 +279,7 @@ async function getCategoryDropdown(userId) {
  */
 async function getPlacesSelection(text) {
   const searchResults = await placesSearch(text);
-  if (searchResults.length > 0) {
+  if (searchResults && searchResults.length > 0) {
     const returnDiv = document.createElement('div');
     const placesSelection = customCreateElement('select', ['select']);
     placesSelection.id = 'placesDropdown';
