@@ -36,3 +36,7 @@
 #panelHeading a:hover{
   text-decoration: none;
 }
+
+#placesDropdown, #categoryDropdown {
+  width: 100% !important;
+}
