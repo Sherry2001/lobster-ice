@@ -87,10 +87,10 @@ async function createSidebar(content) {
   highlightLabel.htmlFor = 'highlight';
   form.appendChild(highlightLabel);
 
-  const highlightTextarea = customCreateElement('textarea', ['textarea', 'mb-2']);
-  highlightTextarea.id = 'highlight';
-  form.appendChild(highlightTextarea);
-  highlightTextarea.value = content;
+  const highlightInput = customCreateElement('input', ['input', 'mb-2']);
+  highlightInput.id = 'highlight';
+  form.appendChild(highlightInput);
+  highlightInput.value = content;
 
   // Get search results and selector for places api search results
   const placesSelector = await getPlacesSelection(content);
