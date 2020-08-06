@@ -12,8 +12,8 @@ bulmaLink.setAttribute(
 bulmaLink.setAttribute('rel', 'stylesheet');
 document.head.appendChild(bulmaLink);
 
-// TODO: get actual user id
-const currentUserId = '66616b652d757365722d6964';
+const serverUrl = 'http://localhost:8080';
+// TODO: select between dev host and prod host
 
 // Inject invisible sidebar onto page
 const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
@@ -78,10 +78,7 @@ async function createSidebar(content) {
   sidebar.appendChild(panelHeading);
 
   const form = document.createElement('form');
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    addItem();
-  });
+  form.id = 'sidebarForm';
 
   const highlightLabel = customCreateElement('label', ['label', 'mt-2'], 'Highlighted Text');
   highlightLabel.htmlFor = 'highlight';
@@ -101,23 +98,52 @@ async function createSidebar(content) {
   commentTextarea.setAttribute('placeholder', 'Note to self');
   form.appendChild(commentTextarea);
 
-  // Create select dropdown with options fetched from categories db
-  const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
-  dropdownLabel.htmlFor = 'categoryDropdown';
-  form.appendChild(dropdownLabel);
-  
   sidebar.appendChild(form);
 
-  const categoryDropdown = await getCategoryDropdown(currentUserId);
-  categoryDropdown.id = 'categoryDropdown';
-  form.appendChild(categoryDropdown);
+  const userEmailNote = customCreateElement('div', []);
+  let mongoId;
 
-  const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+  // Get logged-in user info
+  chrome.extension.sendMessage({}, async (userInfo) => {
+    const email = userInfo.email;
+    const googleId = userInfo.id;
 
-  const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
-  addButton.type = 'submit';
-  buttonContainer.appendChild(addButton);
-  form.appendChild(buttonContainer);
+    if (googleId) {
+      try {
+        const response = await fetch(serverUrl + '/user/getUserId/' + googleId);
+        mongoId = await response.json();
+
+        // Create select dropdown with options fetched from categories db
+        const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
+        dropdownLabel.htmlFor = 'categoryDropdown';
+        form.appendChild(dropdownLabel);
+
+        const categoryDropdown = await getCategoryDropdown(mongoId);
+        categoryDropdown.id = 'categoryDropdown';
+        form.appendChild(categoryDropdown);
+
+        userEmailNote.innerHTML = 'Signed in as ' + email;
+      } catch (error) {
+        // TODO: better error handling
+        userEmailNote.innerHTML = 'Error while getting user information';
+        console.log(error);
+      }
+    } else {
+      userEmailNote.innerHTML = 'Sign into Chrome to save your clipping';
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      addItem(mongoId);
+    });
+
+    const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
+    const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
+    addButton.type = 'submit';
+    buttonContainer.appendChild(addButton);
+    form.appendChild(buttonContainer);
+    form.appendChild(userEmailNote);
+  });
 }
 
 /**
@@ -133,13 +159,10 @@ function customCreateElement(type, classList, innerHTML = '') {
   return newElement;
 }
 
-const serverUrl = 'http://localhost:8080';
-// TODO: select between dev host and prod host
-
 /**
  * Returns a Promise that resolves to a <select> element,
  * a multi-select dropdown menu of category options from fetching db
- * @param {String} userId
+ * @param {String (Mongoose.ObjectId)} userId
  */
 async function getCategoryDropdown(userId) {
   const categoryDropdown = customCreateElement('select', []);
@@ -148,7 +171,6 @@ async function getCategoryDropdown(userId) {
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
   defaultOption.value = '';
   defaultOption.disabled = true;
-  defaultOption.selected = true;
   categoryDropdown.options.add(defaultOption);
 
   try {
@@ -162,30 +184,40 @@ async function getCategoryDropdown(userId) {
       categoryDropdown.options.add(newOption);
     });
   } catch (error) {
-    // TODO: Handle this error?
+    // TODO: Handle error
   }
   return categoryDropdown;
 }
 
 /**
- * Add new item to databse
+ * Add new item to database
+ * Side bar turns to success message panel once item successfully added  
  */
-async function addItem() {
-  newItem = {
+async function addItem(mongoId) {
+  const newItem = {
     sourceLink: window.location.toString(),
     placesId: 'something', // TODO: get actual placesId
-    userId: currentUserId, // TODO: get actual userID
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
 
-  const selectedCategories = getSelectedOptions('categoryDropdown');
+  if (mongoId) {
+    newItem.userId = mongoId;
+  } else {
+    // TODO: alert message coming from website, not extension
+    alert('Please sign into Chrome to save your clipping');
+    return;
+  }
 
-  if (selectedCategories.length) {
+  // Handle categories selected by user for new Item
+  const selectedCategories = getSelectedOptions('categoryDropdown');
+  if (selectedCategories.length > 0) {
     newItem.categoryIds = selectedCategories;
   }
 
   try {
+    console.log('here after return');
+
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
@@ -196,10 +228,15 @@ async function addItem() {
       throw new Error(response.statusMessage);
     } else {
       // TODO: display success message, timeOut closeSidebar
-      closeSidebar();
+      sidebar.removeChild(document.getElementById('sidebarForm'));
+      sidebar.appendChild(
+          //TODO: To be styled
+          customCreateElement('div', [], 'Succesfully added clipping to your account!')
+      );
+      setTimeout(closeSidebar, 3000);
     }
   } catch (error) {
-    // TODO: display error message on frontend
+    alert('There was an error adding this clipping to your account');
   }
 }
 

@@ -9,6 +9,7 @@ export default class ContentPane extends React.Component {
     super(props);
     this.state = {
       items: [],
+      errorMessage: '',
     };
     this.deleteItem = this.deleteItem.bind(this);
     allowErrorMessage(this);
@@ -31,10 +32,12 @@ export default class ContentPane extends React.Component {
     let items;
     try {
       if (categoryId === defaultCategory) {
+        // Fetches all of the user's items
         url = process.env.REACT_APP_API_URL + '/item/getItems/' + userId;
         response = await fetch(url);
         items = await response.json();
       } else {
+        // Fetches only the items belonging to the current category
         url =
           process.env.REACT_APP_API_URL +
           '/category/getCategoryItems/' +
@@ -48,6 +51,7 @@ export default class ContentPane extends React.Component {
       }
       this.setState({ items });
     } catch (error) {
+      this.setState({ errorMessage: 'Error retrieving clippings' });
       this.showErrorMessage();
     }
   }
@@ -65,6 +69,7 @@ export default class ContentPane extends React.Component {
       }
       this.setItems(this.props);
     } catch (error) {
+      this.setState({ errorMessage: 'Error deleting clipping' });
       this.showErrorMessage();
     }
   }
@@ -77,7 +82,7 @@ export default class ContentPane extends React.Component {
             {this.props.categoryTitle}
           </h1>
         </nav>
-        {this.renderErrorMessage('Error retrieving clippings')}
+        {this.renderErrorMessage(this.state.errorMessage)}
         <div className="wrap tile is-ancestor">
           {this.state.items.map((item, index) => {
             return (

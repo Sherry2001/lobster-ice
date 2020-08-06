@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import DropContainer from './DropContainer';
 import allowErrorMessage from '../errorify';
 import DragDropContainer from './DragDropContainer';
-import DropContainer from './DropContainer';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
