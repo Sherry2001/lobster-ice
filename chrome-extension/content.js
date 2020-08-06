@@ -71,10 +71,10 @@ async function createSidebar(content) {
   sidebar.style.display = 'block';
 
   const panelHeading = customCreateElement('div', ['message-header'],
-      '<a href="http://localhost:3000" target="_blank">Lobster Ice Cream</a>');
+    '<a href="http://localhost:3000" target="_blank">Lobster Ice Cream</a>');
   // TODO: Include icon in panelhead, update looks
   panelHeading.id = 'panelHeading';
-  
+
   const close = customCreateElement('a', ['delete']);
   close.onclick = closeSidebar;
   panelHeading.appendChild(close);
@@ -91,7 +91,7 @@ async function createSidebar(content) {
   highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
-  
+
 
   // Get selector for places api search results
   const placesSelector = await getPlacesSelection(content);
@@ -104,7 +104,7 @@ async function createSidebar(content) {
   } else {
     // TODO: Show that Places API did not find place?
   }
-  
+
   const commentLabel = customCreateElement('label', ['label', 'mt-2'], 'Note to Self');
   commentLabel.htmlFor = 'comment';
   form.appendChild(commentLabel);
@@ -129,11 +129,14 @@ async function createSidebar(content) {
         const response = await fetch(serverUrl + '/user/getUserId/' + googleId);
         mongoId = await response.json();
 
-        // Create select dropdown with options fetched from categories db
         const dropdownLabel = customCreateElement('label', ['label', 'mt-2'], 'Add Clipping to a Category?');
         dropdownLabel.htmlFor = 'categoryDropdown';
         form.appendChild(dropdownLabel);
 
+        // Create tiny form to add category
+        const newCategoryForm = createNewCategoryForm(mongoId);
+        form.appendChild(newCategoryForm);
+        // Create select dropdown with options fetched from categories db
         const categoryDropdown = await getCategoryDropdown(mongoId);
         categoryDropdown.id = 'categoryDropdown';
         form.appendChild(categoryDropdown);
@@ -164,6 +167,62 @@ async function createSidebar(content) {
 }
 
 /**
+ * Helper to create a small new category form
+ * @param {String} userId 
+ */
+function createNewCategoryForm(userId) {
+  const newCategoryForm = document.createElement('form');
+  newCategoryForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    addNewCategory(userId);
+  });
+
+  const newCategoryBar = customCreateElement('div', ['field', 'has-addons']);
+  const inputControl = customCreateElement('div', ['control']);
+  const categoryInput = customCreateElement('input', ['input']);
+  categoryInput.setAttribute('placeholder', 'Add new category');
+  categoryInput.setAttribute('type', 'text');
+  categoryInput.id = 'newCategoryInput';
+  inputControl.appendChild(categoryInput);
+
+  const buttonControl = customCreateElement('div', ['control']);
+  const categoryButton = customCreateElement('button', ['button'], 'Create');
+  categoryButton.id = 'newCategoryButton';
+  categoryButton.type = 'submit';
+  buttonControl.appendChild(categoryButton);
+  newCategoryBar.append(inputControl, buttonControl);
+  newCategoryForm.appendChild(newCategoryBar)
+
+  return newCategoryForm;
+}
+
+async function addNewCategory(userId) {
+  console.log('got into get new category');
+  const newCategoryTitle = document.getElementById('newCategoryInput').value;
+  const newCategory = {userId: userId,
+                       title: newCategoryTitle}
+  try {
+    const response = await fetch(serverUrl + '/category/createCategory', {
+      method: 'POST',
+      body: JSON.stringify(newCategory),
+      headers: { 'Content-type': 'application/json' },
+    });
+
+    if (response.status !== 200) {
+      throw new Error(response.statusMessage);
+    } else {
+      const newOption = customCreateElement('option', [], newCategoryTitle);
+      console.log('this is new cat response', response);
+      newOption.value = response.body;
+      categoryDropdown.options.add(newOption);
+      document.getElementById('newCategoryInput').value = '';
+    }
+  } catch (error) {
+    console.log(error);
+    alert('Sorry, there was an error adding new category');
+  }
+}
+/**
  * Helper to create an HTML Element
  * @param {String} type
  * @param {Array of Strings} classList
@@ -182,8 +241,9 @@ function customCreateElement(type, classList, innerHTML = '') {
  * @param {String (Mongoose.ObjectId)} userId
  */
 async function getCategoryDropdown(userId) {
-  const categoryDropdown = customCreateElement('select', ['select', 'is-multiple']);
+  const categoryDropdown = customCreateElement('select', ['select', 'is-multiple', 'mb-2']);
   categoryDropdown.setAttribute('multiple', true);
+  categoryDropdown.id = 'categoryDropdown';
 
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
   defaultOption.value = '';
@@ -229,7 +289,7 @@ async function getPlacesSelection(text) {
       const mediaImage = customCreateElement('div', ['media-left']);
       const figure = customCreateElement('figure', ['image', 'is-48x48']);
       const image = document.createElement('img');
-      
+
       image.src = place.icon;
       image.alt = 'place icon';
       figure.appendChild(image);
@@ -239,12 +299,12 @@ async function getPlacesSelection(text) {
       const placeName = customCreateElement('p', ['title', 'is-6'], place.name);
       const rating = customCreateElement('p', ['subtitle', 'is-6'], 'Rating: ' + place.rating);
       mediaContent.append(placeName, rating);
-      
+
       cardMedia.append(mediaImage, mediaContent);
 
       const cardDetails = customCreateElement('div', ['content', 'is-size-6'], place.formatted_address);
       cardContent.append(cardMedia, cardDetails);
-      previewCard.appendChild(cardContent); 
+      previewCard.appendChild(cardContent);
       returnDiv.appendChild(previewCard);
 
       const newOption = customCreateElement('option', [], place.name);
@@ -273,7 +333,7 @@ async function placesSearch(text) {
   } catch (error) {
     console.log('heres an error from places search');
     console.log(error);
-    return null;  
+    return null;
   }
 }
 
@@ -321,8 +381,8 @@ async function addItem(mongoId) {
       // TODO: display success message, timeOut closeSidebar
       sidebar.removeChild(document.getElementById('sidebarForm'));
       sidebar.appendChild(
-          //TODO: To be styled
-          customCreateElement('div', [], 'Succesfully added clipping to your account!')
+        //TODO: To be styled
+        customCreateElement('div', [], 'Succesfully added clipping to your account!')
       );
       setTimeout(closeSidebar, 3000);
     }

@@ -20,12 +20,22 @@
   padding: 5px;
   display: none;
 }
-#lobster-submit-button {
+#lobster-submit-button, #newCategoryButton {
   display: 'block' !important;
   opacity: 1 !important;
   border-radius: 2px !important;
   border: none !important;
   position: relative !important;
+}
+
+#newCategoryButton {
+  box-shadow: none !important;
+  background-color: rgb(136, 182, 241) !important;
+}
+
+#newCategoryButton:hover {
+  background-color: rgb(119, 171, 240) !important;
+  cursor: pointer !important;
 }
 
 #panelHeading a {
