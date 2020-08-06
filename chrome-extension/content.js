@@ -16,12 +16,13 @@ const serverUrl = 'http://localhost:8080';
 // TODO: select between dev host and prod host
 
 // Inject invisible sidebar onto page
-const sidebar = customCreateElement('div', ['panel', 'injection-sidebar', 'px-4', 'py-4']);
-sidebar.id = 'lobstericecream';
+const sidebar = customCreateElement('div', ['panel', 'px-4', 'py-4']);
+sidebar.id = 'extension-sidebar';
 document.body.appendChild(sidebar);
 
 // Inject invisible highlight icon onto page
-const iconButton = customCreateElement('button', ['injection-icon'], 'Save');
+const iconButton = customCreateElement('button', [], 'Save');
+iconButton.id = 'highlight-icon';
 // TODO: CHANGE BUTTON TO AN ACTUAL ICON!!
 
 document.body.appendChild(iconButton);
@@ -84,14 +85,18 @@ async function createSidebar(content) {
   highlightLabel.htmlFor = 'highlight';
   form.appendChild(highlightLabel);
 
-  const highlightTextarea = customCreateElement('textarea', ['textarea']);
+  const highlightTextarea = customCreateElement('textarea', ['textarea', 'mb-2']);
   highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
   
+
   // Get selector for places api search results
   const placesSelector = await getPlacesSelection(content);
   if (placesSelector) {
+    const placesResultLabel = customCreateElement('label', ['label'], 'Google Maps Search Results')
+    placesResultLabel.htmlFor = 'placesSelector';
+    form.appendChild(placesResultLabel);
     placesSelector.id = 'placesSelector';
     form.appendChild(placesSelector);
   } else {
@@ -174,7 +179,7 @@ function customCreateElement(type, classList, innerHTML = '') {
  * @param {String (Mongoose.ObjectId)} userId
  */
 async function getCategoryDropdown(userId) {
-  const categoryDropdown = customCreateElement('select', []);
+  const categoryDropdown = customCreateElement('select', ['select', 'is-multiple']);
   categoryDropdown.setAttribute('multiple', true);
 
   const defaultOption = customCreateElement('option', [], 'Option: Select a Category');
@@ -205,20 +210,46 @@ async function getCategoryDropdown(userId) {
 async function getPlacesSelection(text) {
   const searchResults = await placesSearch(text);
   if (searchResults.length > 0) {
-    const placesSelection = customCreateElement('select', []);
-    
-    const defaultOption = customCreateElement('option', [], 'Optional: Select a Known Location');
+    const returnDiv = document.createElement('div');
+    const placesSelection = customCreateElement('select', ['select']);
+    placesSelection.id = 'placesDropdown';
+    const defaultOption = customCreateElement('option', [], 'Optional: Select a Location');
     defaultOption.value = '';
     defaultOption.selected = true;
     defaultOption.disabled = true;
     placesSelection.options.add(defaultOption);
 
     searchResults.map((place) => {
+      const previewCard = customCreateElement('div', ['card', 'mb-2']);
+      const cardContent = customCreateElement('div', ['card-content']);
+      const cardMedia = customCreateElement('div', ['media']);
+      const mediaImage = customCreateElement('div', ['media-left']);
+      const figure = customCreateElement('figure', ['image', 'is-48x48']);
+      const image = document.createElement('img');
+      
+      image.src = place.icon;
+      image.alt = 'place icon';
+      figure.appendChild(image);
+      mediaImage.appendChild(figure);
+
+      const mediaContent = customCreateElement('div', ['media-content']);
+      const placeName = customCreateElement('p', ['title', 'is-6'], place.name);
+      const rating = customCreateElement('p', ['subtitle', 'is-6'], 'Rating: ' + place.rating);
+      mediaContent.append(placeName, rating);
+      
+      cardMedia.append(mediaImage, mediaContent);
+
+      const cardDetails = customCreateElement('div', ['content'], place.formatted_address);
+      cardContent.append(cardMedia, cardDetails);
+      previewCard.appendChild(cardContent); 
+      returnDiv.appendChild(previewCard);
+
       const newOption = customCreateElement('option', [], place.name);
       newOption.value = place.place_id
       placesSelection.options.add(newOption);
     })
-    return placesSelection;
+    returnDiv.appendChild(placesSelection);
+    return returnDiv;
   }
   return null;
 }
@@ -250,10 +281,12 @@ async function placesSearch(text) {
 async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
-    placesId: document.getElementById('placesSelector').value,
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
+  if (document.getElementById('placesDropdown')) {
+    newItem.placesId = document.getElementById('placesDropdown').value;
+  }
 
   if (mongoId) {
     newItem.userId = mongoId;

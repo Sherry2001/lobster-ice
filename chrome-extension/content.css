@@ -1,16 +1,17 @@
-.injection-sidebar {
+#extension-sidebar {
   z-index: 9999;
   position: fixed;
-  right: 0;
-  top: 20px;
+  right: 0px;
+  top: 0px;
   width: 300px;
   min-height: 500px;
-  max-height: 80vh;
+  max-height: 95vh;
+  overflow: scroll;
   background-color: #fff;
   display: none;
 }
 
-.injection-icon {
+#highlight-icon {
   z-index: 9999;
   position: absolute;
   background-color: #fff;
