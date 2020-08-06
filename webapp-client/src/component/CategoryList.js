@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DragContainer from './DragContainer';
 import DropContainer from './DropContainer';
 import allowErrorMessage from '../errorify';
+import DragDropContainer from './DragDropContainer';
 
 export default class CategoryList extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ export default class CategoryList extends React.Component {
   }
 
   async getCategoryList() {
-    const header = {'Content-Type': 'application/json'};
+    const header = { 'Content-Type': 'application/json' };
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
@@ -42,22 +42,25 @@ export default class CategoryList extends React.Component {
     this.getCategoryList();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props || prevState !== this.state) {
       this.getCategoryList();
     }
   }
 
-  /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
-  addCategoryElement(category, key) {
+  /**
+   * Given Mongo category object, creates panel block displaying category title and updates current category id and
+   *  title on click
+   * @param {{_id, title}} category - Mongo category object with _id and title fields
+   */
+  addCategoryElement(category) {
     return (
       <>
-        <DragContainer
+        <DragDropContainer
           title={category.title}
-          id={category._id}
-          key={key}
-          setCurrentCategory={this.props.setCurrentCategory}
+          categoryId={category._id}
           currentCategoryId={this.props.currentCategoryId}
+          setCurrentCategory={this.props.setCurrentCategory}
         />
       </>
     );
