@@ -42,8 +42,10 @@ export default class CategoryList extends React.Component {
     this.getCategoryList();
   }
 
-  componentDidUpdate() {
-    this.getCategoryList();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props || prevState !== this.state) {
+      this.getCategoryList();
+    }
   }
 
   /** Adds each category as a draggable object displaying name and onclick to change current category displayed*/
