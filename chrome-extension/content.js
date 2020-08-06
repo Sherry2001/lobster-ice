@@ -202,7 +202,6 @@ function createNewCategoryForm(userId) {
  * @param {String} userId 
  */
 async function addNewCategory(userId) {
-  console.log('got into get new category');
   const newCategoryTitle = document.getElementById('newCategoryInput').value;
   const newCategory = {userId: userId,
                        title: newCategoryTitle};
@@ -217,9 +216,7 @@ async function addNewCategory(userId) {
       throw new Error(response.statusMessage);
     } else {
       const newOption = customCreateElement('option', [], newCategoryTitle);
-      console.log('this is new cat response', response);
       const newCategoryId = await response.json();
-      console.log(newCategoryId);
       newOption.value = newCategoryId;
       categoryDropdown.options.add(newOption);
       document.getElementById('newCategoryInput').value = '';
@@ -335,10 +332,8 @@ async function placesSearch(text) {
       serverUrl + '/extension/placesSearch/' + text
     );
     const candidates = await response.json();
-    console.log('response', candidates);
     return candidates
   } catch (error) {
-    console.log('heres an error from places search');
     console.log(error);
     return null;
   }
@@ -372,10 +367,7 @@ async function addItem(mongoId) {
     newItem.categoryIds = selectedCategories;
   }
 
-  console.log('This is the newItem object', newItem);
   try {
-    console.log('here after return');
-
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
