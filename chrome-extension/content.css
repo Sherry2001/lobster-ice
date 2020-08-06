@@ -20,3 +20,19 @@
   padding: 5px;
   display: none;
 }
+#lobster-submit-button {
+  display: 'block' !important;
+  opacity: 1 !important;
+  border-radius: 2px !important;
+  border: none !important;
+  position: relative !important;
+}
+
+#panelHeading a {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+#panelHeading a:hover{
+  text-decoration: none;
+}

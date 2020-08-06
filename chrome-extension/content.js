@@ -70,9 +70,11 @@ async function createSidebar(content) {
   sidebar.innerHTML = '';
   sidebar.style.display = 'block';
 
-  const panelHeading = customCreateElement('div', ['message-header'], 'Lobster Ice Cream');
+  const panelHeading = customCreateElement('div', ['message-header'],
+      '<a href="http://localhost:3000" target="_blank">Lobster Ice Cream</a>');
   // TODO: Include icon in panelhead, update looks
-
+  panelHeading.id = 'panelHeading';
+  
   const close = customCreateElement('a', ['delete']);
   close.onclick = closeSidebar;
   panelHeading.appendChild(close);
@@ -154,6 +156,7 @@ async function createSidebar(content) {
     const buttonContainer = customCreateElement('div', ['has-text-centered', 'mt-1']);
     const addButton = customCreateElement('button', ['button', 'is-link'], 'Add Clipping');
     addButton.type = 'submit';
+    addButton.id = 'lobster-submit-button';
     buttonContainer.appendChild(addButton);
     form.appendChild(buttonContainer);
     form.appendChild(userEmailNote);
@@ -239,7 +242,7 @@ async function getPlacesSelection(text) {
       
       cardMedia.append(mediaImage, mediaContent);
 
-      const cardDetails = customCreateElement('div', ['content'], place.formatted_address);
+      const cardDetails = customCreateElement('div', ['content', 'is-size-6'], place.formatted_address);
       cardContent.append(cardMedia, cardDetails);
       previewCard.appendChild(cardContent); 
       returnDiv.appendChild(previewCard);
