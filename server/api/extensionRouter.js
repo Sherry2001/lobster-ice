@@ -13,7 +13,8 @@ router.get('/placesSearch/:text', async (req, res, next) => {
   try {
     const response = await fetch(
       'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' +
-      req.params.text + '&inputtype=textquery&fields=place_id,icon,photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyBfQXZ3F-buzSRz5RvVB0iIvQN_K2UxRVk', {
+      req.params.text + '&inputtype=textquery&fields=place_id,icon,photos,formatted_address,name,rating,opening_hours,geometry' +
+      '&key=' + process.env.APIKEY, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
