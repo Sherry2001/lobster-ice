@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
-import Category from './component/Category';
+import ContentPane from './component/ContentPane';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -14,9 +14,11 @@ export default class App extends React.Component {
     // hard-coded for now, will be fetched from db
     this.defaultCategory = 'All';
     this.state = {
-      // categoryID of the current category
+    // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
+      // TODO: Take in userID from OAuth
+      userId: '5f050952f516f3570ee26724',
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
@@ -37,10 +39,9 @@ export default class App extends React.Component {
             <nav className="panel pb-1">
             <DndProvider backend={HTML5Backend}>
               <CategoryList
-                currentCategoryId={this.state.categoryId}
                 setCurrentCategory={this.setCurrentCategory}
-                //TODO: Take in userID from OAuth */
-                userID="5f050952f516f3570ee26724"
+                currentCategoryId={this.state.categoryId}
+                userID={this.state.userId}
               />
             </DndProvider>
               <div className="panel-block"></div>
@@ -49,8 +50,14 @@ export default class App extends React.Component {
             </nav>
           </div>
           <div className="column">
-            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.categoryTitle} />
+            <DndProvider backend={HTML5Backend}>
+              <ContentPane
+                defaultCategory={this.defaultCategory}
+                categoryId={this.state.categoryId}
+                categoryTitle={this.state.categoryTitle}
+                userId={this.state.userId}
+              />
+            </DndProvider>
           </div>
         </div>
       </>

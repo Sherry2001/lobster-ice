@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
 import allowErrorMessage from '../errorify';
 
@@ -7,15 +7,17 @@ import allowErrorMessage from '../errorify';
  * Draggable category container displayed in category list
  * @param {*} props
  */
-function Drag(props) {
+function DragAndDrop(props) {
   const title = props.title;
-  const id = props.id;
+  const categoryId = props.categoryId;
+
+  // Drag action dragging categories
   const [{ isDragging }, drag] = useDrag({
     item: { title, type: 'category' },
     end: (item, monitor) => {
       const isDropped = monitor.getDropResult();
       if (item && isDropped) {
-        props.deleteCategory(id);
+        props.deleteCategory(categoryId);
       }
     },
     collect: (monitor) => ({
@@ -23,26 +25,49 @@ function Drag(props) {
     }),
   });
 
+  //Drop action accepting items
+  const [{ canDrop, isOver }, drop] = useDrop({
+    accept: 'item',
+    drop: () => ({ categoryId: categoryId }),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+  const isActive = canDrop && isOver;
+  let backgroundColor = 'white';
+  if (isActive) {
+    backgroundColor = 'lightgrey';
+  }
+
+  const mergeRef = (...refs) => {
+    return (inst) => {
+      for (let ref of refs) {
+        ref(inst);
+      }
+    };
+  };
+
   return (
     <a
-      ref={drag}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={mergeRef(drag, drop)}
+      style={{ opacity: isDragging ? 0.5 : 1, backgroundColor }}
       className={
-        props.currentCategoryId === id
+        props.currentCategoryId === categoryId
           ? 'panel-block has-background-light'
           : 'panel-block'
       }
-      key={id}
-      onClick={() => props.setCurrentCategory(id, title)}
+      key={categoryId}
+      onClick={() => props.setCurrentCategory(categoryId, title)}
     >
       {title}
     </a>
   );
 }
 
-Drag.propTypes = {
+DragAndDrop.propTypes = {
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   deleteCategory: PropTypes.func.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
   currentCategoryId: PropTypes.string.isRequired,
@@ -51,7 +76,7 @@ Drag.propTypes = {
 /**
  * Wrapper around Drag functional component that handles error and displays error message
  */
-export default class DragContainer extends React.Component {
+export default class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
     this.deleteCategory = this.deleteCategory.bind(this);
@@ -63,7 +88,7 @@ export default class DragContainer extends React.Component {
     const request = {
       method: 'DELETE',
       body: JSON.stringify({
-        categoryId: this.props.id,
+        categoryId: this.props.categoryId,
       }),
       headers: { 'Content-type': 'application/json' },
     };
@@ -83,9 +108,9 @@ export default class DragContainer extends React.Component {
   render() {
     return (
       <>
-        <Drag
+        <DragAndDrop
           title={this.props.title}
-          id={this.props.id}
+          categoryId={this.props.categoryId}
           deleteCategory={this.deleteCategory}
           setCurrentCategory={this.props.setCurrentCategory}
           currentCategoryId={this.props.currentCategoryId}
@@ -96,9 +121,9 @@ export default class DragContainer extends React.Component {
   }
 }
 
-DragContainer.propTypes = {
+DragDropContainer.propTypes = {
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   setCurrentCategory: PropTypes.func.isRequired,
   currentCategoryId: PropTypes.string.isRequired,
 };
