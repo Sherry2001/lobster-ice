@@ -25,7 +25,7 @@ export default class AddCategoryForm extends React.Component {
         title: category,
         userId: '5f050952f516f3570ee26724',
       }),
-      headers: { 'Content-type': 'application/json' },
+      headers: {'Content-type': 'application/json'},
     };
     try {
       const response = await fetch(

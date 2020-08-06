@@ -34,8 +34,8 @@ export default class App extends React.Component {
     return (
       <>
         <Navbar />
-        <div className="columns">
-          <div className="column is-one-fifth">
+        <div className="columns is-gapless">
+          <div className="column is-one-fifth is-flex is-fullheight">
             <nav className="panel pb-1">
             <DndProvider backend={HTML5Backend}>
               <CategoryList

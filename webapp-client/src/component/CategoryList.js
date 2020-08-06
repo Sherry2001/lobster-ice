@@ -69,11 +69,13 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <>
-        {this.addCategoryElement({title: 'All', _id: 'All'})}
-        {this.state.categoryList.map((category) =>
-          this.addCategoryElement(category)
-        )}
-        {this.renderErrorMessage('Error displaying list of category')}
+        <div className="partial">
+          {this.addCategoryElement({title: 'All', _id: 'All'})}
+          {this.state.categoryList.map((category) =>
+            this.addCategoryElement(category)
+          )}
+          {this.renderErrorMessage('Error displaying list of category')}
+        </div>
         <DropContainer />
       </>
     );

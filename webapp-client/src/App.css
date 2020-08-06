@@ -20,3 +20,9 @@
     transform: rotate(360deg);
   }
 }
+
+.partial {
+  height: 66vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
