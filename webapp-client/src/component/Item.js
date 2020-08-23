@@ -2,13 +2,14 @@ import '../stylesheets/Item.css';
 import allowErrorMessage from '../errorify';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useDrag } from 'react-dnd';
+import {useDrag} from 'react-dnd';
+import GoogleMap from './GoogleMap';
 
 function DragItem(props) {
   const savedItem = props.item;
 
-  const [{ isDragging }, drag] = useDrag({
-    item: { type: 'item' },
+  const [{isDragging}, drag] = useDrag({
+    item: {type: 'item'},
     end: (item, monitor) => {
       const isDropped = monitor.getDropResult();
       if (item && isDropped) {
@@ -21,11 +22,25 @@ function DragItem(props) {
   });
 
   return (
-    <div ref={drag} style={{opacity: isDragging ? 0.5 : 1}} className="tile is-parent is-4">
+    <div
+      ref={drag}
+      style={{opacity: isDragging ? 0.5 : 1}}
+      className="tile is-parent is-4"
+    >
       <article className="tile is-child box">
         <article className="media">
           <div className="media-content">
             <p className="title">{savedItem.highlight}</p>
+          </div>
+          <div className="media-right">
+            <a className="map-pin">
+              <i
+                onClick={() => props.setShowMap(true)}
+                className="fa fa-map-pin"
+                aria-hidden="true"
+                id="showMap"
+              ></i>
+            </a>
           </div>
         </article>
         <div className="content">
@@ -61,14 +76,16 @@ DragItem.propTypes = {
   addItemToCategory: PropTypes.func.isRequired,
   deleteItem: PropTypes.func.isRequired,
   formatSourceLink: PropTypes.func.isRequired,
+  setShowMap: PropTypes.func.isRequired,
 };
 
 export default class Item extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {showMap: false};
     this.addItemToCategory = this.addItemToCategory.bind(this);
     this.formatSourceLink = this.formatSourceLink.bind(this);
+    this.setShowMap = this.setShowMap.bind(this);
     allowErrorMessage(this);
   }
 
@@ -79,6 +96,10 @@ export default class Item extends React.Component {
     return '';
   }
 
+  setShowMap(status) {
+    this.setState({showMap: status});
+  }
+
   async addItemToCategory(itemId, categoryId) {
     const request = {
       method: 'PUT',
@@ -86,7 +107,7 @@ export default class Item extends React.Component {
         itemId: itemId,
         categoryId: categoryId,
       }),
-      headers: { 'Content-type': 'application/json' },
+      headers: {'Content-type': 'application/json'},
     };
     try {
       const response = await fetch(
@@ -102,6 +123,16 @@ export default class Item extends React.Component {
   }
 
   render() {
+    let googleMap = null;
+    if (this.state.showMap) {
+      googleMap = (
+        <GoogleMap
+          setShowMap={this.setShowMap}
+          // placeId="ChIJd8BlQ2BZwokRAFUEcm_qrcA"
+          placeId={this.props.item.placesId}
+        />
+      );
+    }
     return (
       <>
         <DragItem
@@ -109,7 +140,9 @@ export default class Item extends React.Component {
           deleteItem={this.props.deleteItem}
           addItemToCategory={this.addItemToCategory}
           formatSourceLink={this.formatSourceLink}
+          setShowMap={this.setShowMap}
         />
+        {googleMap}
         {this.renderErrorMessage('Error adding item to category')}
       </>
     );
