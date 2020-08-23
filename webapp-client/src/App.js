@@ -2,9 +2,9 @@ import React from 'react';
 import './App.css';
 import CategoryList from './component/CategoryList';
 import AddCategoryForm from './component/AddCategoryForm';
-import Category from './component/Category';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import ContentPane from './component/ContentPane';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import Navbar from './component/Navbar';
 
@@ -17,6 +17,8 @@ export default class App extends React.Component {
       // categoryID of the current category
       categoryId: this.defaultCategory,
       categoryTitle: this.defaultCategory,
+      // TODO: Take in userID from OAuth
+      userId: '5f050952f516f3570ee26724',
     };
     this.setCurrentCategory = this.setCurrentCategory.bind(this);
   }
@@ -35,22 +37,26 @@ export default class App extends React.Component {
         <div className="columns">
           <div className="column is-one-fifth">
             <nav className="panel pb-1">
-            <DndProvider backend={HTML5Backend}>
-              <CategoryList
-                currentCategoryId={this.state.categoryId}
-                setCurrentCategory={this.setCurrentCategory}
-                //TODO: Take in userID from OAuth */
-                userID="5f050952f516f3570ee26724"
-              />
-            </DndProvider>
+              <DndProvider backend={HTML5Backend}>
+                <CategoryList
+                  currentCategoryId={this.state.categoryId}
+                  setCurrentCategory={this.setCurrentCategory}
+                  //TODO: Take in userID from OAuth */
+                  userID="5f050952f516f3570ee26724"
+                />
+              </DndProvider>
               <div className="panel-block"></div>
               {/* TODO: Pull AddCategoryForm to the bottom of the page */}
               <AddCategoryForm addCategory={this.addCategory} />
             </nav>
           </div>
           <div className="column">
-            {/* Category will later be replaced by a component named ItemContainer including category name and list of item ids of that category */}
-            <Category categoryName={this.state.categoryTitle} />
+            <ContentPane
+              defaultCategory={this.defaultCategory}
+              categoryId={this.state.categoryId}
+              categoryTitle={this.state.categoryTitle}
+              userId={this.state.userId}
+            />
           </div>
         </div>
       </>

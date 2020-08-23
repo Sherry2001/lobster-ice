@@ -39,7 +39,7 @@ export default class AddCategoryForm extends React.Component {
       this.showErrorMessage();
     }
   }
-  
+
   render() {
     return (
       <>
