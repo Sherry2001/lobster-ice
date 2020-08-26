@@ -1,5 +1,6 @@
 # lobster-ice
 STEP 2020 Capstone Project :) 
+Project presentation: https://docs.google.com/presentation/d/1d886XSu86rw00bm_ApstzAB39q8U1b5ynx464Ss0nmQ/edit?usp=sharing
 
 ### Step 0: Make sure to have or install Node.Js version 10 or above
 We recommend using Node Version Manager (nvm): 
