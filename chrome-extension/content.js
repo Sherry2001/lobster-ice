@@ -37,7 +37,7 @@ document.onclick = (event) => {
   }
   const content = window.getSelection().toString();
   // TODO: Trim Text
-  if (content && content !== lastContent) {
+  if (content && /\S/.test(content) && content !== lastContent) {
     showIcon(event);
     lastContent = content;
   }
@@ -280,6 +280,7 @@ async function getPlacesSelection(text) {
     const returnDiv = document.createElement('div');
     const placesSelection = customCreateElement('select', ['select']);
     placesSelection.id = 'placesDropdown';
+    
     const defaultOption = customCreateElement('option', [], 'Optional: Select a Location');
     defaultOption.value = '';
     defaultOption.selected = true;
@@ -334,8 +335,8 @@ async function placesSearch(text) {
     const candidates = await response.json();
     return candidates
   } catch (error) {
-    console.log(error);
-    return null;
+    console.log('Error from places search: ', error);
+    return null;  
   }
 }
 
@@ -351,6 +352,10 @@ async function addItem(mongoId) {
   };
   if (document.getElementById('placesDropdown')) {
     newItem.placesId = document.getElementById('placesDropdown').value;
+  }
+
+  if (document.getElementById('placesSelector')) {
+    newItem.placesId = document.getElementById('placesSelector').value;
   }
 
   if (mongoId) {
