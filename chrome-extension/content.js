@@ -36,7 +36,7 @@ document.onclick = (event) => {
   }
   const content = window.getSelection().toString();
   // TODO: Trim Text
-  if (content && content !== lastContent) {
+  if (content && /\S/.test(content) && content !== lastContent) {
     showIcon(event);
     lastContent = content;
   }
@@ -204,7 +204,7 @@ async function getCategoryDropdown(userId) {
  */
 async function getPlacesSelection(text) {
   const searchResults = await placesSearch(text);
-  if (searchResults.length > 0) {
+  if (searchResults && searchResults.length > 0) {
     const placesSelection = customCreateElement('select', []);
     
     const defaultOption = customCreateElement('option', [], 'Optional: Select a Known Location');
@@ -250,10 +250,14 @@ async function placesSearch(text) {
 async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
-    placesId: document.getElementById('placesSelector').value,
+    //placesId = document.getElementById('placesSelector').value,
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
+
+  if (document.getElementById('placesSelector')) {
+    newItem.placesId = document.getElementById('placesSelector').value;
+  }
 
   if (mongoId) {
     newItem.userId = mongoId;
@@ -271,8 +275,6 @@ async function addItem(mongoId) {
 
   console.log('This is the newItem object', newItem);
   try {
-    console.log('here after return');
-
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
