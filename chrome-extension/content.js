@@ -234,11 +234,9 @@ async function placesSearch(text) {
       serverUrl + '/extension/placesSearch/' + text
     );
     const candidates = await response.json();
-    console.log('response', candidates);
     return candidates
   } catch (error) {
-    console.log('heres an error from places search');
-    console.log(error);
+    console.log('Error from places search: ', error);
     return null;  
   }
 }
@@ -273,7 +271,6 @@ async function addItem(mongoId) {
     newItem.categoryIds = selectedCategories;
   }
 
-  console.log('This is the newItem object', newItem);
   try {
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
