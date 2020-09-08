@@ -145,7 +145,6 @@ async function createSidebar(content) {
       } catch (error) {
         // TODO: better error handling
         userEmailNote.innerHTML = 'Error while getting user information';
-        console.log(error);
       }
     } else {
       userEmailNote.innerHTML = 'Sign into Chrome to save your clipping';
@@ -222,7 +221,6 @@ async function addNewCategory(userId) {
       document.getElementById('newCategoryInput').value = '';
     }
   } catch (error) {
-    console.log(error);
     alert('Sorry, there was an error adding new category');
   }
 }
@@ -335,7 +333,6 @@ async function placesSearch(text) {
     const candidates = await response.json();
     return candidates
   } catch (error) {
-    console.log('Error from places search: ', error);
     return null;  
   }
 }
