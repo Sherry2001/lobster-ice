@@ -248,7 +248,6 @@ async function placesSearch(text) {
 async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
-    //placesId = document.getElementById('placesSelector').value,
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
