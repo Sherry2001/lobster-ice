@@ -6,6 +6,7 @@ const apiPort = 8080;
 const categoryRouter = require('./api/categoryRouter.js');
 const itemRouter = require('./api/itemRouter.js');
 const userRouter = require('./api/userRouter.js');
+const extensionRouter = require('./api/extensionRouter.js');
 
 //connected to mongoose through db/index.js
 if (require.main === module) {
@@ -19,12 +20,13 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Hello Word!');
+  res.send('Welcome to Lobster Ice Cream REST Api!');
 });
 
 app.use('/category', categoryRouter);
 app.use('/item', itemRouter);
 app.use('/user', userRouter);
+app.use('/extension', extensionRouter);
 
 const server = app.listen(apiPort, () => console.log('Server running on port %s', apiPort));
 module.exports = server;

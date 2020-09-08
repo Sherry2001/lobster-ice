@@ -1,16 +1,17 @@
-.injection-sidebar {
+#extension-sidebar {
   z-index: 9999;
   position: fixed;
   right: 0;
-  top: 20px;
+  top: 0;
   width: 300px;
   min-height: 500px;
-  max-height: 80vh;
+  max-height: 95vh;
+  overflow: auto;
   background-color: #fff;
   display: none;
 }
 
-.injection-icon {
+#highlight-icon {
   z-index: 9999;
   position: absolute;
   background-color: #fff;
@@ -18,4 +19,34 @@
   border-radius: 5px;
   padding: 5px;
   display: none;
+}
+#lobster-submit-button, #newCategoryButton {
+  display: 'block' !important;
+  opacity: 1 !important;
+  border-radius: 2px !important;
+  border: none !important;
+  position: relative !important;
+}
+
+#newCategoryButton {
+  box-shadow: none !important;
+  background-color: rgb(136, 182, 241) !important;
+}
+
+#newCategoryButton:hover {
+  background-color: rgb(119, 171, 240) !important;
+  cursor: pointer !important;
+}
+
+#panelHeading a {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+#panelHeading a:hover {
+  text-decoration: none;
+}
+
+#placesDropdown, #categoryDropdown {
+  width: 100% !important;
 }
