@@ -36,7 +36,7 @@ document.onclick = (event) => {
   }
   const content = window.getSelection().toString();
   // TODO: Trim Text
-  if (content && content !== lastContent) {
+  if (content && /\S/.test(content) && content !== lastContent) {
     showIcon(event);
     lastContent = content;
   }
@@ -88,7 +88,16 @@ async function createSidebar(content) {
   highlightTextarea.id = 'highlight';
   form.appendChild(highlightTextarea);
   highlightTextarea.value = content;
-
+  
+  // Get selector for places api search results
+  const placesSelector = await getPlacesSelection(content);
+  if (placesSelector) {
+    placesSelector.id = 'placesSelector';
+    form.appendChild(placesSelector);
+  } else {
+    // TODO: Show that Places API did not find place?
+  }
+  
   const commentLabel = customCreateElement('label', ['label', 'mt-2'], 'Note to Self');
   commentLabel.htmlFor = 'comment';
   form.appendChild(commentLabel);
@@ -190,16 +199,62 @@ async function getCategoryDropdown(userId) {
 }
 
 /**
+ * Returns select HTML element of places search result options
+ * @param {String} text 
+ */
+async function getPlacesSelection(text) {
+  const searchResults = await placesSearch(text);
+  if (searchResults && searchResults.length > 0) {
+    const placesSelection = customCreateElement('select', []);
+    
+    const defaultOption = customCreateElement('option', [], 'Optional: Select a Known Location');
+    defaultOption.value = '';
+    defaultOption.selected = true;
+    defaultOption.disabled = true;
+    placesSelection.options.add(defaultOption);
+
+    searchResults.map((place) => {
+      const newOption = customCreateElement('option', [], place.name);
+      newOption.value = place.place_id
+      placesSelection.options.add(newOption);
+    })
+    return placesSelection;
+  }
+  return null;
+}
+
+/**
+ * Helper function that sends a request to Google Places Search and returns a list of
+ * search results, if there are.
+ * @param {String} text 
+ */
+async function placesSearch(text) {
+  try {
+    const response = await fetch(
+      serverUrl + '/extension/placesSearch/' + text
+    );
+    const candidates = await response.json();
+    return candidates
+  } catch (error) {
+    console.log('Error from places search: ', error);
+    return null;  
+  }
+}
+
+/**
  * Add new item to database
  * Side bar turns to success message panel once item successfully added  
  */
 async function addItem(mongoId) {
   const newItem = {
     sourceLink: window.location.toString(),
-    placesId: 'something', // TODO: get actual placesId
     highlight: document.getElementById('highlight').value,
     comment: document.getElementById('comment').value,
   };
+
+  if (document.getElementById('placesSelector')) {
+    newItem.placesId = document.getElementById('placesSelector').value;
+  }
 
   if (mongoId) {
     newItem.userId = mongoId;
@@ -216,8 +271,6 @@ async function addItem(mongoId) {
   }
 
   try {
-    console.log('here after return');
-
     const response = await fetch(serverUrl + '/item/addItem', {
       method: 'POST',
       body: JSON.stringify(newItem),
